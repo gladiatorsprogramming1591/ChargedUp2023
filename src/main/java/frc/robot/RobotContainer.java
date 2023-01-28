@@ -21,6 +21,7 @@ import frc.robot.Constants.OIConstants;
 import frc.robot.commands.driveCommands.AutoLevel;
 import frc.robot.commands.driveCommands.DriveToAngle;
 import frc.robot.commands.driveCommands.DriveToLevel;
+import frc.robot.commands.driveCommands.PathPlanner.AutoPathTest;
 import frc.robot.subsystems.DriveSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -89,6 +90,7 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
+    /*
     // Create config for trajectory
     TrajectoryConfig config = new TrajectoryConfig(
         AutoConstants.kMaxSpeedMetersPerSecond,
@@ -127,5 +129,8 @@ public class RobotContainer {
 
     // Run path following command, then stop at the end.
     return swerveControllerCommand.andThen(() -> m_robotDrive.drive(0, 0, 0, true));
+    */
+    System.out.println("Called getAutonomousCommand, retunring AutoPathTest");
+    return new AutoPathTest(m_robotDrive);
   }
 }

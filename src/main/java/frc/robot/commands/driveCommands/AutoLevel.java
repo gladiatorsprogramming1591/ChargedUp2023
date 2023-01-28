@@ -5,10 +5,10 @@ import frc.robot.subsystems.DriveSubsystem;
 
 public class AutoLevel extends SequentialCommandGroup {
 
-    public AutoLevel(DriveSubsystem m_DriveSubsystem) {
+    public AutoLevel(DriveSubsystem driveSubsystem) {
         addCommands(
-        new DriveToAngle(m_DriveSubsystem),
-        new DriveToLevel(m_DriveSubsystem)
+        new DriveToAngle(driveSubsystem),
+        new DriveToLevel(driveSubsystem)
         );
     }
 }
