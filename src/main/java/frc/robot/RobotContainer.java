@@ -18,6 +18,8 @@ import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
+import frc.robot.commands.driveCommands.AutoLevel;
+import frc.robot.commands.driveCommands.DriveToAngle;
 import frc.robot.commands.driveCommands.DriveToLevel;
 import frc.robot.subsystems.DriveSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -54,11 +56,12 @@ public class RobotContainer {
         // Turning is controlled by the X axis of the right stick.
         new RunCommand(
             () -> m_robotDrive.drive(
-                MathUtil.applyDeadband(-m_driverController.getLeftY(), 0.06),
-                MathUtil.applyDeadband(-m_driverController.getLeftX(), 0.06),
-                MathUtil.applyDeadband(-m_driverController.getRightX(), 0.06),
+                MathUtil.applyDeadband(-m_driverController.getLeftY()*Constants.DriveConstants.kDrivingMaxOutput, 0.06),
+                MathUtil.applyDeadband(-m_driverController.getLeftX()*Constants.DriveConstants.kDrivingMaxOutput, 0.06),
+                MathUtil.applyDeadband(-m_driverController.getRightX()*Constants.DriveConstants.kDrivingMaxOutput, 0.06),
                 true),
             m_robotDrive));
+        //TODO: Drive Squared Input
   }
 
   /**
@@ -71,9 +74,13 @@ public class RobotContainer {
    * {@link JoystickButton}.
    */
   private void configureButtonBindings() {
-    m_driverController.b().whileTrue(new RunCommand(() -> m_robotDrive.setX(),m_robotDrive));
+    m_driverController.x().whileTrue(new RunCommand(() -> m_robotDrive.setX(),m_robotDrive));  //Prevents Movement
 
-    m_driverController.leftBumper().whileTrue(new DriveToLevel(m_robotDrive));
+    m_driverController.leftTrigger().whileTrue(new DriveToLevel(m_robotDrive)); //On Charge Station
+
+    m_driverController.leftBumper().whileTrue(new DriveToAngle(m_robotDrive));  //Off Charge Station
+
+    m_driverController.y().toggleOnTrue(new AutoLevel(m_robotDrive));  //Command Group
   }
 
   /**

@@ -59,6 +59,8 @@ public final class Constants {
     public static final int kRearRightTurningCanId = 16;
 
     public static final boolean kGyroReversed = false;
+
+    public static final double kDrivingMaxOutput = 0.5;
   }
 
   public static final class ModuleConstants {
@@ -131,6 +133,8 @@ public final class Constants {
         kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
 
     public static final double kLevelTolerance = 1;
+
+    public static final double kDriveAngle = 14;
   }
 
   public static final class NeoMotorConstants {
