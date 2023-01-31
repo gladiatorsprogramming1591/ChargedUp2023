@@ -22,6 +22,8 @@ import frc.robot.commands.driveCommands.AutoLevel;
 import frc.robot.commands.driveCommands.DriveToAngle;
 import frc.robot.commands.driveCommands.DriveToLevel;
 import frc.robot.commands.driveCommands.PathPlanner.AutoPathTest;
+import frc.robot.commands.driveCommands.PathPlanner.ForwardPathTest;
+import frc.robot.commands.driveCommands.PathPlanner.ReversePathTest;
 import frc.robot.subsystems.DriveSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -82,6 +84,12 @@ public class RobotContainer {
     m_driverController.leftBumper().whileTrue(new DriveToAngle(m_robotDrive));  //Off Charge Station
 
     m_driverController.y().toggleOnTrue(new AutoLevel(m_robotDrive));  //Command Group
+
+    m_driverController.b().toggleOnTrue(new ForwardPathTest(m_robotDrive)); 
+
+    m_driverController.a().toggleOnTrue(new ReversePathTest(m_robotDrive)); 
+
+    // m_driverController.povDown().whileTrue(new ResetGyro());
   }
 
   /**
