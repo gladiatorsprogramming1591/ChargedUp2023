@@ -82,6 +82,7 @@ public class DriveSubsystem extends SubsystemBase {
   public void periodic() {
     // Update the odometry in the periodic block
     SmartDashboard.putData(m_field);
+    SmartDashboard.putBoolean("Navx is calibrating: ", m_navX.isCalibrating());
     m_odometry.update(
         Rotation2d.fromDegrees(-m_navX.getAngle()),
         new SwerveModulePosition[] {
