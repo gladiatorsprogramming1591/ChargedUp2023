@@ -134,13 +134,26 @@ public class DriveSubsystem extends SubsystemBase {
    * @param fieldRelative Whether the provided x and y speeds are relative to the
    *                      field.
    */
+
   public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative) {
+    drive(xSpeed, ySpeed, rot, fieldRelative, false, 1);
+  }
+
+  public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative, boolean squaredInputs, double maxOutput) {
+    if (squaredInputs) {
+      xSpeed = Math.copySign(xSpeed*xSpeed, xSpeed);
+      ySpeed = Math.copySign(ySpeed*ySpeed, ySpeed);
+      rot = Math.copySign(rot*rot, rot);
+    }
     // Adjust input based on max speed
-    xSpeed *= DriveConstants.kMaxSpeedMetersPerSecond;
-    ySpeed *= DriveConstants.kMaxSpeedMetersPerSecond;
-    rot *= DriveConstants.kMaxAngularSpeed;
-    
-    // System.out.println(m_navX.getAngle());
+    xSpeed *= DriveConstants.kMaxSpeedMetersPerSecond*maxOutput;
+    ySpeed *= DriveConstants.kMaxSpeedMetersPerSecond*maxOutput;
+    rot *= DriveConstants.kMaxAngularSpeed*maxOutput;
+
+    // squaredInputs
+    //   ? xSpeed = Math.copySign(xSpeed*xSpeed, xSpeed), ySpeed = Math.copySign(ySpeed*ySpeed, ySpeed), rot = Math.copySign(rot*rot, rot)
+    //   : null;
+    // }
 
     var swerveModuleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(
         fieldRelative
