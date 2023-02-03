@@ -24,6 +24,7 @@ import frc.robot.commands.driveCommands.DriveToLevel;
 import frc.robot.commands.driveCommands.PathPlanner.AutoPathTest;
 import frc.robot.commands.driveCommands.PathPlanner.ForwardPathTest;
 import frc.robot.commands.driveCommands.PathPlanner.ReversePathTest;
+import frc.robot.commands.navXCommands.ResetGyro;
 import frc.robot.subsystems.DriveSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -89,7 +90,7 @@ public class RobotContainer {
 
     m_driverController.a().toggleOnTrue(new ReversePathTest(m_robotDrive)); 
 
-    // m_driverController.povDown().whileTrue(new ResetGyro());
+    m_driverController.povDown().whileTrue(new ResetGyro(m_robotDrive));
   }
 
   /**

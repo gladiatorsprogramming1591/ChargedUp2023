@@ -190,6 +190,9 @@ public class DriveSubsystem extends SubsystemBase {
   public void zeroHeading() {
     m_navX.reset();
   }
+  //FYI: Don't use m_navX.calibrate(), the method does nothing
+  //Startup Cal takes 20s
+
 
   /**
    * Returns the heading of the robot.
@@ -275,3 +278,4 @@ public class DriveSubsystem extends SubsystemBase {
     );
   }
 }
+//TODO - Update to match REV's repo (addition of "Slew Limiter")
