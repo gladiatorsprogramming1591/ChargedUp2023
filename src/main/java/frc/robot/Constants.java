@@ -52,6 +52,7 @@ public final class Constants {
     public static final int kRearLeftDrivingCanId = 13;
     public static final int kFrontRightDrivingCanId = 15;
     public static final int kRearRightDrivingCanId = 17;
+    public static final int kArmCANId = 1; 
 
     public static final int kFrontLeftTurningCanId = 10;
     public static final int kRearLeftTurningCanId = 12;
@@ -140,4 +141,5 @@ public final class Constants {
   public static final class NeoMotorConstants {
     public static final double kFreeSpeedRpm = 5676;
   }
+
 }
