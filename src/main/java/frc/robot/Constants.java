@@ -52,7 +52,8 @@ public final class Constants {
     public static final int kRearLeftDrivingCanId = 13;
     public static final int kFrontRightDrivingCanId = 15;
     public static final int kRearRightDrivingCanId = 17;
-    public static final int kArmCANId = 1; 
+    public static final int kLeftArmCANId = 1; 
+    public static final int kRightArmCANId = 2; 
 
     public static final int kFrontLeftTurningCanId = 10;
     public static final int kRearLeftTurningCanId = 12;
@@ -117,6 +118,7 @@ public final class Constants {
 
   public static final class OIConstants {
     public static final int kDriverControllerPort = 0;
+    public static final int kManipulatorControllerPort = 1; 
   }
 
   public static final class AutoConstants {
@@ -140,6 +142,16 @@ public final class Constants {
 
   public static final class NeoMotorConstants {
     public static final double kFreeSpeedRpm = 5676;
+  }
+
+  public static final class ArmConstants{
+    public static final double kArmP = 0.1; 
+    public static final double kArmI = 0; 
+    public static final double kArmD = 0; 
+    public static final double kArmFF = 0; 
+    public static final double kArmMinOutput = -0.3; 
+    public static final double kArmMaxOutput = 0.3; //TODO: update these
+    
   }
 
 }
