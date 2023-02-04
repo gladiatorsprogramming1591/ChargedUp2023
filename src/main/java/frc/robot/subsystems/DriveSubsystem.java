@@ -149,7 +149,7 @@ public class DriveSubsystem extends SubsystemBase {
    */
 
   public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative) {
-    drive(xSpeed, ySpeed, rot, fieldRelative, true, false, 1);  //TODO - Do we want rateLimit for auto?
+    drive(xSpeed, ySpeed, rot, fieldRelative, false, false, 1);  //TODO - Do we want rateLimit for auto?
   }
   public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative, boolean rateLimit) {
     drive(xSpeed, ySpeed, rot, fieldRelative, rateLimit, false, 1);
@@ -225,7 +225,7 @@ public class DriveSubsystem extends SubsystemBase {
 
     var swerveModuleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(
         fieldRelative
-            ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered, Rotation2d.fromDegrees(m_navX.getAngle()))
+            ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered, Rotation2d.fromDegrees(-m_navX.getAngle()))
             : new ChassisSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered));
     SwerveDriveKinematics.desaturateWheelSpeeds(
         swerveModuleStates, DriveConstants.kMaxSpeedMetersPerSecond);
@@ -359,3 +359,4 @@ public class DriveSubsystem extends SubsystemBase {
     );
   }
 }
+//TODO - command to give rotation to PID to square up with grid while giving driver translation control
