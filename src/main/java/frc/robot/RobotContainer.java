@@ -67,7 +67,6 @@ public class RobotContainer {
                 true,
                 Constants.DriveConstants.kDrivingMaxOutput),
             m_robotDrive));
-        //TODO: Drive Squared Input
   }
 
   /**

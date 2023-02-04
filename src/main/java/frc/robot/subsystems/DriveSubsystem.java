@@ -265,7 +265,7 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
     // Assuming this method is part of a drivetrain subsystem that provides the necessary methods
-    // TODO - Adjust p for x and y
+    // TODO(requires P-bot) - Adjust p for x and y
   public Command followTrajectoryCommand(PathPlannerTrajectory traj, boolean isFirstPath) {
     return new SequentialCommandGroup(
         new InstantCommand(() -> {
@@ -286,7 +286,7 @@ public class DriveSubsystem extends SubsystemBase {
             this // Requires this drive subsystem
 
             //1 inch undershot Forward/Backward. Increasing Xkp and Xki increases this error
-            //TODO - Adjust max vel and acc constaints
+            //TODO (requires P-bot) - Adjust max vel and acc constaints
         )
     );
   }
