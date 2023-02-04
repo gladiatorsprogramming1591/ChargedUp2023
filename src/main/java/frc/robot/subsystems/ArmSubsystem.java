@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.SparkMaxPIDController.AccelStrategy;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -49,7 +50,27 @@ public class ArmSubsystem extends SubsystemBase{
 
         baseEncoderPosition = armEncoder.getPosition(); 
 
-        SmartDashboard.putNumber("Arm base position: ", baseEncoderPosition); 
+        armMotorLeft.setSmartCurrentLimit(Constants.ARM_CURRENT_LIMIT_A);
+    /**
+     * Smart Motion coefficients are set on a SparkMaxPIDController object
+     * 
+     * - setSmartMotionMaxVelocity() will limit the velocity in RPM of
+     * the pid controller in Smart Motion mode
+     * - setSmartMotionMinOutputVelocity() will put a lower bound in
+     * RPM of the pid controller in Smart Motion mode
+     * - setSmartMotionMaxAccel() will limit the acceleration in RPM^2
+     * of the pid controller in Smart Motion mode
+     * - setSmartMotionAllowedClosedLoopError() will set the max allowed
+     * error for the pid controller in Smart Motion mode
+     */
+    int smartMotionSlot = 0;
+    armPID.setSmartMotionMaxVelocity(ArmConstants.kArmMaxVel, smartMotionSlot);
+    armPID.setSmartMotionMinOutputVelocity(ArmConstants.kArmMinVel, smartMotionSlot);
+    armPID.setSmartMotionMaxAccel(ArmConstants.kArmMaxAcc, smartMotionSlot);
+    armPID.setSmartMotionAllowedClosedLoopError(ArmConstants.kAllowedErr, smartMotionSlot);
+
+    SmartDashboard.putNumber("Arm base position",baseEncoderPosition);
+    SmartDashboard.putNumber("Arm Enc", armMotorLeft.getEncoder().getPosition());
 
     }
 

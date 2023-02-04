@@ -72,7 +72,13 @@ public class RobotContainer {
                 true),
             m_robotDrive));
 
-            //TODO: squared inputs
+    m_arm.setDefaultCommand(
+      // The left stick controls moving the arm in and out. 
+      new RunCommand(
+        
+          () -> m_arm.raiseArm(
+              MathUtil.applyDeadband(-m_manipulatorController.getLeftY()*Constants.DriveConstants.kDrivingMaxOutput, 0.06)), 
+                          m_arm));
 
   }
 
@@ -97,6 +103,7 @@ public class RobotContainer {
     m_driverController.b().toggleOnTrue(new ForwardPathTest(m_robotDrive)); 
 
     m_driverController.a().toggleOnTrue(new ReversePathTest(m_robotDrive)); 
+    //TODO: add buttons for arm positions 
 
     //m_manipulatorController.().whileTrue(new ) //TODO: add button to prevent from running
 

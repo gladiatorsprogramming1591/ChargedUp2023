@@ -145,13 +145,50 @@ public final class Constants {
   }
 
   public static final class ArmConstants{
-    public static final double kArmP = 0.1; 
-    public static final double kArmI = 0; 
+    public static final double kArmP = 5e-5; 
+    public static final double kArmI = 1e-6; 
     public static final double kArmD = 0; 
-    public static final double kArmFF = 0; 
+    public static final double kArmFF = 0.000156; 
     public static final double kArmMinOutput = -0.3; 
-    public static final double kArmMaxOutput = 0.3; //TODO: update these
-    
+    public static final double kArmMaxOutput = 0.3; //TODO: update these (everybot has max as 1, min as -1)
+    public static final double kArmMaxVel = 2000; //rpm
+    public static final double kArmMinVel = 0; 
+    public static final double kArmMaxAcc = 1500; 
+    public static final double kAllowedErr = 2; 
   }
+ /**
+   * How many amps the arm motor can use.
+   */
+  public static final int ARM_CURRENT_LIMIT_A = 20;
+
+  /**
+   * Percent output to run the arm up/down at
+   */
+  public static final double ARM_OUTPUT_POWER = 0.4;
+
+  /**
+   * How many amps the intake can use while picking up
+   */
+  public static final int INTAKE_CURRENT_LIMIT_A = 25;
+
+  /**
+   * How many amps the intake can use while holding
+   */
+  public static final int INTAKE_HOLD_CURRENT_LIMIT_A = 5;
+
+  /**
+   * Percent output for intaking
+   */
+  public static final double INTAKE_OUTPUT_POWER = 1.0;
+
+  /**
+   * Percent output for holding
+   */
+  public static final double INTAKE_HOLD_POWER = 0.07;
+
+  /**
+   * Time to extend or retract arm in auto
+   */
+  public static final double ARM_EXTEND_TIME_S = 2.0;
 
 }
