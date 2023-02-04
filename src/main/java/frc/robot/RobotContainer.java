@@ -71,6 +71,14 @@ public class RobotContainer {
                 MathUtil.applyDeadband(-m_driverController.getRightX()*Constants.DriveConstants.kDrivingMaxOutput, 0.06),
                 true),
             m_robotDrive));
+      
+      m_driverController.rightStick().toggleOnTrue( new RunCommand (
+            () -> m_robotDrive.drive(
+                MathUtil.applyDeadband(-m_driverController.getLeftY()*Constants.DriveConstants.kDrivingMaxOutput, 0.06),
+                MathUtil.applyDeadband(-m_driverController.getLeftX()*Constants.DriveConstants.kDrivingMaxOutput, 0.06),
+                MathUtil.applyDeadband(-m_driverController.getRightX()*Constants.DriveConstants.kDrivingMaxOutput, 0.06),
+                false),
+            m_robotDrive));
 
     m_arm.setDefaultCommand(
       // The left stick controls moving the arm in and out. 
@@ -104,6 +112,12 @@ public class RobotContainer {
 
     m_driverController.a().toggleOnTrue(new ReversePathTest(m_robotDrive)); 
     //TODO: add buttons for arm positions 
+
+    //TODO: have button to switch from field-oriented to robot oriented
+
+    //TODO: add button to rotate to 0 degrees
+
+    //TODO: add buton to rotate to 180 degrees
 
     //m_manipulatorController.().whileTrue(new ) //TODO: add button to prevent from running
 

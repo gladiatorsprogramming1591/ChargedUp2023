@@ -17,8 +17,8 @@ import frc.robot.Constants.ArmConstants;
 enum armPositions{
     LVLONE, 
     LVLTWO, 
-    LVLTRE; 
-
+    LVLTRE,
+    HOME;
 }
 
 public class ArmSubsystem extends SubsystemBase{
@@ -40,7 +40,8 @@ public class ArmSubsystem extends SubsystemBase{
         // using standard put() method
         map.put(armPositions.LVLONE, 10);
         map.put(armPositions.LVLTWO, 20);
-        map.put(armPositions.LVLTRE, 30); //TODO: empirically measure encoder positions and update here
+        map.put(armPositions.LVLTRE, 30);
+        map.put(armPositions.HOME, 0); //TODO: empirically measure encoder positions and update here
 
         armPID.setP(ArmConstants.kArmP);
         armPID.setI(ArmConstants.kArmI);

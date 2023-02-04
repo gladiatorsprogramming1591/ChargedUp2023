@@ -149,8 +149,8 @@ public final class Constants {
     public static final double kArmI = 1e-6; 
     public static final double kArmD = 0; 
     public static final double kArmFF = 0.000156; 
-    public static final double kArmMinOutput = -0.3; 
-    public static final double kArmMaxOutput = 0.3; //TODO: update these (everybot has max as 1, min as -1)
+    public static final double kArmMinOutput = -0.2; 
+    public static final double kArmMaxOutput = 0.2; //TODO: update these (everybot has max as 1, min as -1)
     public static final double kArmMaxVel = 2000; //rpm
     public static final double kArmMinVel = 0; 
     public static final double kArmMaxAcc = 1500; 
@@ -159,7 +159,7 @@ public final class Constants {
  /**
    * How many amps the arm motor can use.
    */
-  public static final int ARM_CURRENT_LIMIT_A = 20;
+  public static final int ARM_CURRENT_LIMIT_A = 10; //originally 10 for testing
 
   /**
    * Percent output to run the arm up/down at
