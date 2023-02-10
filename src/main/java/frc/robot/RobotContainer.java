@@ -24,7 +24,9 @@ import frc.robot.commands.driveCommands.DriveToLevel;
 import frc.robot.commands.driveCommands.PathPlanner.AutoPathTest;
 import frc.robot.commands.driveCommands.PathPlanner.ForwardPathTest;
 import frc.robot.commands.driveCommands.PathPlanner.ReversePathTest;
+import frc.robot.commands.armCommands.ArmToPosition;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ArmSubsystem; 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -43,6 +45,7 @@ public class RobotContainer {
   // The robot's subsystems
   private final DriveSubsystem m_robotDrive = new DriveSubsystem();
   private final ArmSubsystem m_arm = new ArmSubsystem(); 
+  private final IntakeSubsystem m_intake = new IntakeSubsystem();
 
   // The driver's controller
 //   XboxController m_driverController = new XboxController(OIConstants.kDriverControllerPort);
@@ -72,6 +75,9 @@ public class RobotContainer {
                 true),
             m_robotDrive));
       
+      // Toggle for field oriented vs robot oriented
+      // When right stick pressed down, run the robot oriented drive.
+      // When right stick pressed down again, end the robot oriented drive and run default drive, which is field oriented drive
       m_driverController.rightStick().toggleOnTrue( new RunCommand (
             () -> m_robotDrive.drive(
                 MathUtil.applyDeadband(-m_driverController.getLeftY()*Constants.DriveConstants.kDrivingMaxOutput, 0.06),
@@ -85,9 +91,17 @@ public class RobotContainer {
       new RunCommand(
         
           () -> m_arm.raiseArm(
-              MathUtil.applyDeadband(-m_manipulatorController.getLeftY()*Constants.DriveConstants.kDrivingMaxOutput, 0.06)), 
+              MathUtil.applyDeadband(-m_manipulatorController.getLeftY()*Constants.ArmConstants.kArmMaxOutput, 0.06)), 
                           m_arm));
 
+    m_intake.setDefaultCommand(
+      // The left stick controls moving the arm in and out. 
+      new RunCommand(
+        
+          () -> m_intake.intakeOn(
+              MathUtil.applyDeadband(-m_manipulatorController.getRightY()*Constants.IntakeConstants.kIntakeMaxOutput, 0.06)), 
+                          m_arm));
+                      
   }
 
   /**
@@ -111,6 +125,12 @@ public class RobotContainer {
     m_driverController.b().toggleOnTrue(new ForwardPathTest(m_robotDrive)); 
 
     m_driverController.a().toggleOnTrue(new ReversePathTest(m_robotDrive)); 
+
+    m_manipulatorController.povDown().toggleOnTrue(new ArmToPosition(m_arm, ArmSubsystem.armPositions.HOME));
+    m_manipulatorController.povLeft().toggleOnTrue(new ArmToPosition(m_arm, ArmSubsystem.armPositions.LVLONE));
+    m_manipulatorController.povUp().toggleOnTrue(new ArmToPosition(m_arm, ArmSubsystem.armPositions.LVLTWO));
+    m_manipulatorController.povRight().toggleOnTrue(new ArmToPosition(m_arm, ArmSubsystem.armPositions.LVLTRE));
+  
     //TODO: add buttons for arm positions 
 
     //TODO: have button to switch from field-oriented to robot oriented

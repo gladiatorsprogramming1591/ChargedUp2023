@@ -54,6 +54,7 @@ public final class Constants {
     public static final int kRearRightDrivingCanId = 17;
     public static final int kLeftArmCANId = 1; 
     public static final int kRightArmCANId = 2; 
+    public static final int kPdhCanId = 0; // TODO: Confirm CAN ID for PDH
 
     public static final int kFrontLeftTurningCanId = 10;
     public static final int kRearLeftTurningCanId = 12;
@@ -154,7 +155,13 @@ public final class Constants {
     public static final double kArmMaxVel = 2000; //rpm
     public static final double kArmMinVel = 0; 
     public static final double kArmMaxAcc = 1500; 
-    public static final double kAllowedErr = 2; 
+    public static final double kAllowedErr = 2;
+  }
+
+  public static final class IntakeConstants{
+    public static final int kPdhChannel = 0; // TODO: Need to determine which PDH channel the intake is plugged into 
+    public static final double kStallSpeed = 0.1; // TODO: Need to confirm actual stall speed needed
+    public static final double kIntakeMaxOutput = 0.3;
   }
  /**
    * How many amps the arm motor can use.
@@ -169,7 +176,7 @@ public final class Constants {
   /**
    * How many amps the intake can use while picking up
    */
-  public static final int INTAKE_CURRENT_LIMIT_A = 25;
+  public static final int INTAKE_CURRENT_LIMIT_A = 10; // Everybot was 25
 
   /**
    * How many amps the intake can use while holding

@@ -14,22 +14,21 @@ import com.revrobotics.RelativeEncoder;
 import java.util.EnumMap;
 import frc.robot.Constants.ArmConstants;
 
-enum armPositions{
-    LVLONE, 
-    LVLTWO, 
-    LVLTRE,
-    HOME;
-}
-
 public class ArmSubsystem extends SubsystemBase{
-
+    public enum armPositions{
+        LVLONE, 
+        LVLTWO, 
+        LVLTRE,
+        HOME;
+    }
+        
     private final CANSparkMax armMotorLeft = new CANSparkMax(Constants.DriveConstants.kLeftArmCANId, MotorType.kBrushless); 
     private final CANSparkMax armMotorRight = new CANSparkMax(Constants.DriveConstants.kRightArmCANId, MotorType.kBrushless); 
     private final SparkMaxPIDController armPID = armMotorLeft.getPIDController(); 
     private final RelativeEncoder armEncoder = armMotorLeft.getEncoder(); 
     private double baseEncoderPosition = 0; 
 
-    EnumMap<armPositions, Integer> map = new EnumMap<>(armPositions.class); 
+    EnumMap<armPositions, Double> map = new EnumMap<>(armPositions.class); 
 
     public ArmSubsystem(){
         armMotorRight.follow(armMotorLeft, true); 
@@ -38,10 +37,10 @@ public class ArmSubsystem extends SubsystemBase{
  
         // Adding elements to the Map
         // using standard put() method
-        map.put(armPositions.LVLONE, 10);
-        map.put(armPositions.LVLTWO, 20);
-        map.put(armPositions.LVLTRE, 30);
-        map.put(armPositions.HOME, 0); //TODO: empirically measure encoder positions and update here
+        map.put(armPositions.LVLONE, 10.0);
+        map.put(armPositions.LVLTWO, 20.0);
+        map.put(armPositions.LVLTRE, 30.0);
+        map.put(armPositions.HOME, 0.0); //TODO: empirically measure encoder positions and update here
 
         armPID.setP(ArmConstants.kArmP);
         armPID.setI(ArmConstants.kArmI);
@@ -76,14 +75,18 @@ public class ArmSubsystem extends SubsystemBase{
     }
 
     public void raiseArm(armPositions position){
-        armPID.setReference(map.get(position), ControlType.kPosition);
+        armPID.setReference(map.get(position), CANSparkMax.ControlType.kSmartMotion);
         armPID.setFeedbackDevice(armEncoder);
-
         }
 
     public void raiseArm(double speed){
         armMotorLeft.set(speed);
 
+    }
+
+    public boolean atLevel(armPositions pos){
+        double currentEncoderPosition = armEncoder.getPosition();
+        return (Math.abs(currentEncoderPosition - map.get(pos)) < Constants.ArmConstants.kAllowedErr);
     }
 
 }
