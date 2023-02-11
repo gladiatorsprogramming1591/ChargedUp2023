@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 import com.revrobotics.SparkMaxPIDController;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.RelativeEncoder;
 import java.util.EnumMap;
 import frc.robot.Constants.ArmConstants;
@@ -44,7 +45,10 @@ public class ArmSubsystem extends SubsystemBase{
         armPID.setFF(ArmConstants.kArmFF);
         armPID.setOutputRange(ArmConstants.kArmMinOutput, ArmConstants.kArmMaxOutput);
 
-        baseEncoderPosition = armEncoder.getPosition(); 
+        baseEncoderPosition = armEncoder.getPosition();
+
+        armMotorLeft.setIdleMode(IdleMode.kBrake);
+        armMotorRight.setIdleMode(IdleMode.kBrake);
 
         armMotorLeft.setSmartCurrentLimit(Constants.ARM_CURRENT_LIMIT_A);
         armMotorRight.setSmartCurrentLimit(Constants.ARM_CURRENT_LIMIT_A);

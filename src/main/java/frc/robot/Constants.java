@@ -169,8 +169,8 @@ public final class Constants {
     public static final double kArmI = 1e-6; 
     public static final double kArmD = 0; 
     public static final double kArmFF = 0.000156; 
-    public static final double kArmMinOutput = -0.2; 
-    public static final double kArmMaxOutput = 0.2; //TODO (requires bot): update these (everybot has max as 1, min as -1)
+    public static final double kArmMinOutput = -0.3; 
+    public static final double kArmMaxOutput = 0.3; //TODO (requires bot): update these (everybot has max as 1, min as -1)
     public static final double kArmMaxVel = 2000; //rpm
     public static final double kArmMinVel = 0; 
     public static final double kArmMaxAcc = 1500; 

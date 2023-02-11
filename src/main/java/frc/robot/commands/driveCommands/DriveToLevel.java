@@ -6,7 +6,7 @@ import edu.wpi.first.wpilibj.Timer;
 
 public class DriveToLevel extends CommandBase {
     private DriveSubsystem m_drivetrain;
-    private Timer timer; 
+    private Timer timer = new Timer(); 
 
     public DriveToLevel(DriveSubsystem drivetrain){
         m_drivetrain = drivetrain;

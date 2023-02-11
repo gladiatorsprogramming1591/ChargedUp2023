@@ -90,7 +90,7 @@ public class RobotContainer {
             m_robotDrive));
 
       // POV Rotation
-      m_driverController.povRight().toggleOnTrue( new RunCommand (
+      m_driverController.b().toggleOnTrue( new RunCommand (
             () -> m_robotDrive.TurnToTarget(
                 -MathUtil.applyDeadband(m_driverController.getLeftY(), OIConstants.kDriveDeadband),
                 -MathUtil.applyDeadband(m_driverController.getLeftX(), OIConstants.kDriveDeadband),
@@ -98,7 +98,7 @@ public class RobotContainer {
                 true, true,
                 Constants.DriveConstants.kDrivingMaxOutput),
             m_robotDrive));
-      m_driverController.povLeft().toggleOnTrue( new RunCommand (
+      m_driverController.x().toggleOnTrue( new RunCommand (
             () -> m_robotDrive.TurnToTarget(
                 -MathUtil.applyDeadband(m_driverController.getLeftY(), OIConstants.kDriveDeadband),
                 -MathUtil.applyDeadband(m_driverController.getLeftX(), OIConstants.kDriveDeadband),
@@ -106,7 +106,7 @@ public class RobotContainer {
                 true, true,
                 Constants.DriveConstants.kDrivingMaxOutput),
             m_robotDrive));
-      m_driverController.povUp().toggleOnTrue( new RunCommand (
+      m_driverController.y().toggleOnTrue( new RunCommand (
             () -> m_robotDrive.TurnToTarget(
                 -MathUtil.applyDeadband(m_driverController.getLeftY(), OIConstants.kDriveDeadband),
                 -MathUtil.applyDeadband(m_driverController.getLeftX(), OIConstants.kDriveDeadband),
@@ -114,7 +114,7 @@ public class RobotContainer {
                 true, true,
                 Constants.DriveConstants.kDrivingMaxOutput),
             m_robotDrive));
-      m_driverController.povDown().toggleOnTrue( new RunCommand (
+      m_driverController.a().toggleOnTrue( new RunCommand (
             () -> m_robotDrive.TurnToTarget(
                 -MathUtil.applyDeadband(m_driverController.getLeftY(), OIConstants.kDriveDeadband),
                 -MathUtil.applyDeadband(m_driverController.getLeftX(), OIConstants.kDriveDeadband),
@@ -128,7 +128,7 @@ public class RobotContainer {
       new RunCommand(
         
           () -> m_arm.raiseArm(
-              MathUtil.applyDeadband(-m_manipulatorController.getLeftY()*Constants.ArmConstants.kArmMaxOutput, OIConstants.kArmDeadband)), 
+              MathUtil.applyDeadband(m_manipulatorController.getLeftY()*Constants.ArmConstants.kArmMaxOutput, OIConstants.kArmDeadband)), 
                           m_arm));
 
     m_intake.setDefaultCommand(
@@ -136,8 +136,9 @@ public class RobotContainer {
       new RunCommand(
         
           () -> m_intake.intakeOn(
-              MathUtil.applyDeadband(-m_manipulatorController.getRightY()*Constants.IntakeConstants.kIntakeMaxOutput, OIConstants.kIntakeDeadband)), 
-                          m_arm));
+              -m_manipulatorController.getRightY()), 
+            //   MathUtil.applyDeadband(-m_manipulatorController.getRightY(), OIConstants.kIntakeDeadband)), 
+                          m_intake));
                       
   }
 
