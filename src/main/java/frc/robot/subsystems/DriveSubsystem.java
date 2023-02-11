@@ -314,9 +314,7 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   public boolean isLevel(){
-    //TODO - Set 2 second timer
-    // return Math.abs(m_navX.getRoll()) < Constants.AutoConstants.kLevelTolerance;
-    return false;
+    return Math.abs(m_navX.getRoll()) < Constants.AutoConstants.kLevelTolerance;
   }
 
   public boolean driveToAngle (double angle){

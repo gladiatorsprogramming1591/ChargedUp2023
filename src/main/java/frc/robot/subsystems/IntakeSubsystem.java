@@ -11,7 +11,7 @@ import frc.robot.Constants;
 
 public class IntakeSubsystem extends SubsystemBase{
         
-    private final CANSparkMax intakeMotor = new CANSparkMax(Constants.CANIDConstants.kLeftArmCANId, MotorType.kBrushed); 
+    private final CANSparkMax intakeMotor = new CANSparkMax(Constants.CANIDConstants.kIntakeCANId, MotorType.kBrushed); 
 
     PowerDistribution powerDist = new PowerDistribution(Constants.CANIDConstants.kPdhCanId, ModuleType.kRev);
     double intakeCurrent = 0;

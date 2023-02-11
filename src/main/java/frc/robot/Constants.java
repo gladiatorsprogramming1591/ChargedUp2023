@@ -26,23 +26,24 @@ import edu.wpi.first.math.util.Units;
 public final class Constants {
 
   public static final class CANIDConstants {
-        // SPARK MAX CAN IDs
-        public static final int kFrontLeftDrivingCanId = 11;
-        public static final int kRearLeftDrivingCanId = 13;
-        public static final int kFrontRightDrivingCanId = 15;
-        public static final int kRearRightDrivingCanId = 17;
+    // SPARK MAX CAN IDs
+    public static final int kFrontLeftDrivingCanId = 11;
+    public static final int kRearLeftDrivingCanId = 13;
+    public static final int kFrontRightDrivingCanId = 15;
+    public static final int kRearRightDrivingCanId = 17;
     
-        public static final int kFrontLeftTurningCanId = 10;
-        public static final int kRearLeftTurningCanId = 12;
-        public static final int kFrontRightTurningCanId = 14;
-        public static final int kRearRightTurningCanId = 16;
+    public static final int kFrontLeftTurningCanId = 10;
+    public static final int kRearLeftTurningCanId = 12;
+    public static final int kFrontRightTurningCanId = 14;
+    public static final int kRearRightTurningCanId = 16;
 
-        public static final int kLeftArmCANId = 1; 
-        public static final int kRightArmCANId = 2;
+    public static final int kLeftArmCANId = 1; 
+    public static final int kRightArmCANId = 2;
 
-        //Power Distribution Hub (PDH) CAN ID
-        public static final int kPdhCanId = 0; // TODO (requires bot): Confirm CAN ID for PDH
-    
+    public static final int kIntakeCANId = 3;
+
+    //Power Distribution Hub (PDH) CAN ID
+    public static final int kPdhCanId = 0; // TODO (requires bot): Confirm CAN ID for PDH
   }
 
   public static final class DriveConstants {
@@ -154,7 +155,7 @@ public final class Constants {
     public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(
         kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
 
-    public static final double kLevelTolerance = 1;
+    public static final double kLevelTolerance = 2.25;  //field tolerance is 2.25 degrees 
 
     public static final double kDriveAngle = 14;
   }
