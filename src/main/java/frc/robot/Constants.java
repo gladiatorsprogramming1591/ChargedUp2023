@@ -24,6 +24,28 @@ import edu.wpi.first.math.util.Units;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+
+  public static final class CANIDConstants {
+    // SPARK MAX CAN IDs
+    public static final int kFrontLeftDrivingCanId = 11;
+    public static final int kRearLeftDrivingCanId = 13;
+    public static final int kFrontRightDrivingCanId = 15;
+    public static final int kRearRightDrivingCanId = 17;
+    
+    public static final int kFrontLeftTurningCanId = 10;
+    public static final int kRearLeftTurningCanId = 12;
+    public static final int kFrontRightTurningCanId = 14;
+    public static final int kRearRightTurningCanId = 16;
+
+    public static final int kLeftArmCANId = 5; 
+    public static final int kRightArmCANId = 4;
+
+    public static final int kIntakeCANId = 3;
+
+    //Power Distribution Hub (PDH) CAN ID
+    public static final int kPdhCanId = 1;
+  }
+
   public static final class DriveConstants {
     // Driving Parameters - Note that these are not the maximum capable speeds of
     // the robot, rather the allowed maximum speeds
@@ -51,22 +73,13 @@ public final class Constants {
     public static final double kBackLeftChassisAngularOffset = Math.PI;
     public static final double kBackRightChassisAngularOffset = Math.PI / 2;
 
-    // SPARK MAX CAN IDs
-    public static final int kFrontLeftDrivingCanId = 11;
-    public static final int kRearLeftDrivingCanId = 13;
-    public static final int kFrontRightDrivingCanId = 15;
-    public static final int kRearRightDrivingCanId = 17;
-    public static final int kLeftArmCANId = 1; 
-    public static final int kRightArmCANId = 2; 
-
-    public static final int kFrontLeftTurningCanId = 10;
-    public static final int kRearLeftTurningCanId = 12;
-    public static final int kFrontRightTurningCanId = 14;
-    public static final int kRearRightTurningCanId = 16;
-
     public static final boolean kGyroReversed = false;
 
     public static final double kDrivingMaxOutput = 0.25;
+    public static final double faceForward = 180;
+    public static final double faceBackward = 0;
+    public static final double faceLeft = 90;
+	  public static final double faceRight = 270;
   }
 
   public static final class ModuleConstants {
@@ -124,6 +137,8 @@ public final class Constants {
     public static final int kDriverControllerPort = 0;
     public static final int kManipulatorControllerPort = 1; 
     public static final double kDriveDeadband = 0.05;
+    public static final double kArmDeadband = 0.05;
+    public static final double kIntakeDeadband = 0.05;
   }
 
   public static final class AutoConstants {
@@ -140,7 +155,7 @@ public final class Constants {
     public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(
         kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
 
-    public static final double kLevelTolerance = 1;
+    public static final double kLevelTolerance = 2.25;  //field tolerance is 2.25 degrees 
 
     public static final double kDriveAngle = 14;
   }
@@ -150,13 +165,56 @@ public final class Constants {
   }
 
   public static final class ArmConstants{
-    public static final double kArmP = 0.1; 
-    public static final double kArmI = 0; 
+    public static final double kArmP = 5e-5; 
+    public static final double kArmI = 1e-6; 
     public static final double kArmD = 0; 
-    public static final double kArmFF = 0; 
+    public static final double kArmFF = 0.000156; 
     public static final double kArmMinOutput = -0.3; 
-    public static final double kArmMaxOutput = 0.3; //TODO: update these
-    
+    public static final double kArmMaxOutput = 0.3; //TODO (requires bot): update these (everybot has max as 1, min as -1)
+    public static final double kArmMaxVel = 2000; //rpm
+    public static final double kArmMinVel = 0; 
+    public static final double kArmMaxAcc = 1500; 
+    public static final double kAllowedErr = 2;
   }
+
+  public static final class IntakeConstants{
+    public static final int kPdhChannel = 0; // TODO (requires bot): Need to determine which PDH channel the intake is plugged into 
+    public static final double kStallSpeed = 0.1; // TODO (requires bot): Need to confirm actual stall speed needed
+    public static final double kIntakeMaxOutput = 0.3;
+  }
+ /**
+   * How many amps the arm motor can use.
+   */
+  public static final int ARM_CURRENT_LIMIT_A = 10; //originally 10 for testing
+
+  /**
+   * Percent output to run the arm up/down at
+   */
+  public static final double ARM_OUTPUT_POWER = 0.4;
+
+  /**
+   * How many amps the intake can use while picking up
+   */
+  public static final int INTAKE_CURRENT_LIMIT_A = 10; // Everybot was 25
+
+  /**
+   * How many amps the intake can use while holding
+   */
+  public static final int INTAKE_HOLD_CURRENT_LIMIT_A = 5;
+
+  /**
+   * Percent output for intaking
+   */
+  public static final double INTAKE_OUTPUT_POWER = 1.0;
+
+  /**
+   * Percent output for holding
+   */
+  public static final double INTAKE_HOLD_POWER = 0.07;
+
+  /**
+   * Time to extend or retract arm in auto
+   */
+  public static final double ARM_EXTEND_TIME_S = 2.0;
 
 }

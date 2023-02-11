@@ -18,40 +18,41 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+// import frc.robot.Constants;
+import edu.wpi.first.util.WPIUtilJNI;
 // import edu.wpi.first.wpilibj.ADIS16470_IMU;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.Constants;
-// import frc.robot.Constants;
-import edu.wpi.first.util.WPIUtilJNI;
-import frc.robot.Constants.DriveConstants;
-import frc.utils.SwerveUtils;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
+import frc.robot.Constants.CANIDConstants;
+import frc.robot.Constants.DriveConstants;
+import frc.utils.SwerveUtils;
 
 public class DriveSubsystem extends SubsystemBase {
   // Create MAXSwerveModules
   private final MAXSwerveModule m_frontLeft = new MAXSwerveModule(
-      DriveConstants.kFrontLeftDrivingCanId,
-      DriveConstants.kFrontLeftTurningCanId,
+      CANIDConstants.kFrontLeftDrivingCanId,
+      CANIDConstants.kFrontLeftTurningCanId,
       DriveConstants.kFrontLeftChassisAngularOffset);
 
   private final MAXSwerveModule m_frontRight = new MAXSwerveModule(
-      DriveConstants.kFrontRightDrivingCanId,
-      DriveConstants.kFrontRightTurningCanId,
+      CANIDConstants.kFrontRightDrivingCanId,
+      CANIDConstants.kFrontRightTurningCanId,
       DriveConstants.kFrontRightChassisAngularOffset);
 
   private final MAXSwerveModule m_rearLeft = new MAXSwerveModule(
-      DriveConstants.kRearLeftDrivingCanId,
-      DriveConstants.kRearLeftTurningCanId,
+      CANIDConstants.kRearLeftDrivingCanId,
+      CANIDConstants.kRearLeftTurningCanId,
       DriveConstants.kBackLeftChassisAngularOffset);
 
   private final MAXSwerveModule m_rearRight = new MAXSwerveModule(
-      DriveConstants.kRearRightDrivingCanId,
-      DriveConstants.kRearRightTurningCanId,
+      CANIDConstants.kRearRightDrivingCanId,
+      CANIDConstants.kRearRightTurningCanId,
       DriveConstants.kBackRightChassisAngularOffset);
 
   // The gyro sensor
@@ -82,6 +83,7 @@ public class DriveSubsystem extends SubsystemBase {
 
   private int count = 0;
   private final PIDController m_rollPidController = new PIDController(0.005, 0.000, 0.001); // 1/21 ki:0.0055 kd: 0.0025
+  private final PIDController m_rotPidController = new PIDController(0.01, 0.000, 0.000); // TODO (requires bot): values need testing
 
   // private final PIDController xTrajPID = new PIDController(0.05, 0, 0);
 
@@ -147,15 +149,19 @@ public class DriveSubsystem extends SubsystemBase {
    *                      field.
    * @param rateLimit     Whether to enable rate limiting for smoother control.
    */
-
+  
   public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative) {
-    drive(xSpeed, ySpeed, rot, fieldRelative, false, false, 1);  //TODO - Do we want rateLimit for auto?
+    drive(xSpeed, ySpeed, rot, fieldRelative, false, false, 1, false);  //TODO - Do we want rateLimit for auto?
   }
   public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative, boolean rateLimit) {
-    drive(xSpeed, ySpeed, rot, fieldRelative, rateLimit, false, 1);
+    drive(xSpeed, ySpeed, rot, fieldRelative, rateLimit, false, 1, false);
+  }
+  public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative, boolean rateLimit, boolean squaredInputs, double maxOutput) {
+    drive(xSpeed, ySpeed, rot, fieldRelative, rateLimit, squaredInputs, maxOutput, false);
   }
 
-  public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative, boolean rateLimit, boolean squaredInputs, double maxOutput) {
+  // Main drive method
+  public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative, boolean rateLimit, boolean squaredInputs, double maxOutput, boolean rotException) {
     
     double xSpeedCommanded;
     double ySpeedCommanded;
@@ -163,12 +169,12 @@ public class DriveSubsystem extends SubsystemBase {
     if (squaredInputs) {
       xSpeed = Math.copySign(xSpeed*xSpeed, xSpeed);
       ySpeed = Math.copySign(ySpeed*ySpeed, ySpeed);
-      rot = Math.copySign(rot*rot, rot);
+      if (!rotException) {rot = Math.copySign(rot*rot, rot);}
     }
 
     xSpeed *= maxOutput;
     ySpeed *= maxOutput;
-    rot *= maxOutput;
+    if (!rotException) {rot *= maxOutput;}
 
     if (rateLimit) {
       // Convert XY to polar for rate limiting
@@ -308,15 +314,13 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   public boolean isLevel(){
-    //TODO - Set 2 second timer
-    // return Math.abs(m_navX.getRoll()) < Constants.AutoConstants.kLevelTolerance;
-    return false;
+    return Math.abs(m_navX.getRoll()) < Constants.AutoConstants.kLevelTolerance;
   }
 
   public boolean driveToAngle (double angle){
     boolean atAngle = true;
     double currentAngle = m_navX.getRoll();
-    // TODO: Angle could be positive or negative, need to handle both
+    // TODO (requires bot): Angle could be positive or negative, need to handle both
     // Should be positive if driving forward, negative if driving backward onto the power station ramp
     if ( currentAngle <= angle) {
         drive(.20, 0, 0, true);
@@ -331,9 +335,9 @@ public class DriveSubsystem extends SubsystemBase {
     }
     return atAngle;
   }
-
+    
     // Assuming this method is part of a drivetrain subsystem that provides the necessary methods
-    // TODO(requires P-bot) - Adjust p for x and y
+    // TODO(requires bot) - Adjust p for x and y
   public Command followTrajectoryCommand(PathPlannerTrajectory traj, boolean isFirstPath) {
     return new SequentialCommandGroup(
         new InstantCommand(() -> {
@@ -354,9 +358,14 @@ public class DriveSubsystem extends SubsystemBase {
             this // Requires this drive subsystem
 
             //1 inch undershot Forward/Backward. Increasing Xkp and Xki increases this error
-            //TODO (requires P-bot) - Adjust max vel and acc constaints
+            //TODO (requires bot) - Adjust max vel and acc constaints
         )
     );
   }
+  //TODO: use profiled pid if needed
+  public void TurnToTarget(double X, double Y, double angle, boolean rateLimit, boolean squaredInputs, double maxOutput){
+    double pidOut = MathUtil.clamp(m_rotPidController.calculate(-m_navX.getAngle()%360, angle), -0.30, 0.30);
+    drive(X, Y, pidOut, true, rateLimit, squaredInputs, maxOutput, true);
+  //NOTE: added rotExeption to keep the driver's SquaredInputs and MaxOutput seperate from PID rotation
+  }
 }
-//TODO - command to give rotation to PID to square up with grid while giving driver translation control
