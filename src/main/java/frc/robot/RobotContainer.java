@@ -14,10 +14,17 @@ import edu.wpi.first.math.MathUtil;
 // import edu.wpi.first.math.trajectory.TrajectoryConfig;
 // import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.RunCommand;
+// import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+// import java.util.List;
 // import edu.wpi.first.wpilibj.PS4Controller.Button;
 // import frc.robot.Constants.AutoConstants;
 // import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
+import frc.robot.commands.armCommands.ArmToPosition;
 import frc.robot.commands.driveCommands.AutoLevel;
 import frc.robot.commands.driveCommands.DriveToAngle;
 import frc.robot.commands.driveCommands.DriveToLevel;
@@ -25,14 +32,9 @@ import frc.robot.commands.driveCommands.PathPlanner.AutoPathTest;
 import frc.robot.commands.driveCommands.PathPlanner.ForwardPathTest;
 import frc.robot.commands.driveCommands.PathPlanner.ReversePathTest;
 import frc.robot.commands.navXCommands.ResetGyro;
+import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.subsystems.ArmSubsystem; 
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.RunCommand;
-// import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-// import java.util.List;
+import frc.robot.subsystems.IntakeSubsystem;
 
 /*
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -44,6 +46,7 @@ public class RobotContainer {
   // The robot's subsystems
   private final DriveSubsystem m_robotDrive = new DriveSubsystem();
   private final ArmSubsystem m_arm = new ArmSubsystem(); 
+  private final IntakeSubsystem m_intake = new IntakeSubsystem();
 
   // The driver's controller
 //   XboxController m_driverController = new XboxController(OIConstants.kDriverControllerPort);
@@ -73,6 +76,59 @@ public class RobotContainer {
                 true, true, true,
                 Constants.DriveConstants.kDrivingMaxOutput),
             m_robotDrive));
+      
+      // Toggle for field oriented vs robot oriented
+      // When right stick pressed down, run the robot oriented drive.
+      // When right stick pressed down again, end the robot oriented drive and run default drive, which is field oriented drive
+      m_driverController.rightStick().toggleOnTrue( new RunCommand (
+            () -> m_robotDrive.drive(
+                -MathUtil.applyDeadband(m_driverController.getLeftY(), OIConstants.kDriveDeadband),
+                -MathUtil.applyDeadband(m_driverController.getLeftX(), OIConstants.kDriveDeadband),
+                -MathUtil.applyDeadband(m_driverController.getRightX(), OIConstants.kDriveDeadband),
+                false, true, true,
+                Constants.DriveConstants.kDrivingMaxOutput),
+            m_robotDrive));
+
+      m_driverController.povRight().toggleOnTrue( new RunCommand (
+            () -> m_robotDrive.TurnToTarget(
+                -MathUtil.applyDeadband(m_driverController.getLeftY(), OIConstants.kDriveDeadband),
+                -MathUtil.applyDeadband(m_driverController.getLeftX(), OIConstants.kDriveDeadband),
+               Constants.DriveConstants.faceRight),
+            m_robotDrive));
+      m_driverController.povLeft().toggleOnTrue( new RunCommand (
+              () -> m_robotDrive.TurnToTarget(
+                  -MathUtil.applyDeadband(m_driverController.getLeftY(), OIConstants.kDriveDeadband),
+                  -MathUtil.applyDeadband(m_driverController.getLeftX(), OIConstants.kDriveDeadband),
+                 Constants.DriveConstants.faceLeft),
+              m_robotDrive));
+      m_driverController.povUp().toggleOnTrue( new RunCommand (
+            () -> m_robotDrive.TurnToTarget(
+                -MathUtil.applyDeadband(m_driverController.getLeftY(), OIConstants.kDriveDeadband),
+                -MathUtil.applyDeadband(m_driverController.getLeftX(), OIConstants.kDriveDeadband),
+               Constants.DriveConstants.faceForward),
+            m_robotDrive));
+      m_driverController.povDown().toggleOnTrue( new RunCommand (
+              () -> m_robotDrive.TurnToTarget(
+                  -MathUtil.applyDeadband(m_driverController.getLeftY(), OIConstants.kDriveDeadband),
+                  -MathUtil.applyDeadband(m_driverController.getLeftX(), OIConstants.kDriveDeadband),
+                 Constants.DriveConstants.faceBackward),
+              m_robotDrive));
+    m_arm.setDefaultCommand(
+      // The left stick controls moving the arm in and out. 
+      new RunCommand(
+        
+          () -> m_arm.raiseArm(
+              MathUtil.applyDeadband(-m_manipulatorController.getLeftY()*Constants.ArmConstants.kArmMaxOutput, OIConstants.kArmDeadband)), 
+                          m_arm));
+
+    m_intake.setDefaultCommand(
+      // The left stick controls moving the arm in and out. 
+      new RunCommand(
+        
+          () -> m_intake.intakeOn(
+              MathUtil.applyDeadband(-m_manipulatorController.getRightY()*Constants.IntakeConstants.kIntakeMaxOutput, OIConstants.kIntakeDeadband)), 
+                          m_arm));
+                      
   }
 
   /**
@@ -98,7 +154,14 @@ public class RobotContainer {
     m_driverController.a().toggleOnTrue(new ReversePathTest(m_robotDrive)); 
 
     m_driverController.povDown().whileTrue(new ResetGyro(m_robotDrive));
-    //m_manipulatorController.().whileTrue(new ) //TODO: add button to prevent from running
+    
+    m_manipulatorController.povDown().toggleOnTrue(new ArmToPosition(m_arm, ArmSubsystem.armPositions.HOME));
+    m_manipulatorController.povLeft().toggleOnTrue(new ArmToPosition(m_arm, ArmSubsystem.armPositions.LVLONE));
+    m_manipulatorController.povUp().toggleOnTrue(new ArmToPosition(m_arm, ArmSubsystem.armPositions.LVLTWO));
+    m_manipulatorController.povRight().toggleOnTrue(new ArmToPosition(m_arm, ArmSubsystem.armPositions.LVLTRE));
+  
+
+    // m_manipulatorController.().whileTrue(new ) //TODO: add button to prevent from running
 
     // m_driverController.povDown().whileTrue(new ResetGyro());
   }
