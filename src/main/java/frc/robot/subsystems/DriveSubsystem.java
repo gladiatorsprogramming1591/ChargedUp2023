@@ -149,15 +149,19 @@ public class DriveSubsystem extends SubsystemBase {
    *                      field.
    * @param rateLimit     Whether to enable rate limiting for smoother control.
    */
-
+  
   public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative) {
-    drive(xSpeed, ySpeed, rot, fieldRelative, false, false, 1);  //TODO - Do we want rateLimit for auto?
+    drive(xSpeed, ySpeed, rot, fieldRelative, false, false, 1, false);  //TODO - Do we want rateLimit for auto?
   }
   public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative, boolean rateLimit) {
-    drive(xSpeed, ySpeed, rot, fieldRelative, rateLimit, false, 1);
+    drive(xSpeed, ySpeed, rot, fieldRelative, rateLimit, false, 1, false);
+  }
+  public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative, boolean rateLimit, boolean squaredInputs, double maxOutput) {
+    drive(xSpeed, ySpeed, rot, fieldRelative, rateLimit, squaredInputs, maxOutput, false);
   }
 
-  public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative, boolean rateLimit, boolean squaredInputs, double maxOutput) {
+  // Main drive method
+  public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative, boolean rateLimit, boolean squaredInputs, double maxOutput, boolean rotException) {
     
     double xSpeedCommanded;
     double ySpeedCommanded;
@@ -165,12 +169,12 @@ public class DriveSubsystem extends SubsystemBase {
     if (squaredInputs) {
       xSpeed = Math.copySign(xSpeed*xSpeed, xSpeed);
       ySpeed = Math.copySign(ySpeed*ySpeed, ySpeed);
-      rot = Math.copySign(rot*rot, rot);
+      if (!rotException) {rot = Math.copySign(rot*rot, rot);}
     }
 
     xSpeed *= maxOutput;
     ySpeed *= maxOutput;
-    rot *= maxOutput;
+    if (!rotException) {rot *= maxOutput;}
 
     if (rateLimit) {
       // Convert XY to polar for rate limiting
@@ -361,9 +365,9 @@ public class DriveSubsystem extends SubsystemBase {
     );
   }
   //TODO: use profiled pid if needed
-  public void TurnToTarget(double X, double Y, double angle){
+  public void TurnToTarget(double X, double Y, double angle, boolean rateLimit, boolean squaredInputs, double maxOutput){
     double pidOut = MathUtil.clamp(m_rotPidController.calculate(-m_navX.getAngle()%360, angle), -0.30, 0.30);
-    drive(X, Y, pidOut, true);
+    drive(X, Y, pidOut, true, rateLimit, squaredInputs, maxOutput, true);
+  //NOTE: added rotExeption to keep the driver's SquaredInputs and MaxOutput seperate from PID rotation
   }
 }
-//TODO - command to give rotation to PID to square up with grid while giving driver translation control

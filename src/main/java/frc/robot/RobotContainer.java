@@ -89,30 +89,40 @@ public class RobotContainer {
                 Constants.DriveConstants.kDrivingMaxOutput),
             m_robotDrive));
 
+      // POV Rotation
       m_driverController.povRight().toggleOnTrue( new RunCommand (
             () -> m_robotDrive.TurnToTarget(
                 -MathUtil.applyDeadband(m_driverController.getLeftY(), OIConstants.kDriveDeadband),
                 -MathUtil.applyDeadband(m_driverController.getLeftX(), OIConstants.kDriveDeadband),
-               Constants.DriveConstants.faceRight),
+                Constants.DriveConstants.faceRight,
+                true, true,
+                Constants.DriveConstants.kDrivingMaxOutput),
             m_robotDrive));
       m_driverController.povLeft().toggleOnTrue( new RunCommand (
-              () -> m_robotDrive.TurnToTarget(
-                  -MathUtil.applyDeadband(m_driverController.getLeftY(), OIConstants.kDriveDeadband),
-                  -MathUtil.applyDeadband(m_driverController.getLeftX(), OIConstants.kDriveDeadband),
-                 Constants.DriveConstants.faceLeft),
-              m_robotDrive));
+            () -> m_robotDrive.TurnToTarget(
+                -MathUtil.applyDeadband(m_driverController.getLeftY(), OIConstants.kDriveDeadband),
+                -MathUtil.applyDeadband(m_driverController.getLeftX(), OIConstants.kDriveDeadband),
+                Constants.DriveConstants.faceLeft,
+                true, true,
+                Constants.DriveConstants.kDrivingMaxOutput),
+            m_robotDrive));
       m_driverController.povUp().toggleOnTrue( new RunCommand (
             () -> m_robotDrive.TurnToTarget(
                 -MathUtil.applyDeadband(m_driverController.getLeftY(), OIConstants.kDriveDeadband),
                 -MathUtil.applyDeadband(m_driverController.getLeftX(), OIConstants.kDriveDeadband),
-               Constants.DriveConstants.faceForward),
+                Constants.DriveConstants.faceForward,
+                true, true,
+                Constants.DriveConstants.kDrivingMaxOutput),
             m_robotDrive));
       m_driverController.povDown().toggleOnTrue( new RunCommand (
-              () -> m_robotDrive.TurnToTarget(
-                  -MathUtil.applyDeadband(m_driverController.getLeftY(), OIConstants.kDriveDeadband),
-                  -MathUtil.applyDeadband(m_driverController.getLeftX(), OIConstants.kDriveDeadband),
-                 Constants.DriveConstants.faceBackward),
-              m_robotDrive));
+            () -> m_robotDrive.TurnToTarget(
+                -MathUtil.applyDeadband(m_driverController.getLeftY(), OIConstants.kDriveDeadband),
+                -MathUtil.applyDeadband(m_driverController.getLeftX(), OIConstants.kDriveDeadband),
+                Constants.DriveConstants.faceBackward,
+                true, true,
+                Constants.DriveConstants.kDrivingMaxOutput),
+            m_robotDrive));
+            
     m_arm.setDefaultCommand(
       // The left stick controls moving the arm in and out. 
       new RunCommand(
