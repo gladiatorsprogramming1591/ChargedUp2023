@@ -37,13 +37,13 @@ public final class Constants {
     public static final int kFrontRightTurningCanId = 14;
     public static final int kRearRightTurningCanId = 16;
 
-    public static final int kLeftArmCANId = 1; 
-    public static final int kRightArmCANId = 2;
+    public static final int kLeftArmCANId = 5; 
+    public static final int kRightArmCANId = 4;
 
     public static final int kIntakeCANId = 3;
 
     //Power Distribution Hub (PDH) CAN ID
-    public static final int kPdhCanId = 0; // TODO (requires bot): Confirm CAN ID for PDH
+    public static final int kPdhCanId = 1;
   }
 
   public static final class DriveConstants {
