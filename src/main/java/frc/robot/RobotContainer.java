@@ -123,22 +123,27 @@ public class RobotContainer {
                 Constants.DriveConstants.kDrivingMaxOutput),
             m_robotDrive));
             
+    //TODO: move to driver's stick
     m_arm.setDefaultCommand(
       // The left stick controls moving the arm in and out. 
-      new RunCommand(
+        new RunCommand(
         
-          () -> m_arm.raiseArm(
-              MathUtil.applyDeadband(m_manipulatorController.getLeftY()*Constants.ArmConstants.kArmMaxOutput, OIConstants.kArmDeadband)), 
-                          m_arm));
+            () -> m_arm.raiseArm(
+                MathUtil.applyDeadband(m_driverController.getRightTriggerAxis()*Constants.ArmConstants.kArmMaxOutput, OIConstants.kArmDeadband),
+                MathUtil.applyDeadband(m_driverController.getLeftTriggerAxis()*Constants.ArmConstants.kArmMaxOutput, OIConstants.kArmDeadband)), 
+            m_arm));
+            // () -> m_arm.raiseArm(
+            //     MathUtil.applyDeadband(m_driverController.getRightTriggerAxis()*Constants.ArmConstants.kArmMaxOutput, OIConstants.kArmDeadband)),
+            // m_arm));
 
     m_intake.setDefaultCommand(
-      // The left stick controls moving the arm in and out. 
-      new RunCommand(
+      // The right stick controls the intake speed and direction. 
+        new RunCommand(
         
-          () -> m_intake.intakeOn(
-              -m_manipulatorController.getRightY()), 
-            //   MathUtil.applyDeadband(-m_manipulatorController.getRightY(), OIConstants.kIntakeDeadband)), 
-                          m_intake));
+            () -> m_intake.intakeOn(
+                -m_manipulatorController.getRightY()), 
+                // MathUtil.applyDeadband(-m_manipulatorController.getRightY(), OIConstants.kIntakeDeadband)), 
+            m_intake));
                       
   }
 

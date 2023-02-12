@@ -362,10 +362,10 @@ public class DriveSubsystem extends SubsystemBase {
         )
     );
   }
-  //TODO: use profiled pid if needed
+  // TODO: use profiled pid if needed
+  // TODO: add %180 and other functionality to ensure rot takes the shortest path
   public void TurnToTarget(double X, double Y, double angle, boolean rateLimit, boolean squaredInputs, double maxOutput){
     double pidOut = MathUtil.clamp(m_rotPidController.calculate(-m_navX.getAngle()%360, angle), -0.30, 0.30);
-    drive(X, Y, pidOut, true, rateLimit, squaredInputs, maxOutput, true);
-  //NOTE: added rotExeption to keep the driver's SquaredInputs and MaxOutput seperate from PID rotation
+    drive(X, Y, pidOut, true, rateLimit, squaredInputs, maxOutput, true); // added rotExeption to keep the driver's SquaredInputs and MaxOutput seperate from PID rotation
   }
 }

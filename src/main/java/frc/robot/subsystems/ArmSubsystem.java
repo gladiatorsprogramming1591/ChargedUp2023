@@ -78,11 +78,15 @@ public class ArmSubsystem extends SubsystemBase{
     public void raiseArm(armPositions position){
         armPID.setReference(map.get(position), CANSparkMax.ControlType.kSmartMotion);
         armPID.setFeedbackDevice(armEncoder);
-        }
+    }
 
     public void raiseArm(double speed){
         armMotorLeft.set(speed);
+    }
 
+    public void raiseArm(double raiseSpeed, double lowerSpeed){
+        double speed = raiseSpeed - lowerSpeed;
+        armMotorLeft.set(speed);
     }
 
     public boolean atLevel(armPositions pos){
