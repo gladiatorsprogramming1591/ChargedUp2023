@@ -30,13 +30,14 @@ public class ArmSubsystem extends SubsystemBase{
     EnumMap<armPositions, Double> map = new EnumMap<>(armPositions.class); 
 
     public ArmSubsystem(){
+        armMotorLeft.setInverted(true);
         armMotorRight.follow(armMotorLeft, true); 
  
         // Adding elements to the Map
         // using standard put() method
-        map.put(armPositions.LVLONE, 10.0);
-        map.put(armPositions.LVLTWO, 20.0);
-        map.put(armPositions.LVLTRE, 30.0);
+        map.put(armPositions.LVLONE, 20.0);
+        map.put(armPositions.LVLTWO, 40.0);
+        map.put(armPositions.LVLTRE, 75.6);
         map.put(armPositions.HOME, 0.0); //TODO (requires bot): empirically measure encoder positions and update here
 
         armPID.setP(ArmConstants.kArmP);
@@ -75,6 +76,11 @@ public class ArmSubsystem extends SubsystemBase{
 
     }
 
+    @Override
+    public void periodic() {
+        SmartDashboard.putNumber("Arm Enc", armMotorLeft.getEncoder().getPosition());
+    }
+
     public void raiseArm(armPositions position){
         armPID.setReference(map.get(position), CANSparkMax.ControlType.kSmartMotion);
         armPID.setFeedbackDevice(armEncoder);
@@ -85,7 +91,7 @@ public class ArmSubsystem extends SubsystemBase{
     }
 
     public void raiseArm(double raiseSpeed, double lowerSpeed){
-        double speed = raiseSpeed - lowerSpeed;
+        double speed = raiseSpeed - lowerSpeed; //positive output to raise arm
         armMotorLeft.set(speed);
     }
 

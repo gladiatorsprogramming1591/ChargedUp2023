@@ -90,6 +90,7 @@ public class DriveSubsystem extends SubsystemBase {
 
   /** Creates a new DriveSubsystem. */
   public DriveSubsystem() {
+    m_rotPidController.enableContinuousInput(-180, 180);
   }
 
   @Override
@@ -280,6 +281,9 @@ public class DriveSubsystem extends SubsystemBase {
   //FYI: Don't use m_navX.calibrate(), the method does nothing
   //Startup Cal takes 20s
 
+  public boolean isCalibrating(){
+    return m_navX.isCalibrating();
+  }
 
   /**
    * Returns the heading of the robot.
@@ -365,7 +369,8 @@ public class DriveSubsystem extends SubsystemBase {
   // TODO: use profiled pid if needed
   // TODO: add %180 and other functionality to ensure rot takes the shortest path
   public void TurnToTarget(double X, double Y, double angle, boolean rateLimit, boolean squaredInputs, double maxOutput){
-    double pidOut = MathUtil.clamp(m_rotPidController.calculate(-m_navX.getAngle()%360, angle), -0.30, 0.30);
+    // double pidOut = MathUtil.clamp(m_rotPidController.calculate(-m_navX.getAngle()%360, angle), -0.30, 0.30);
+    double pidOut = MathUtil.clamp(m_rotPidController.calculate(MathUtil.inputModulus(-m_navX.getAngle(), -180, 180), angle), -0.30, 0.30);
     drive(X, Y, pidOut, true, rateLimit, squaredInputs, maxOutput, true); // added rotExeption to keep the driver's SquaredInputs and MaxOutput seperate from PID rotation
   }
 }

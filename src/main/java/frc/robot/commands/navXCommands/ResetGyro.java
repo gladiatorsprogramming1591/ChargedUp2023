@@ -16,4 +16,10 @@ public class ResetGyro extends CommandBase {
     public void execute() {
     m_drivetrain.zeroHeading();    
     }
+
+    @Override
+    public boolean isFinished() {
+        // return !m_drivetrain.isCalibrating();
+        return true;
+    }
 }
