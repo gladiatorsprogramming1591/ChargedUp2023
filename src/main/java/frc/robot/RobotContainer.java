@@ -74,7 +74,7 @@ public class RobotContainer {
                 -MathUtil.applyDeadband(m_driverController.getLeftX(), OIConstants.kDriveDeadband),
                 -MathUtil.applyDeadband(m_driverController.getRightX(), OIConstants.kDriveDeadband),
                 true, true, true,
-                Constants.DriveConstants.kDrivingMaxOutput),
+                Constants.DriveConstants.kDriveMaxOutput),
             m_robotDrive));
       
       // Toggle for field oriented vs robot oriented
@@ -86,7 +86,7 @@ public class RobotContainer {
                 -MathUtil.applyDeadband(m_driverController.getLeftX(), OIConstants.kDriveDeadband),
                 -MathUtil.applyDeadband(m_driverController.getRightX(), OIConstants.kDriveDeadband),
                 false, true, true,
-                Constants.DriveConstants.kDrivingMaxOutput),
+                Constants.DriveConstants.kDriveMaxOutput),
             m_robotDrive));
 
       // POV Rotation
@@ -96,7 +96,7 @@ public class RobotContainer {
                 -MathUtil.applyDeadband(m_driverController.getLeftX(), OIConstants.kDriveDeadband),
                 Constants.DriveConstants.faceRight,
                 true, true,
-                Constants.DriveConstants.kDrivingMaxOutput),
+                Constants.DriveConstants.kDriveMaxOutput),
             m_robotDrive));
       m_driverController.x().whileTrue( new RunCommand (
             () -> m_robotDrive.TurnToTarget(
@@ -104,7 +104,7 @@ public class RobotContainer {
                 -MathUtil.applyDeadband(m_driverController.getLeftX(), OIConstants.kDriveDeadband),
                 Constants.DriveConstants.faceLeft,
                 true, true,
-                Constants.DriveConstants.kDrivingMaxOutput),
+                Constants.DriveConstants.kDriveMaxOutput),
             m_robotDrive));
       m_driverController.y().whileTrue( new RunCommand (
             () -> m_robotDrive.TurnToTarget(
@@ -112,7 +112,7 @@ public class RobotContainer {
                 -MathUtil.applyDeadband(m_driverController.getLeftX(), OIConstants.kDriveDeadband),
                 Constants.DriveConstants.faceForward,
                 true, true,
-                Constants.DriveConstants.kDrivingMaxOutput),
+                Constants.DriveConstants.kDriveMaxOutput),
             m_robotDrive));
       m_driverController.a().whileTrue( new RunCommand (
             () -> m_robotDrive.TurnToTarget(
@@ -120,7 +120,7 @@ public class RobotContainer {
                 -MathUtil.applyDeadband(m_driverController.getLeftX(), OIConstants.kDriveDeadband),
                 Constants.DriveConstants.faceBackward,
                 true, true,
-                Constants.DriveConstants.kDrivingMaxOutput),
+                Constants.DriveConstants.kDriveMaxOutput),
             m_robotDrive));
             
     //TODO: move to driver's stick
@@ -169,17 +169,17 @@ public class RobotContainer {
    * {@link JoystickButton}.
    */
   private void configureButtonBindings() {
-    m_driverController.x().whileTrue(new RunCommand(() -> m_robotDrive.setX(),m_robotDrive));  //Prevents Movement
+    m_manipulatorController.x().whileTrue(new RunCommand(() -> m_robotDrive.setX(),m_robotDrive));  //Prevents Movement
 
     m_manipulatorController.leftTrigger().whileTrue(new DriveToLevel(m_robotDrive)); //On Charge Station
 
     m_manipulatorController.leftBumper().whileTrue(new DriveToAngle(m_robotDrive));  //Off Charge Station
 
-    m_driverController.y().toggleOnTrue(new AutoLevel(m_robotDrive));  //Command Group
+    m_manipulatorController.y().toggleOnTrue(new AutoLevel(m_robotDrive));  //Command Group
 
-    m_driverController.b().toggleOnTrue(new ForwardPathTest(m_robotDrive)); 
+    m_manipulatorController.b().toggleOnTrue(new ForwardPathTest(m_robotDrive)); 
 
-    m_driverController.a().toggleOnTrue(new ReversePathTest(m_robotDrive)); 
+    m_manipulatorController.a().toggleOnTrue(new ReversePathTest(m_robotDrive));
 
     // m_driverController.povDown().whileTrue(new ResetGyro(m_robotDrive));
     m_driverController.leftStick().toggleOnTrue(new ResetGyro(m_robotDrive));

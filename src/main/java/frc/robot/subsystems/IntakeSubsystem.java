@@ -25,8 +25,7 @@ public class IntakeSubsystem extends SubsystemBase{
         intakeMotor.setNeutralMode(NeutralMode.Brake);
         intakeMotor.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, intakeCurrent, intakeCurrent + 1.5, 0.3));
     }
-    // TODO (idea): Add stall speed to continuously run after current limit is tripped until intake is reversed
-    //(currentLimit trip = game piece obtained, intakeReverse = no game piece)
+    
     // TODO: Add Sensors (1 Color and 2 Distance[for cone and cube])
     // Color sensor to set motor direction, Distance to determine alignment to grid
     public void intakeOn(double speed){

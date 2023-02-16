@@ -75,7 +75,7 @@ public final class Constants {
 
     public static final boolean kGyroReversed = false;
 
-    public static final double kDrivingMaxOutput = 0.25;
+    public static final double kDriveMaxOutput = 0.25;
     public static final double faceForward = 0; //Need to change depending on where robot starts (field orientation must match)
     public static final double faceBackward = 180;
     public static final double faceLeft = 90;
@@ -165,16 +165,16 @@ public final class Constants {
   }
 
   public static final class ArmConstants{
-    public static final double kArmP = 0.01; 
-    public static final double kArmI = 0.001; 
+    public static final double kArmP = 0.03; 
+    public static final double kArmI = 0.002; 
     public static final double kArmD = 0; 
-    public static final double kArmFF = 0.000156; 
+    public static final double kArmFF = 0.0005; 
     public static final double kArmMinOutput = -0.3; 
     public static final double kArmMaxOutput = 0.3; //TODO (requires bot): update these (everybot has max as 1, min as -1)
     public static final double kArmMaxVel = 25; //rpm
     public static final double kArmMinVel = 0; 
     public static final double kArmMaxAcc = 25; 
-    public static final double kAllowedErr = 2;
+    public static final double kAllowedErr = 0.5;
   }
 
   public static final class IntakeConstants{

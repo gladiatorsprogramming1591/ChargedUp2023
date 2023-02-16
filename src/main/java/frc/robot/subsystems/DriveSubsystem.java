@@ -27,6 +27,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.CANIDConstants;
@@ -82,7 +83,7 @@ public class DriveSubsystem extends SubsystemBase {
       });
 
   private int count = 0;
-  private final PIDController m_rollPidController = new PIDController(0.005, 0.000, 0.001); // 1/21 ki:0.0055 kd: 0.0025
+  private final PIDController m_rollPidController = new PIDController(0.0035, 0.000, 0.00); // 2/15 kp 0.005 kd 0.001  1/21 ki:0.0055 kd: 0.0025
   private final PIDController m_rotPidController = new PIDController(0.01, 0.000, 0.000); // TODO (requires bot): values need testing
 
   // private final PIDController xTrajPID = new PIDController(0.05, 0, 0);
@@ -372,5 +373,12 @@ public class DriveSubsystem extends SubsystemBase {
     // double pidOut = MathUtil.clamp(m_rotPidController.calculate(-m_navX.getAngle()%360, angle), -0.30, 0.30);
     double pidOut = MathUtil.clamp(m_rotPidController.calculate(MathUtil.inputModulus(-m_navX.getAngle(), -180, 180), angle), -0.30, 0.30);
     drive(X, Y, pidOut, true, rateLimit, squaredInputs, maxOutput, true); // added rotExeption to keep the driver's SquaredInputs and MaxOutput seperate from PID rotation
+  }
+
+  public Command DriveCommand(double speed){
+    return new StartEndCommand(
+      () -> drive(speed,0,0,false), 
+      () -> drive(0,0,0,false),
+      this);
   }
 }
