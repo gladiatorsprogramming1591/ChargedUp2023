@@ -123,7 +123,6 @@ public class RobotContainer {
                 Constants.DriveConstants.kDriveMaxOutput),
             m_robotDrive));
             
-    //TODO: move to driver's stick
     m_arm.setDefaultCommand(
       // The left stick controls moving the arm in and out. 
         new RunCommand(
@@ -133,6 +132,7 @@ public class RobotContainer {
                 MathUtil.applyDeadband(m_driverController.getLeftTriggerAxis()*Constants.ArmConstants.kArmMaxOutput, OIConstants.kArmDeadband)), 
             m_arm));
 
+        // m_manipulatorController.leftStick().toggleOnTrue( new RunCommand(
         m_manipulatorController.leftStick().toggleOnTrue( new RunCommand(
             () -> m_arm.raiseArm(
                 MathUtil.applyDeadband(m_manipulatorController.getLeftY()*Constants.ArmConstants.kArmMaxOutput, OIConstants.kArmDeadband)),
@@ -154,7 +154,7 @@ public class RobotContainer {
 
         m_driverController.rightBumper().toggleOnTrue( new RunCommand(
             () -> m_intake.intakeOn(
-                1), //cube speed
+                1), //cone speed
             m_intake));
                       
   }
