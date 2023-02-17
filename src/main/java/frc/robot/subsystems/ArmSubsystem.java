@@ -34,6 +34,8 @@ public class ArmSubsystem extends SubsystemBase{
 
     EnumMap<armPositions, Double> map = new EnumMap<>(armPositions.class); 
 
+    private double armPos;
+
     public ArmSubsystem(){
         armMotorLeft.setInverted(true);
         armMotorRight.follow(armMotorLeft, true); 
@@ -41,7 +43,7 @@ public class ArmSubsystem extends SubsystemBase{
         // Adding elements to the Map
         // using standard put() method
         map.put(armPositions.LVLONE, 20.0);
-        map.put(armPositions.LVLTWO, 40.0);
+        map.put(armPositions.LVLTWO, 60.0);
         map.put(armPositions.LVLTRE, 72.0);
         map.put(armPositions.HOME, 0.0); //TODO (requires bot): empirically measure encoder positions and update here
 
@@ -77,18 +79,24 @@ public class ArmSubsystem extends SubsystemBase{
     armPID.setSmartMotionAllowedClosedLoopError(ArmConstants.kAllowedErr, smartMotionSlot);
 
     SmartDashboard.putNumber("Arm base position",baseEncoderPosition);
-    SmartDashboard.putNumber("Arm Enc", armMotorLeft.getEncoder().getPosition());
+    // SmartDashboard.putNumber("Arm Enc", armMotorLeft.getEncoder().getPosition());
 
     }
 
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("Arm Enc", armMotorLeft.getEncoder().getPosition());
+        armPos = armMotorLeft.getEncoder().getPosition();
+        SmartDashboard.putNumber("Arm Enc", armPos);
         // TODO: Low Priority: If driving too fast, lower arm to home. 
         //   Might use global that is set by drive periodic to indicate if driving too fast.
     }
 
     public void raiseArm(armPositions position){
+        if (((armEncoder.getPosition() < 0) && (position == armPositions.HOME)) ||
+            ((armEncoder.getPosition() > 73) && (position == armPositions.LVLTRE))) {
+            armMotorLeft.set(0);
+            return;
+        }
         double ref = map.get(position);
         SmartDashboard.putNumber("Arm Target Pos", ref);
         armPID.setReference(ref, CANSparkMax.ControlType.kPosition);
@@ -97,11 +105,21 @@ public class ArmSubsystem extends SubsystemBase{
     }
 
     public void raiseArm(double speed){
+        if (((armEncoder.getPosition() <= 0) && (speed < 0)) ||
+            ((armEncoder.getPosition() > 73) && (speed > 0))) {
+            armMotorLeft.set(0);
+            return;
+        }
         armMotorLeft.set(speed);
     }
 
     public void raiseArm(double raiseSpeed, double lowerSpeed){
         double speed = raiseSpeed - lowerSpeed; //positive output to raise arm
+        if (((armEncoder.getPosition() <= 0) && (speed < 0)) ||
+            ((armEncoder.getPosition() > 73) && (speed > 0))) {
+            armMotorLeft.set(0);
+            return;
+        }
         armMotorLeft.set(speed);
     }
 

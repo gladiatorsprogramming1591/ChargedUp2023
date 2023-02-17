@@ -165,16 +165,17 @@ public final class Constants {
   }
 
   public static final class ArmConstants{
-    public static final double kArmP = 0.03; 
-    public static final double kArmI = 0.002; 
+    // p=.01, i=.001 resulted in inverted elbow
+    public static final double kArmP = 0.005; 
+    public static final double kArmI = 0.0002; 
     public static final double kArmD = 0; 
     public static final double kArmFF = 0.0005; 
-    public static final double kArmMinOutput = -0.3; 
-    public static final double kArmMaxOutput = 0.3; //TODO (requires bot): update these (everybot has max as 1, min as -1)
-    public static final double kArmMaxVel = 25; //rpm
-    public static final double kArmMinVel = 0; 
-    public static final double kArmMaxAcc = 25; 
-    public static final double kAllowedErr = 0.5;
+    public static final double kArmMinOutput = -0.4; 
+    public static final double kArmMaxOutput = 0.4; //TODO (requires bot): update these (everybot has max as 1, min as -1)
+    public static final double kArmMaxVel = 0; // unused
+    public static final double kArmMinVel = 0; // unused
+    public static final double kArmMaxAcc = 0; // unused
+    public static final double kAllowedErr = 0.25; 
   }
 
   public static final class IntakeConstants{

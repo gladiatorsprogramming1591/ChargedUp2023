@@ -185,10 +185,10 @@ public class RobotContainer {
     m_driverController.leftStick().toggleOnTrue(new ResetGyro(m_robotDrive));
 
     
-    m_manipulatorController.povDown().toggleOnTrue(new ArmToPosition(m_arm, ArmSubsystem.armPositions.HOME));
-    m_manipulatorController.povLeft().toggleOnTrue(new ArmToPosition(m_arm, ArmSubsystem.armPositions.LVLONE));
-    m_manipulatorController.povUp().toggleOnTrue(new ArmToPosition(m_arm, ArmSubsystem.armPositions.LVLTWO));
-    m_manipulatorController.povRight().toggleOnTrue(new ArmToPosition(m_arm, ArmSubsystem.armPositions.LVLTRE));
+    m_manipulatorController.povDown().onTrue(new ArmToPosition(m_arm, ArmSubsystem.armPositions.HOME)); // TODO: enable quick cancelling of these commands
+    m_manipulatorController.povLeft().onTrue(new ArmToPosition(m_arm, ArmSubsystem.armPositions.LVLONE));
+    m_manipulatorController.povUp().onTrue(new ArmToPosition(m_arm, ArmSubsystem.armPositions.LVLTWO));
+    m_manipulatorController.povRight().onTrue(new ArmToPosition(m_arm, ArmSubsystem.armPositions.LVLTRE));
   
 
     // m_manipulatorController.().whileTrue(new ) //TODO: add button to prevent from running

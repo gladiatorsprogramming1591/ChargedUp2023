@@ -356,7 +356,7 @@ public class DriveSubsystem extends SubsystemBase {
             this::getPose, // Pose supplier
             Constants.DriveConstants.kDriveKinematics, // SwerveDriveKinematics
             new PIDController(1.5, 0, 0), // Forward/Backward X controller. Tune these values for your robot. Leaving them 0 will only use feedforwards.
-            new PIDController(2.0, 0.5, 0), // Strafe Y controller (usually the same values as X controller)
+            new PIDController(3.0, 0, 0), // Strafe Y controller (usually the same values as X controller)
             new PIDController(5.0, 0, 0), // Rotation controller. Tune these values for your robot. Leaving them 0 will only use feedforwards.
             this::setModuleStates, // Module states consumer
             true, // Should the path be automatically mirrored depending on alliance color. Optional, defaults to true
