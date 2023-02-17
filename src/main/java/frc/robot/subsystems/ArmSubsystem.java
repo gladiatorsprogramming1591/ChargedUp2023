@@ -3,6 +3,8 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+// import edu.wpi.first.math.controller.ProfiledPIDController;
+// import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -24,19 +26,25 @@ public class ArmSubsystem extends SubsystemBase{
     private final CANSparkMax armMotorLeft = new CANSparkMax(Constants.CANIDConstants.kLeftArmCANId, MotorType.kBrushless); 
     private final CANSparkMax armMotorRight = new CANSparkMax(Constants.CANIDConstants.kRightArmCANId, MotorType.kBrushless); 
     private final SparkMaxPIDController armPID = armMotorLeft.getPIDController(); 
+    // private final ProfiledPIDController armPID = 
+    //     new ProfiledPIDController(ArmConstants.kArmP, ArmConstants.kArmI, ArmConstants.kArmD, 
+    //     new Constraints(ArmConstants.kArmMaxVel, ArmConstants.kArmMaxAcc));
     private final RelativeEncoder armEncoder = armMotorLeft.getEncoder(); 
     private double baseEncoderPosition = 0; 
 
     EnumMap<armPositions, Double> map = new EnumMap<>(armPositions.class); 
 
+    private double armPos;
+
     public ArmSubsystem(){
+        armMotorLeft.setInverted(true);
         armMotorRight.follow(armMotorLeft, true); 
  
         // Adding elements to the Map
         // using standard put() method
-        map.put(armPositions.LVLONE, 10.0);
-        map.put(armPositions.LVLTWO, 20.0);
-        map.put(armPositions.LVLTRE, 30.0);
+        map.put(armPositions.LVLONE, 20.0);
+        map.put(armPositions.LVLTWO, 60.0);
+        map.put(armPositions.LVLTRE, 72.0);
         map.put(armPositions.HOME, 0.0); //TODO (requires bot): empirically measure encoder positions and update here
 
         armPID.setP(ArmConstants.kArmP);
@@ -71,18 +79,48 @@ public class ArmSubsystem extends SubsystemBase{
     armPID.setSmartMotionAllowedClosedLoopError(ArmConstants.kAllowedErr, smartMotionSlot);
 
     SmartDashboard.putNumber("Arm base position",baseEncoderPosition);
-    SmartDashboard.putNumber("Arm Enc", armMotorLeft.getEncoder().getPosition());
+    // SmartDashboard.putNumber("Arm Enc", armMotorLeft.getEncoder().getPosition());
 
     }
 
+    @Override
+    public void periodic() {
+        armPos = armMotorLeft.getEncoder().getPosition();
+        SmartDashboard.putNumber("Arm Enc", armPos);
+        // TODO: Low Priority: If driving too fast, lower arm to home. 
+        //   Might use global that is set by drive periodic to indicate if driving too fast.
+    }
+
     public void raiseArm(armPositions position){
-        armPID.setReference(map.get(position), CANSparkMax.ControlType.kSmartMotion);
-        armPID.setFeedbackDevice(armEncoder);
+        if (((armEncoder.getPosition() < 0) && (position == armPositions.HOME)) ||
+            ((armEncoder.getPosition() > 73) && (position == armPositions.LVLTRE))) {
+            armMotorLeft.set(0);
+            return;
         }
+        double ref = map.get(position);
+        SmartDashboard.putNumber("Arm Target Pos", ref);
+        armPID.setReference(ref, CANSparkMax.ControlType.kPosition);
+        armPID.setFeedbackDevice(armEncoder);
+        // TODO: Add a new armPosition that reads a value from teh smart dashboard and moves arm to that position.
+    }
 
     public void raiseArm(double speed){
+        if (((armEncoder.getPosition() <= 0) && (speed < 0)) ||
+            ((armEncoder.getPosition() > 73) && (speed > 0))) {
+            armMotorLeft.set(0);
+            return;
+        }
         armMotorLeft.set(speed);
+    }
 
+    public void raiseArm(double raiseSpeed, double lowerSpeed){
+        double speed = raiseSpeed - lowerSpeed; //positive output to raise arm
+        if (((armEncoder.getPosition() <= 0) && (speed < 0)) ||
+            ((armEncoder.getPosition() > 73) && (speed > 0))) {
+            armMotorLeft.set(0);
+            return;
+        }
+        armMotorLeft.set(speed);
     }
 
     public boolean atLevel(armPositions pos){

@@ -27,6 +27,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.CANIDConstants;
@@ -82,7 +83,7 @@ public class DriveSubsystem extends SubsystemBase {
       });
 
   private int count = 0;
-  private final PIDController m_rollPidController = new PIDController(0.005, 0.000, 0.001); // 1/21 ki:0.0055 kd: 0.0025
+  private final PIDController m_rollPidController = new PIDController(0.0035, 0.000, 0.00); // 2/15 kp 0.005 kd 0.001  1/21 ki:0.0055 kd: 0.0025
   private final PIDController m_rotPidController = new PIDController(0.01, 0.000, 0.000); // TODO (requires bot): values need testing
 
   // private final PIDController xTrajPID = new PIDController(0.05, 0, 0);
@@ -90,6 +91,7 @@ public class DriveSubsystem extends SubsystemBase {
 
   /** Creates a new DriveSubsystem. */
   public DriveSubsystem() {
+    m_rotPidController.enableContinuousInput(-180, 180);
   }
 
   @Override
@@ -280,6 +282,9 @@ public class DriveSubsystem extends SubsystemBase {
   //FYI: Don't use m_navX.calibrate(), the method does nothing
   //Startup Cal takes 20s
 
+  public boolean isCalibrating(){
+    return m_navX.isCalibrating();
+  }
 
   /**
    * Returns the heading of the robot.
@@ -351,7 +356,7 @@ public class DriveSubsystem extends SubsystemBase {
             this::getPose, // Pose supplier
             Constants.DriveConstants.kDriveKinematics, // SwerveDriveKinematics
             new PIDController(1.5, 0, 0), // Forward/Backward X controller. Tune these values for your robot. Leaving them 0 will only use feedforwards.
-            new PIDController(2.0, 0.5, 0), // Strafe Y controller (usually the same values as X controller)
+            new PIDController(3.0, 0, 0), // Strafe Y controller (usually the same values as X controller)
             new PIDController(5.0, 0, 0), // Rotation controller. Tune these values for your robot. Leaving them 0 will only use feedforwards.
             this::setModuleStates, // Module states consumer
             true, // Should the path be automatically mirrored depending on alliance color. Optional, defaults to true
@@ -362,10 +367,18 @@ public class DriveSubsystem extends SubsystemBase {
         )
     );
   }
-  //TODO: use profiled pid if needed
+  // TODO: use profiled pid if needed
+  // TODO: add %180 and other functionality to ensure rot takes the shortest path
   public void TurnToTarget(double X, double Y, double angle, boolean rateLimit, boolean squaredInputs, double maxOutput){
-    double pidOut = MathUtil.clamp(m_rotPidController.calculate(-m_navX.getAngle()%360, angle), -0.30, 0.30);
-    drive(X, Y, pidOut, true, rateLimit, squaredInputs, maxOutput, true);
-  //NOTE: added rotExeption to keep the driver's SquaredInputs and MaxOutput seperate from PID rotation
+    // double pidOut = MathUtil.clamp(m_rotPidController.calculate(-m_navX.getAngle()%360, angle), -0.30, 0.30);
+    double pidOut = MathUtil.clamp(m_rotPidController.calculate(MathUtil.inputModulus(-m_navX.getAngle(), -180, 180), angle), -0.30, 0.30);
+    drive(X, Y, pidOut, true, rateLimit, squaredInputs, maxOutput, true); // added rotExeption to keep the driver's SquaredInputs and MaxOutput seperate from PID rotation
+  }
+
+  public Command DriveCommand(double speed){
+    return new StartEndCommand(
+      () -> drive(speed,0,0,false), 
+      () -> drive(0,0,0,false),
+      this);
   }
 }
