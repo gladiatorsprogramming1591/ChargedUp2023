@@ -4,6 +4,10 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.PathConstraints;
+import com.pathplanner.lib.PathPlanner;
+import com.pathplanner.lib.PathPlannerTrajectory;
+
 import edu.wpi.first.math.MathUtil;
 // import edu.wpi.first.math.controller.PIDController;
 // import edu.wpi.first.math.controller.ProfiledPIDController;
@@ -123,7 +127,6 @@ public class RobotContainer {
                 Constants.DriveConstants.kDriveMaxOutput),
             m_robotDrive));
             
-    //TODO: move to driver's stick
     m_arm.setDefaultCommand(
       // The left stick controls moving the arm in and out. 
         new RunCommand(
@@ -133,6 +136,7 @@ public class RobotContainer {
                 MathUtil.applyDeadband(m_driverController.getLeftTriggerAxis()*Constants.ArmConstants.kArmMaxOutput, OIConstants.kArmDeadband)), 
             m_arm));
 
+        // m_manipulatorController.leftStick().toggleOnTrue( new RunCommand(
         m_manipulatorController.leftStick().toggleOnTrue( new RunCommand(
             () -> m_arm.raiseArm(
                 MathUtil.applyDeadband(m_manipulatorController.getLeftY()*Constants.ArmConstants.kArmMaxOutput, OIConstants.kArmDeadband)),
@@ -154,7 +158,7 @@ public class RobotContainer {
 
         m_driverController.rightBumper().toggleOnTrue( new RunCommand(
             () -> m_intake.intakeOn(
-                1), //cube speed
+                1), //cone speed
             m_intake));
                       
   }
@@ -190,6 +194,10 @@ public class RobotContainer {
     m_manipulatorController.povUp().onTrue(new ArmToPosition(m_arm, ArmSubsystem.armPositions.LVLTWO));
     m_manipulatorController.povRight().onTrue(new ArmToPosition(m_arm, ArmSubsystem.armPositions.LVLTRE));
   
+    // String pathName = new String("Leave Community 1"); 
+    String pathName = new String("Leave Community 2"); 
+    PathPlannerTrajectory m_newPath = PathPlanner.loadPath(pathName, new PathConstraints(.5, .5));
+    m_driverController.povDown().toggleOnTrue(m_robotDrive.followTrajectoryCommand(m_newPath, true));
 
     // m_manipulatorController.().whileTrue(new ) //TODO: add button to prevent from running
 
