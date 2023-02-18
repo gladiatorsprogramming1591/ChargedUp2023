@@ -92,6 +92,7 @@ public class DriveSubsystem extends SubsystemBase {
   /** Creates a new DriveSubsystem. */
   public DriveSubsystem() {
     m_rotPidController.enableContinuousInput(-180, 180);
+    zeroHeading();  //  TODO: find out why gyro does not stay zeroed after deploying
   }
 
   @Override
@@ -328,7 +329,7 @@ public class DriveSubsystem extends SubsystemBase {
     // TODO (requires bot): Angle could be positive or negative, need to handle both
     // Should be positive if driving forward, negative if driving backward onto the power station ramp
     if ( currentAngle <= angle) {
-        drive(.20, 0, 0, true);
+        drive(.20, 0, 0, false);  // was true
         atAngle = false;
         if (++count %10 == 0) {
           System.out.println("Angle is:" + currentAngle);

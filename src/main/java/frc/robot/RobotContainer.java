@@ -190,6 +190,10 @@ public class RobotContainer {
     m_manipulatorController.povUp().onTrue(new ArmToPosition(m_arm, ArmSubsystem.armPositions.LVLTWO));
     m_manipulatorController.povRight().onTrue(new ArmToPosition(m_arm, ArmSubsystem.armPositions.LVLTRE));
   
+    // String pathName = new String("Leave Community 1"); 
+    String pathName = new String("Leave Community 2"); 
+    PathPlannerTrajectory m_newPath = PathPlanner.loadPath(pathName, new PathConstraints(.5, .5));
+    m_driverController.povDown().toggleOnTrue(m_robotDrive.followTrajectoryCommand(m_newPath, true));
 
     // m_manipulatorController.().whileTrue(new ) //TODO: add button to prevent from running
 
