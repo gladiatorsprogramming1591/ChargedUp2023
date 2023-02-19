@@ -75,7 +75,8 @@ public final class Constants {
 
     public static final boolean kGyroReversed = false;
 
-    public static final double kDriveMaxOutput = 0.25;
+    public static final double kDriveMaxOutput = 0.85;
+    public static final double kDriveSlow = 0.25;
     public static final double faceForward = 0; //Need to change depending on where robot starts (field orientation must match)
     public static final double faceBackward = 180;
     public static final double faceLeft = 90;
@@ -166,22 +167,24 @@ public final class Constants {
 
   public static final class ArmConstants{
     // p=.01, i=.001 resulted in inverted elbow
-    public static final double kArmP = 0.005; 
-    public static final double kArmI = 0.0002; 
-    public static final double kArmD = 0; 
-    public static final double kArmFF = 0.0005; 
+    public static final double kArmP = 0.08; // 0.005
+    public static final double kArmI = 0.0; // 0.0002
+    public static final double kArmD = 0.0; 
+    public static final double kArmFF = 0.0; // 0.0005
     public static final double kArmMinOutput = -0.4; 
     public static final double kArmMaxOutput = 0.4; //TODO (requires bot): update these (everybot has max as 1, min as -1)
     public static final double kArmMaxVel = 0; // unused
     public static final double kArmMinVel = 0; // unused
     public static final double kArmMaxAcc = 0; // unused
     public static final double kAllowedErr = 0.25; 
+    public static final double kMaxHeight = 78;
   }
 
   public static final class IntakeConstants{
     public static final int kPdhChannel = 0; // TODO (requires bot): Need to determine which PDH channel the intake is plugged into 
     public static final double kStallSpeed = 0.1; // TODO (requires bot): Need to confirm actual stall speed needed
-    public static final double kIntakeMaxOutput = 0.3;
+    public static final double kIntakeMaxOutput = 0.3; 
+    public static final double kIntakeMinOutput = -0.5; 
   }
  /**
    * How many amps the arm motor can use.
