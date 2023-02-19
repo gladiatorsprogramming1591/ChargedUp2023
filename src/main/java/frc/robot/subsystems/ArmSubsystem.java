@@ -20,7 +20,8 @@ public class ArmSubsystem extends SubsystemBase{
         LVLONE, 
         LVLTWO, 
         LVLTRE,
-        HOME;
+        HOME,
+        CONESTOW;
     }
         
     private final CANSparkMax armMotorLeft = new CANSparkMax(Constants.CANIDConstants.kLeftArmCANId, MotorType.kBrushless); 
@@ -42,10 +43,12 @@ public class ArmSubsystem extends SubsystemBase{
  
         // Adding elements to the Map
         // using standard put() method
-        map.put(armPositions.LVLONE, 20.0);
+        map.put(armPositions.LVLONE, 23.0);
         map.put(armPositions.LVLTWO, 60.0);
-        map.put(armPositions.LVLTRE, 72.0);
+        map.put(armPositions.LVLTRE, 77.5);
         map.put(armPositions.HOME, 0.0); //TODO (requires bot): empirically measure encoder positions and update here
+        map.put(armPositions.CONESTOW, 10.0);
+
 
         armPID.setP(ArmConstants.kArmP);
         armPID.setI(ArmConstants.kArmI);
@@ -73,8 +76,8 @@ public class ArmSubsystem extends SubsystemBase{
      * error for the pid controller in Smart Motion mode
      */
     int smartMotionSlot = 0;
-    armPID.setSmartMotionMaxVelocity(ArmConstants.kArmMaxVel, smartMotionSlot);
-    armPID.setSmartMotionMinOutputVelocity(ArmConstants.kArmMinVel, smartMotionSlot);
+    armPID.setSmartMotionMaxVelocity(ArmConstants.kArmMaxVel, smartMotionSlot); // not used
+    armPID.setSmartMotionMinOutputVelocity(ArmConstants.kArmMinVel, smartMotionSlot); // not used
     armPID.setSmartMotionMaxAccel(ArmConstants.kArmMaxAcc, smartMotionSlot);
     armPID.setSmartMotionAllowedClosedLoopError(ArmConstants.kAllowedErr, smartMotionSlot);
 
@@ -93,7 +96,7 @@ public class ArmSubsystem extends SubsystemBase{
 
     public void raiseArm(armPositions position){
         if (((armEncoder.getPosition() < 0) && (position == armPositions.HOME)) ||
-            ((armEncoder.getPosition() > 73) && (position == armPositions.LVLTRE))) {
+            ((armEncoder.getPosition() > ArmConstants.kMaxHeight) && (position == armPositions.LVLTRE))) {
             armMotorLeft.set(0);
             return;
         }
@@ -106,7 +109,7 @@ public class ArmSubsystem extends SubsystemBase{
 
     public void raiseArm(double speed){
         if (((armEncoder.getPosition() <= 0) && (speed < 0)) ||
-            ((armEncoder.getPosition() > 73) && (speed > 0))) {
+            ((armEncoder.getPosition() > ArmConstants.kMaxHeight) && (speed > 0))) {
             armMotorLeft.set(0);
             return;
         }
@@ -116,7 +119,7 @@ public class ArmSubsystem extends SubsystemBase{
     public void raiseArm(double raiseSpeed, double lowerSpeed){
         double speed = raiseSpeed - lowerSpeed; //positive output to raise arm
         if (((armEncoder.getPosition() <= 0) && (speed < 0)) ||
-            ((armEncoder.getPosition() > 73) && (speed > 0))) {
+            ((armEncoder.getPosition() > ArmConstants.kMaxHeight) && (speed > 0))) {
             armMotorLeft.set(0);
             return;
         }

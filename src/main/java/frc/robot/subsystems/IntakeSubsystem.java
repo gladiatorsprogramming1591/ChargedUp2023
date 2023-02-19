@@ -42,7 +42,7 @@ public class IntakeSubsystem extends SubsystemBase{
         // }
     }
 
-    public void intakeOff(double speed){
+    public void intakeOff(){
         intakeMotor.set(ControlMode.PercentOutput, 0.0);
     }
 }

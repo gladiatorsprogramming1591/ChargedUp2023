@@ -20,6 +20,7 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 // import frc.robot.Constants;
 import edu.wpi.first.util.WPIUtilJNI;
+import edu.wpi.first.wpilibj.DriverStation;
 // import edu.wpi.first.wpilibj.ADIS16470_IMU;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
@@ -58,7 +59,7 @@ public class DriveSubsystem extends SubsystemBase {
 
   // The gyro sensor
   // private final ADIS16470_IMU m_gyro = new ADIS16470_IMU();
-  private final AHRS m_navX = new AHRS(SPI.Port.kMXP);
+  private final AHRS m_navX;
 
   private Field2d m_field = new Field2d();
 
@@ -72,7 +73,18 @@ public class DriveSubsystem extends SubsystemBase {
   private double m_prevTime = WPIUtilJNI.now() * 1e-6;
 
   // Odometry class for tracking robot pose
-  SwerveDriveOdometry m_odometry = new SwerveDriveOdometry(
+  SwerveDriveOdometry m_odometry;
+  private int count = 0;
+  private final PIDController m_rollPidController = new PIDController(0.005, 0.00008, 0.00); // 2/15 kp 0.005 kd 0.001  1/21 ki:0.0055 kd: 0.0025
+  private final PIDController m_rotPidController = new PIDController(0.01, 0.000, 0.000); // TODO (requires bot): values need testing
+
+  // private final PIDController xTrajPID = new PIDController(0.05, 0, 0);
+
+
+  /** Creates a new DriveSubsystem. */
+  public DriveSubsystem() {
+    m_navX = new AHRS(SPI.Port.kMXP);
+    m_odometry = new SwerveDriveOdometry(
       DriveConstants.kDriveKinematics,
       Rotation2d.fromDegrees(-m_navX.getAngle()),
       new SwerveModulePosition[] {
@@ -81,16 +93,6 @@ public class DriveSubsystem extends SubsystemBase {
           m_rearLeft.getPosition(),
           m_rearRight.getPosition()
       });
-
-  private int count = 0;
-  private final PIDController m_rollPidController = new PIDController(0.0035, 0.000, 0.00); // 2/15 kp 0.005 kd 0.001  1/21 ki:0.0055 kd: 0.0025
-  private final PIDController m_rotPidController = new PIDController(0.01, 0.000, 0.000); // TODO (requires bot): values need testing
-
-  // private final PIDController xTrajPID = new PIDController(0.05, 0, 0);
-
-
-  /** Creates a new DriveSubsystem. */
-  public DriveSubsystem() {
     m_rotPidController.enableContinuousInput(-180, 180);
     zeroHeading();  //  TODO: find out why gyro does not stay zeroed after deploying
   }
@@ -111,7 +113,7 @@ public class DriveSubsystem extends SubsystemBase {
 
         m_field.setRobotPose(m_odometry.getPoseMeters());
 
-    SmartDashboard.putNumber("Heading", m_navX.getAngle());
+    SmartDashboard.putNumber("Heading", m_odometry.getPoseMeters().getRotation().getDegrees());
     // SmartDashboard.putNumber("xTrajSP", xTrajPID.getSetpoint());
     // SmartDashboard.putNumber("xTrajPosErr", xTrajPID.getPositionError());
   }
@@ -234,7 +236,7 @@ public class DriveSubsystem extends SubsystemBase {
 
     var swerveModuleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(
         fieldRelative
-            ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered, Rotation2d.fromDegrees(-m_navX.getAngle()))
+            ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered, m_odometry.getPoseMeters().getRotation())
             : new ChassisSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered));
     SwerveDriveKinematics.desaturateWheelSpeeds(
         swerveModuleStates, DriveConstants.kMaxSpeedMetersPerSecond);
@@ -278,7 +280,8 @@ public class DriveSubsystem extends SubsystemBase {
 
   /** Zeroes the heading of the robot. */
   public void zeroHeading() {
-    m_navX.reset();
+    resetOdometry(new Pose2d(getPose().getTranslation(),new Rotation2d()));
+    // m_navX.reset();
   }
   //FYI: Don't use m_navX.calibrate(), the method does nothing
   //Startup Cal takes 20s
@@ -292,9 +295,9 @@ public class DriveSubsystem extends SubsystemBase {
    *
    * @return the robot's heading in degrees, from -180 to 180
    */
-  public double getHeading() {
-    return Rotation2d.fromDegrees(-m_navX.getAngle()).getDegrees();
-  }
+  // public double getHeading() {
+  //   return Rotation2d.fromDegrees(-m_navX.getAngle()).getDegrees();
+  // }
 
   /**
    * Returns the turn rate of the robot.
@@ -329,7 +332,7 @@ public class DriveSubsystem extends SubsystemBase {
     // TODO (requires bot): Angle could be positive or negative, need to handle both
     // Should be positive if driving forward, negative if driving backward onto the power station ramp
     if ( currentAngle <= angle) {
-        drive(.20, 0, 0, false);  // was true
+        drive(.4, 0, 0, false);  // was true
         atAngle = false;
         if (++count %10 == 0) {
           System.out.println("Angle is:" + currentAngle);
@@ -349,7 +352,8 @@ public class DriveSubsystem extends SubsystemBase {
         new InstantCommand(() -> {
           // Reset odometry for the first path you run during auto
           if(isFirstPath){
-              this.resetOdometry(traj.getInitialHolonomicPose());
+              PathPlannerTrajectory transformed = PathPlannerTrajectory.transformTrajectoryForAlliance(traj, DriverStation.getAlliance());
+              this.resetOdometry(transformed.getInitialHolonomicPose());
           }
         }),
         new PPSwerveControllerCommand(
@@ -372,7 +376,7 @@ public class DriveSubsystem extends SubsystemBase {
   // TODO: add %180 and other functionality to ensure rot takes the shortest path
   public void TurnToTarget(double X, double Y, double angle, boolean rateLimit, boolean squaredInputs, double maxOutput){
     // double pidOut = MathUtil.clamp(m_rotPidController.calculate(-m_navX.getAngle()%360, angle), -0.30, 0.30);
-    double pidOut = MathUtil.clamp(m_rotPidController.calculate(MathUtil.inputModulus(-m_navX.getAngle(), -180, 180), angle), -0.30, 0.30);
+    double pidOut = MathUtil.clamp(m_rotPidController.calculate(MathUtil.inputModulus(m_odometry.getPoseMeters().getRotation().getDegrees(), -180, 180), angle), -0.30, 0.30);
     drive(X, Y, pidOut, true, rateLimit, squaredInputs, maxOutput, true); // added rotExeption to keep the driver's SquaredInputs and MaxOutput seperate from PID rotation
   }
 

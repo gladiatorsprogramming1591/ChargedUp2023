@@ -3,11 +3,11 @@ package frc.robot.commands.armCommands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ArmSubsystem;
 
-public class ArmToPosition extends CommandBase {
+public class ArmToPositionWithEnd extends CommandBase {
     private ArmSubsystem m_arm;
     private ArmSubsystem.armPositions m_targetPos;
 
-    public ArmToPosition(ArmSubsystem arm, ArmSubsystem.armPositions pos){
+    public ArmToPositionWithEnd(ArmSubsystem arm, ArmSubsystem.armPositions pos){
         m_arm = arm;
         m_targetPos = pos;
         addRequirements(m_arm);
@@ -20,8 +20,7 @@ public class ArmToPosition extends CommandBase {
 
     @Override
     public boolean isFinished(){
-        // return m_arm.atLevel(m_targetPos);
-        return false;
+        return m_arm.atLevel(m_targetPos);
     }
 
     @Override
