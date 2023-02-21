@@ -19,7 +19,10 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 // import edu.wpi.first.math.trajectory.TrajectoryConfig;
 // import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 // import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -49,6 +52,9 @@ import frc.robot.subsystems.IntakeSubsystem;
  * (including subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
+
+  SendableChooser<CommandBase> m_autoChooser = new SendableChooser<>();
+
   // The robot's subsystems
   private final DriveSubsystem m_robotDrive;
   private final ArmSubsystem m_arm; 
@@ -70,6 +76,8 @@ public class RobotContainer {
     m_robotDrive = new DriveSubsystem();
     m_arm = new ArmSubsystem(); 
     m_intake = new IntakeSubsystem();
+
+    addAutoOptions();
 
     // Configure the button bindings
     configureButtonBindings();
@@ -179,6 +187,11 @@ public class RobotContainer {
                       
   }
 
+  private void addAutoOptions() {
+    m_autoChooser.setDefaultOption("OnePieceAuto", new OnePieceAuto(m_robotDrive, m_arm, m_intake));
+    SmartDashboard.putData("Auto Mode", m_autoChooser);
+  }
+
   /**
    * Use this method to define your button->command mappings. Buttons can be
    * created by
@@ -211,12 +224,12 @@ public class RobotContainer {
     m_manipulatorController.povRight().onTrue(new ArmToPosition(m_arm, ArmSubsystem.armPositions.LVLTRE));
     m_manipulatorController.rightTrigger().onTrue(new ArmToPosition(m_arm, ArmSubsystem.armPositions.CONESTOW));
   
-    // String pathName = new String("Leave Community 1"); 
-    String pathName1 = new String("Leave Community 1"); 
+    // String pathName = new String("Leave Community 3"); 
+    String pathName1 = new String("Leave Community 3"); 
     PathPlannerTrajectory m_leaveCommunity = PathPlanner.loadPath(pathName1, new PathConstraints(.85, .5));
     m_driverController.povDown().toggleOnTrue(m_robotDrive.followTrajectoryCommand(m_leaveCommunity, true));
 
-    String pathName2 = new String("Cone Score 1"); 
+    String pathName2 = new String("Cone Score 3"); 
     PathPlannerTrajectory m_coneScore1 = PathPlanner.loadPath(pathName2, new PathConstraints(.85, .5));
     m_driverController.povRight().toggleOnTrue(m_robotDrive.followTrajectoryCommand(m_coneScore1, true));
 
@@ -231,47 +244,6 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    /*
-    // Create config for trajectory
-    TrajectoryConfig config = new TrajectoryConfig(
-        AutoConstants.kMaxSpeedMetersPerSecond,
-        AutoConstants.kMaxAccelerationMetersPerSecondSquared)
-        // Add kinematics to ensure max speed is actually obeyed
-        .setKinematics(DriveConstants.kDriveKinematics);
-
-    // An example trajectory to follow. All units in meters.
-    Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(
-        // Start at the origin facing the +X direction
-        new Pose2d(0, 0, new Rotation2d(0)),
-        // Pass through these two interior waypoints, making an 's' curve path
-        List.of(new Translation2d(1, 1), new Translation2d(2, -1)),
-        // End 3 meters straight ahead of where we started, facing forward
-        new Pose2d(3, 0, new Rotation2d(0)),
-        config);
-
-    var thetaController = new ProfiledPIDController(
-        AutoConstants.kPThetaController, 0, 0, AutoConstants.kThetaControllerConstraints);
-    thetaController.enableContinuousInput(-Math.PI, Math.PI);
-
-    SwerveControllerCommand swerveControllerCommand = new SwerveControllerCommand(
-        exampleTrajectory,
-        m_robotDrive::getPose, // Functional interface to feed supplier
-        DriveConstants.kDriveKinematics,
-
-        // Position controllers
-        new PIDController(AutoConstants.kPXController, 0, 0),
-        new PIDController(AutoConstants.kPYController, 0, 0),
-        thetaController,
-        m_robotDrive::setModuleStates,
-        m_robotDrive);
-
-    // Reset odometry to the starting pose of the trajectory.
-    m_robotDrive.resetOdometry(exampleTrajectory.getInitialPose());
-
-    // Run path following command, then stop at the end.
-    return swerveControllerCommand.andThen(() -> m_robotDrive.drive(0, 0, 0, false, false));
-    */
-    System.out.println("Called getAutonomousCommand, retunring AutoPathTest");
-    return new OnePieceAuto(m_robotDrive, m_arm, m_intake);
+    return m_autoChooser.getSelected();
   }
 }

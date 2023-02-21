@@ -183,8 +183,8 @@ public final class Constants {
   public static final class IntakeConstants{
     public static final int kPdhChannel = 0; // TODO (requires bot): Need to determine which PDH channel the intake is plugged into 
     public static final double kStallSpeed = 0.1; // TODO (requires bot): Need to confirm actual stall speed needed
-    public static final double kIntakeMaxOutput = 0.3; 
-    public static final double kIntakeMinOutput = -0.5; 
+    public static final double kIntakePickUp = 0.3;
+    public static final double kIntakeReverse = -0.5; 
   }
  /**
    * How many amps the arm motor can use.

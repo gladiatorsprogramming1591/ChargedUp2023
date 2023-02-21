@@ -26,20 +26,10 @@ public class IntakeSubsystem extends SubsystemBase{
         intakeMotor.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, intakeCurrent, intakeCurrent + 1.5, 0.3));
     }
     
-    // TODO: Add Sensors (1 Color and 2 Distance[for cone and cube])
+    // TODO: (low priority) Add Sensors (1 Color and 2 Distance[for cone and cube])
     // Color sensor to set motor direction, Distance to determine alignment to grid
     public void intakeOn(double speed){
-
         intakeMotor.set(ControlMode.PercentOutput, speed);
-        // // TODO: Try monitoring the current limit from PDH
-        // intakeCurrent = powerDist.getCurrent(Constants.IntakeConstants.kPdhChannel);
-        // SmartDashboard.putNumber("Intake Current",intakeCurrent);
-
-        // if (intakeCurrent < Constants.INTAKE_CURRENT_LIMIT_A){
-        //     intakeMotor.set(speed);
-        // } else {
-        //     intakeMotor.set(Math.copySign(Constants.IntakeConstants.kStallSpeed, speed));
-        // }
     }
 
     public void intakeOff(){
