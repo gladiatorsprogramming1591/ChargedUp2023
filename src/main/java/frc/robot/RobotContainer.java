@@ -23,6 +23,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 // import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -33,6 +34,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 // import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.armCommands.ArmToPosition;
+import frc.robot.commands.armCommands.ArmToPositionWithEnd;
 import frc.robot.commands.driveCommands.AutoLevel;
 import frc.robot.commands.driveCommands.DriveToAngle;
 import frc.robot.commands.driveCommands.DriveToLevel;
@@ -44,6 +46,8 @@ import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 // import frc.robot.subsystems.ArmSubsystem.armPositions;
+import frc.robot.subsystems.ArmSubsystem.armPositions;
+
 
 /*
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -78,6 +82,8 @@ public class RobotContainer {
     m_intake = new IntakeSubsystem();
 
     addAutoOptions();
+
+    configureAutoCommands();
 
     // Configure the button bindings
     configureButtonBindings();
@@ -187,9 +193,18 @@ public class RobotContainer {
                       
   }
 
+  // TODO: Add auto that only drives out of community after time set in SmartDashboard
   private void addAutoOptions() {
     m_autoChooser.setDefaultOption("OnePieceAuto", new OnePieceAuto(m_robotDrive, m_arm, m_intake));
     SmartDashboard.putData("Auto Mode", m_autoChooser);
+  }
+
+  private void configureAutoCommands(){
+    Constants.AutoConstants.AUTO_EVENT_MAP.put("Intake PickUp", new InstantCommand(() -> m_intake.intakeOn(Constants.IntakeConstants.kIntakePickUp), m_intake));
+    Constants.AutoConstants.AUTO_EVENT_MAP.put("Arm LVLTRE", new ArmToPositionWithEnd(m_arm, armPositions.LVLTRE).withTimeout(3.0));
+    Constants.AutoConstants.AUTO_EVENT_MAP.put("Intake Reverse", new RunCommand(() -> m_intake.intakeOn(Constants.IntakeConstants.kIntakeReverse), m_intake).withTimeout(.25));
+    Constants.AutoConstants.AUTO_EVENT_MAP.put("Arm HOME", new ArmToPositionWithEnd(m_arm, armPositions.HOME).withTimeout(2.0));
+    Constants.AutoConstants.AUTO_EVENT_MAP.put("AutoLevel", new AutoLevel(m_robotDrive));   // TODO: (requires bot) Parallel or Sequential?
   }
 
   /**

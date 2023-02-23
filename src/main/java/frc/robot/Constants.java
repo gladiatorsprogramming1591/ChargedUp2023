@@ -4,12 +4,15 @@
 
 package frc.robot;
 
+import java.util.HashMap;
+
 import com.revrobotics.CANSparkMax.IdleMode;
 
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj2.command.Command;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
@@ -159,6 +162,8 @@ public final class Constants {
     public static final double kLevelTolerance = 2.25;  //field tolerance is 2.25 degrees 
 
     public static final double kDriveAngle = 14;
+
+    public static final HashMap<String, Command> AUTO_EVENT_MAP = new HashMap<>();
   }
 
   public static final class NeoMotorConstants {
