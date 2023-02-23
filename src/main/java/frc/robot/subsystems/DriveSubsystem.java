@@ -156,7 +156,7 @@ public class DriveSubsystem extends SubsystemBase {
    */
   
   public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative) {
-    drive(xSpeed, ySpeed, rot, fieldRelative, false, false, 1, false);  //TODO - Do we want rateLimit for auto?
+    drive(xSpeed, ySpeed, rot, fieldRelative, false, false, 1, false);  //TODO: Do we want rateLimit for auto?
   }
   public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative, boolean rateLimit) {
     drive(xSpeed, ySpeed, rot, fieldRelative, rateLimit, false, 1, false);
@@ -346,7 +346,7 @@ public class DriveSubsystem extends SubsystemBase {
   }
     
     // Assuming this method is part of a drivetrain subsystem that provides the necessary methods
-    // TODO(requires bot) - Adjust p for x and y
+    // TODO (requires bot): Adjust p for x and y
   public Command followTrajectoryCommand(PathPlannerTrajectory traj, boolean isFirstPath) {
     return new SequentialCommandGroup(
         new InstantCommand(() -> {
@@ -368,7 +368,7 @@ public class DriveSubsystem extends SubsystemBase {
             this // Requires this drive subsystem
 
             //1 inch undershot Forward/Backward. Increasing Xkp and Xki increases this error
-            //TODO (requires bot) - Adjust max vel and acc constaints
+            //TODO (requires bot): Adjust max vel and acc constaints
         )
     );
   }

@@ -90,7 +90,7 @@ public class ArmSubsystem extends SubsystemBase{
     public void periodic() {
         armPos = armMotorLeft.getEncoder().getPosition();
         SmartDashboard.putNumber("Arm Enc", armPos);
-        // TODO: Low Priority: If driving too fast, lower arm to home. 
+        // TODO (Low Priority): If driving too fast, lower arm to home. 
         //   Might use global that is set by drive periodic to indicate if driving too fast.
     }
 
