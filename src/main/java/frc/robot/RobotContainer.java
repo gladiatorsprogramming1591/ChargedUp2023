@@ -39,6 +39,8 @@ import frc.robot.commands.driveCommands.AutoLevel;
 import frc.robot.commands.driveCommands.DriveToAngle;
 import frc.robot.commands.driveCommands.DriveToLevel;
 import frc.robot.commands.driveCommands.PathPlanner.OnePieceAuto;
+import frc.robot.commands.driveCommands.PathPlanner.OnePieceAuto5;
+import frc.robot.commands.driveCommands.PathPlanner.OnePieceAuto6;
 import frc.robot.commands.driveCommands.PathPlanner.ForwardPathTest;
 import frc.robot.commands.driveCommands.PathPlanner.ReversePathTest;
 import frc.robot.commands.navXCommands.ResetGyro;
@@ -225,9 +227,9 @@ public class RobotContainer {
 
     m_manipulatorController.y().toggleOnTrue(new AutoLevel(m_robotDrive));  //Command Group
 
-    m_manipulatorController.b().toggleOnTrue(new ForwardPathTest(m_robotDrive)); 
+    m_manipulatorController.b().toggleOnTrue(new OnePieceAuto5(m_robotDrive, m_arm, m_intake)); //TEST
 
-    m_manipulatorController.a().toggleOnTrue(new ReversePathTest(m_robotDrive));
+    m_manipulatorController.a().toggleOnTrue(new OnePieceAuto6(m_robotDrive, m_arm, m_intake)); //TEST
 
     // m_driverController.povDown().whileTrue(new ResetGyro(m_robotDrive));
     m_driverController.leftStick().toggleOnTrue(new ResetGyro(m_robotDrive));
