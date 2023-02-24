@@ -39,6 +39,7 @@ import frc.robot.commands.driveCommands.AutoLevel;
 import frc.robot.commands.driveCommands.DriveToAngle;
 import frc.robot.commands.driveCommands.DriveToLevel;
 import frc.robot.commands.driveCommands.PathPlanner.OnePieceAuto;
+import frc.robot.commands.driveCommands.PathPlanner.OnePieceAuto4;
 import frc.robot.commands.driveCommands.PathPlanner.ForwardPathTest;
 import frc.robot.commands.driveCommands.PathPlanner.ReversePathTest;
 import frc.robot.commands.navXCommands.ResetGyro;
@@ -204,6 +205,7 @@ public class RobotContainer {
     Constants.AutoConstants.AUTO_EVENT_MAP.put("Arm LVLTRE", new ArmToPositionWithEnd(m_arm, armPositions.LVLTRE).withTimeout(3.0));
     Constants.AutoConstants.AUTO_EVENT_MAP.put("Intake Reverse", new RunCommand(() -> m_intake.intakeOn(Constants.IntakeConstants.kIntakeReverse), m_intake).withTimeout(.25));
     Constants.AutoConstants.AUTO_EVENT_MAP.put("Arm HOME", new ArmToPositionWithEnd(m_arm, armPositions.HOME).withTimeout(2.0));
+    // Constants.AutoConstants.AUTO_EVENT_MAP.put("LED", SmartDashboard.putString("LED", "Was called"));  // TODO: Reference servo command for last year
     Constants.AutoConstants.AUTO_EVENT_MAP.put("AutoLevel", new AutoLevel(m_robotDrive));   // TODO: (requires bot) Parallel or Sequential?
   }
 
@@ -240,13 +242,15 @@ public class RobotContainer {
     m_manipulatorController.rightTrigger().onTrue(new ArmToPosition(m_arm, ArmSubsystem.armPositions.CONESTOW));
   
     // String pathName = new String("Leave Community 3"); 
-    String pathName1 = new String("Leave Community 3"); 
-    PathPlannerTrajectory m_leaveCommunity = PathPlanner.loadPath(pathName1, new PathConstraints(.85, .5));
-    m_driverController.povDown().toggleOnTrue(m_robotDrive.followTrajectoryCommand(m_leaveCommunity, true));
+    // String pathName1 = new String("Leave Community 3"); 
+    // PathPlannerTrajectory m_leaveCommunity = PathPlanner.loadPath(pathName1, new PathConstraints(.85, .5));
 
-    String pathName2 = new String("Cone Score 3"); 
-    PathPlannerTrajectory m_coneScore1 = PathPlanner.loadPath(pathName2, new PathConstraints(.85, .5));
-    m_driverController.povRight().toggleOnTrue(m_robotDrive.followTrajectoryCommand(m_coneScore1, true));
+    // TEST PATH 4
+    m_driverController.povDown().toggleOnTrue(new OnePieceAuto4(m_robotDrive, m_arm, m_intake));
+
+    // String pathName2 = new String("Cone Score 3"); 
+    // PathPlannerTrajectory m_coneScore1 = PathPlanner.loadPath(pathName2, new PathConstraints(.85, .5));
+    // m_driverController.povRight().toggleOnTrue(m_robotDrive.followTrajectoryCommand(m_coneScore1, true));
 
 
     // m_manipulatorController.().whileTrue(new ) //TODO: add button to prevent from running
