@@ -12,15 +12,15 @@ import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 
-public class NewOnePieceAuto extends SequentialCommandGroup {
+public class NewOnePieceAuto3 extends SequentialCommandGroup {
 
     // TODO: Path group name as parameter
-    public NewOnePieceAuto(DriveSubsystem driveSubsystem, 
+    public NewOnePieceAuto3(DriveSubsystem driveSubsystem, 
                         ArmSubsystem armSubsystem,
                         IntakeSubsystem intakeSubsystem
                         ){
 
-        List<PathPlannerTrajectory> m_path = PathPlanner.loadPathGroup("One Piece Auto",
+        List<PathPlannerTrajectory> m_path = PathPlanner.loadPathGroup("One Piece Auto 3 4ft",
             Constants.AutoConstants.kMaxSpeedMetersPerSecond,
             Constants.AutoConstants.kMaxAccelerationMetersPerSecondSquared);
 

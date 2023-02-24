@@ -38,7 +38,7 @@ import frc.robot.commands.armCommands.ArmToPositionWithEnd;
 import frc.robot.commands.driveCommands.AutoLevel;
 import frc.robot.commands.driveCommands.DriveToAngle;
 import frc.robot.commands.driveCommands.DriveToLevel;
-import frc.robot.commands.driveCommands.PathPlanner.OnePieceAuto;
+import frc.robot.commands.driveCommands.PathPlanner.OnePieceAuto3;
 import frc.robot.commands.driveCommands.PathPlanner.OnePieceAuto5;
 import frc.robot.commands.driveCommands.PathPlanner.OnePieceAuto6;
 import frc.robot.commands.driveCommands.PathPlanner.ForwardPathTest;
@@ -197,7 +197,7 @@ public class RobotContainer {
 
   // TODO: Add auto that only drives out of community after time set in SmartDashboard
   private void addAutoOptions() {
-    m_autoChooser.setDefaultOption("OnePieceAuto", new OnePieceAuto(m_robotDrive, m_arm, m_intake));
+    m_autoChooser.setDefaultOption("OnePieceAuto3", new OnePieceAuto3(m_robotDrive, m_arm, m_intake));
     SmartDashboard.putData("Auto Mode", m_autoChooser);
   }
 
@@ -241,10 +241,9 @@ public class RobotContainer {
     m_manipulatorController.povRight().onTrue(new ArmToPosition(m_arm, ArmSubsystem.armPositions.LVLTRE));
     m_manipulatorController.rightTrigger().onTrue(new ArmToPosition(m_arm, ArmSubsystem.armPositions.CONESTOW));
   
-    // String pathName = new String("Leave Community 3"); 
-    String pathName1 = new String("Leave Community 3"); 
-    PathPlannerTrajectory m_leaveCommunity = PathPlanner.loadPath(pathName1, new PathConstraints(.85, .5));
-    m_driverController.povDown().toggleOnTrue(m_robotDrive.followTrajectoryCommand(m_leaveCommunity, true));
+    // String pathName1 = new String("Leave Community 3"); 
+    // PathPlannerTrajectory m_leaveCommunity = PathPlanner.loadPath(pathName1, new PathConstraints(.85, .5));
+    // m_driverController.povDown().toggleOnTrue(m_robotDrive.followTrajectoryCommand(m_leaveCommunity, true));
 
     String pathName2 = new String("Cone Score 3"); 
     PathPlannerTrajectory m_coneScore1 = PathPlanner.loadPath(pathName2, new PathConstraints(.85, .5));

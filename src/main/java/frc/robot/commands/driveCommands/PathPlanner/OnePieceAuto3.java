@@ -20,11 +20,11 @@ import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ArmSubsystem.armPositions;
 
-public class OnePieceAuto extends SequentialCommandGroup {
+public class OnePieceAuto3 extends SequentialCommandGroup {
 
     // private DriveSubsystem m_driveSubsystem;
 
-    public OnePieceAuto(DriveSubsystem driveSubsystem, 
+    public OnePieceAuto3(DriveSubsystem driveSubsystem, 
                         ArmSubsystem armSubsystem,
                         IntakeSubsystem intakeSubsystem
                         // Timer timer
@@ -35,7 +35,7 @@ public class OnePieceAuto extends SequentialCommandGroup {
             new PathConstraints(2, 3));
             PathPlannerTrajectory m_secondPath = PathPlanner.loadPath("Cone Reverse 3", 
             new PathConstraints(2, 1));
-        PathPlannerTrajectory m_thirdPath = PathPlanner.loadPath("Leave Community 3", 
+        PathPlannerTrajectory m_thirdPath = PathPlanner.loadPath("Leave Community 3 4ft", 
             new PathConstraints(2, 3));
 
         
