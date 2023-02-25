@@ -4,20 +4,12 @@
 
 package frc.robot;
 
-import com.pathplanner.lib.PathConstraints;
-import com.pathplanner.lib.PathPlanner;
-import com.pathplanner.lib.PathPlannerTrajectory;
+// import com.pathplanner.lib.PathConstraints;
+// import com.pathplanner.lib.PathPlanner;
+// import com.pathplanner.lib.PathPlannerTrajectory;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.networktables.NetworkTableInstance;
-// import edu.wpi.first.math.controller.PIDController;
-// import edu.wpi.first.math.controller.ProfiledPIDController;
-// import edu.wpi.first.math.geometry.Pose2d;
-// import edu.wpi.first.math.geometry.Rotation2d;
-// import edu.wpi.first.math.geometry.Translation2d;
-// import edu.wpi.first.math.trajectory.Trajectory;
-// import edu.wpi.first.math.trajectory.TrajectoryConfig;
-// import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -25,13 +17,9 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
-// import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-// import java.util.List;
 // import edu.wpi.first.wpilibj.PS4Controller.Button;
-// import frc.robot.Constants.AutoConstants;
-// import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.armCommands.ArmToPosition;
 import frc.robot.commands.armCommands.ArmToPositionWithEnd;
@@ -41,13 +29,12 @@ import frc.robot.commands.driveCommands.DriveToLevel;
 import frc.robot.commands.driveCommands.PathPlanner.OnePieceAuto3;
 import frc.robot.commands.driveCommands.PathPlanner.OnePieceAuto5;
 import frc.robot.commands.driveCommands.PathPlanner.OnePieceAuto6;
-import frc.robot.commands.driveCommands.PathPlanner.ForwardPathTest;
-import frc.robot.commands.driveCommands.PathPlanner.ReversePathTest;
+import frc.robot.commands.driveCommands.PathPlanner.NewOnePieceAuto3;
 import frc.robot.commands.navXCommands.ResetGyro;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
-// import frc.robot.subsystems.ArmSubsystem.armPositions;
+import frc.robot.subsystems.LEDs;
 import frc.robot.subsystems.ArmSubsystem.armPositions;
 
 
@@ -65,6 +52,7 @@ public class RobotContainer {
   private final DriveSubsystem m_robotDrive;
   private final ArmSubsystem m_arm; 
   private final IntakeSubsystem m_intake;
+  private final LEDs m_LEDs;
 
   // The driver's controller
 //   XboxController m_driverController = new XboxController(OIConstants.kDriverControllerPort);
@@ -82,6 +70,8 @@ public class RobotContainer {
     m_robotDrive = new DriveSubsystem();
     m_arm = new ArmSubsystem(); 
     m_intake = new IntakeSubsystem();
+    m_LEDs = new LEDs();
+    // m_LEDs.setDefaultCommand(new RunCommand(() -> m_LEDs.setColor(.6), m_LEDs));
 
     addAutoOptions();
 
@@ -198,6 +188,9 @@ public class RobotContainer {
   // TODO: Add auto that only drives out of community after time set in SmartDashboard
   private void addAutoOptions() {
     m_autoChooser.setDefaultOption("OnePieceAuto3", new OnePieceAuto3(m_robotDrive, m_arm, m_intake));
+    m_autoChooser.addOption("NewOnePieceAuto3", new NewOnePieceAuto3(m_robotDrive, m_arm, m_intake));
+    m_autoChooser.addOption("OnePieceAuto5", new OnePieceAuto5(m_robotDrive, m_arm, m_intake));
+    m_autoChooser.addOption("OnePieceAuto6", new OnePieceAuto6(m_robotDrive, m_arm, m_intake));
     SmartDashboard.putData("Auto Mode", m_autoChooser);
   }
 
@@ -219,21 +212,21 @@ public class RobotContainer {
    * {@link JoystickButton}.
    */
   private void configureButtonBindings() {
+
+    // DRIVER 1
+    m_driverController.leftStick().toggleOnTrue(new ResetGyro(m_robotDrive));
+
+    // DRIVER 2
     m_manipulatorController.x().whileTrue(new RunCommand(() -> m_robotDrive.setX(),m_robotDrive));  //Prevents Movement
-
-    m_manipulatorController.leftTrigger().whileTrue(new DriveToLevel(m_robotDrive)); //On Charge Station
-
-    m_manipulatorController.leftBumper().whileTrue(new DriveToAngle(m_robotDrive));  //Off Charge Station
 
     m_manipulatorController.y().toggleOnTrue(new AutoLevel(m_robotDrive));  //Command Group
 
-    m_manipulatorController.b().toggleOnTrue(new OnePieceAuto5(m_robotDrive, m_arm, m_intake)); //TEST
+    m_manipulatorController.leftBumper().whileTrue(new DriveToAngle(m_robotDrive));
 
-    m_manipulatorController.a().toggleOnTrue(new OnePieceAuto6(m_robotDrive, m_arm, m_intake)); //TEST
+    m_manipulatorController.leftTrigger().whileTrue(new DriveToLevel(m_robotDrive)); //On Charge Station
 
-    // m_driverController.povDown().whileTrue(new ResetGyro(m_robotDrive));
-    m_driverController.leftStick().toggleOnTrue(new ResetGyro(m_robotDrive));
 
+    // m_manipulatorController.a().toggleOnTrue(new NewOnePieceAuto3(m_robotDrive, m_arm, m_intake)); // TEST
     
     m_manipulatorController.povDown().onTrue(new ArmToPosition(m_arm, ArmSubsystem.armPositions.HOME)); // TODO: enable quick cancelling of these commands
     m_manipulatorController.povLeft().onTrue(new ArmToPosition(m_arm, ArmSubsystem.armPositions.LVLONE));
@@ -241,13 +234,9 @@ public class RobotContainer {
     m_manipulatorController.povRight().onTrue(new ArmToPosition(m_arm, ArmSubsystem.armPositions.LVLTRE));
     m_manipulatorController.rightTrigger().onTrue(new ArmToPosition(m_arm, ArmSubsystem.armPositions.CONESTOW));
   
-    // String pathName1 = new String("Leave Community 3"); 
-    // PathPlannerTrajectory m_leaveCommunity = PathPlanner.loadPath(pathName1, new PathConstraints(.85, .5));
-    // m_driverController.povDown().toggleOnTrue(m_robotDrive.followTrajectoryCommand(m_leaveCommunity, true));
-
-    String pathName2 = new String("Cone Score 3"); 
-    PathPlannerTrajectory m_coneScore1 = PathPlanner.loadPath(pathName2, new PathConstraints(.85, .5));
-    m_driverController.povRight().toggleOnTrue(m_robotDrive.followTrajectoryCommand(m_coneScore1, true));
+    // String TestPathName = new String("Cone Score 3"); 
+    // PathPlannerTrajectory m_coneScore1 = PathPlanner.loadPath(TestPathName, new PathConstraints(.85, .5));
+    // m_driverController.povRight().toggleOnTrue(m_robotDrive.followTrajectoryCommand(m_coneScore1, true));
 
 
     // m_manipulatorController.().whileTrue(new ) //TODO: add button to prevent from running

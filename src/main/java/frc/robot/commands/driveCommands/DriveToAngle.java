@@ -7,7 +7,7 @@ import frc.robot.subsystems.DriveSubsystem;
 public class DriveToAngle extends CommandBase {
     private DriveSubsystem m_drivetrain;
     private boolean atAngle = false;
-    private boolean levelInit;
+    private boolean Initlevel;
 
     public DriveToAngle(DriveSubsystem drivetrain){
         m_drivetrain = drivetrain;
@@ -16,7 +16,7 @@ public class DriveToAngle extends CommandBase {
 
     public void initialize(){
         atAngle = false;
-        levelInit = m_drivetrain.isLevel();
+        Initlevel = m_drivetrain.isLevel();
     }
 
     @Override
@@ -26,7 +26,7 @@ public class DriveToAngle extends CommandBase {
 
     @Override
     public boolean isFinished(){
-        if (levelInit) return atAngle;
+        if (Initlevel) return atAngle;
         else return true; 
     }
 }

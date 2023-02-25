@@ -20,7 +20,7 @@ public class NewOnePieceAuto3 extends SequentialCommandGroup {
                         IntakeSubsystem intakeSubsystem
                         ){
 
-        List<PathPlannerTrajectory> m_path = PathPlanner.loadPathGroup("One Piece Auto 3 4ft",
+        List<PathPlannerTrajectory> m_path = PathPlanner.loadPathGroup("One Piece Auto 3 (4ft)",
             Constants.AutoConstants.kMaxSpeedMetersPerSecond,
             Constants.AutoConstants.kMaxAccelerationMetersPerSecondSquared);
 
@@ -42,11 +42,11 @@ public class NewOnePieceAuto3 extends SequentialCommandGroup {
                 new FollowPathWithEvents(
                     driveSubsystem.followTrajectoryCommand(m_path.get(2), false),
                     m_path.get(2).getMarkers(),
-                    Constants.AutoConstants.AUTO_EVENT_MAP),
-                new FollowPathWithEvents(
-                    driveSubsystem.followTrajectoryCommand(m_path.get(3), false),
-                    m_path.get(3).getMarkers(),
                     Constants.AutoConstants.AUTO_EVENT_MAP)
+                // new FollowPathWithEvents(
+                //     driveSubsystem.followTrajectoryCommand(m_path.get(3), false),
+                //     m_path.get(3).getMarkers(),
+                //     Constants.AutoConstants.AUTO_EVENT_MAP)
             );
     }
 }

@@ -35,7 +35,7 @@ public class OnePieceAuto3 extends SequentialCommandGroup {
             new PathConstraints(2, 3));
             PathPlannerTrajectory m_secondPath = PathPlanner.loadPath("Cone Reverse 3", 
             new PathConstraints(2, 1));
-        PathPlannerTrajectory m_thirdPath = PathPlanner.loadPath("Leave Community 3 4ft", 
+        PathPlannerTrajectory m_thirdPath = PathPlanner.loadPath("Leave Community 3 (4ft)", 
             new PathConstraints(2, 3));
 
         

@@ -15,7 +15,7 @@ public class ArmToPositionWithEnd extends CommandBase {
 
     @Override
     public void execute(){
-        m_arm.raiseArm(m_targetPos);
+        m_arm.raiseArmAbs(m_targetPos);
     }
 
     @Override
