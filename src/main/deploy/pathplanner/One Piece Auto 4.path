@@ -82,11 +82,11 @@
     {
       "anchorPoint": {
         "x": 5.832204034350266,
-        "y": 3.106663224061379
+        "y": 3.31
       },
       "prevControl": {
         "x": 6.549278300868741,
-        "y": 5.251056744888058
+        "y": 5.454393520826679
       },
       "nextControl": null,
       "holonomicAngle": 180.0,
@@ -96,8 +96,7 @@
       "isStopPoint": false,
       "stopEvent": {
         "names": [
-          "AutoLevel",
-          "LED"
+          "AutoLevel"
         ],
         "executionBehavior": "sequential",
         "waitBehavior": "none",

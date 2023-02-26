@@ -25,7 +25,8 @@ public class ArmSubsystem extends SubsystemBase{
         LVLTWO, 
         LVLTRE,
         HOME,
-        CONESTOW;
+        CONESTOW,
+        CONESINGLE
     }
         
     private final CANSparkMax armMotorLeft = new CANSparkMax(Constants.CANIDConstants.kLeftArmCANId, MotorType.kBrushless); 
@@ -45,7 +46,7 @@ public class ArmSubsystem extends SubsystemBase{
 
     private double armPos;
 
-    private final PIDController m_AbsPidController = new PIDController(7.0, 0.2, 0.0); 
+    private final PIDController m_AbsPidController = new PIDController(0.0, 0.0, 0.0); //i was 0.2 | p is set below
 
     public ArmSubsystem(){
         armMotorLeft.setInverted(true);
@@ -60,10 +61,12 @@ public class ArmSubsystem extends SubsystemBase{
         map.put(armPositions.CONESTOW, 10.0);
 
         mapAbs.put(armPositions.LVLONE, 0.41);
-        mapAbs.put(armPositions.LVLTWO, 0.245);
-        mapAbs.put(armPositions.LVLTRE, 0.154); //At hard stop 
-        mapAbs.put(armPositions.CONESTOW, 0.496); 
+        mapAbs.put(armPositions.LVLTWO, 0.280);
+        mapAbs.put(armPositions.CONESINGLE, .235); // Single Substation
+        mapAbs.put(armPositions.LVLTRE, 0.180); //At hard stop, was 0.154
+        mapAbs.put(armPositions.CONESTOW, 0.549); // was 0.546
         mapAbs.put(armPositions.HOME, 0.56); 
+        // .235
         
         armPID.setP(ArmConstants.kArmP);
         armPID.setI(ArmConstants.kArmI);
@@ -129,6 +132,21 @@ public class ArmSubsystem extends SubsystemBase{
             ((armAbsEncoder.getAbsolutePosition() < ArmConstants.kMaxHeightAbs) && (position == armPositions.LVLTRE))) {
             armMotorLeft.set(0);
             return;
+        }
+
+        // For LVLTRE, LVLTWO, and HOME
+        switch (position) {
+            case LVLTRE:
+            case LVLTWO:
+            case HOME:
+                m_AbsPidController.setP(11.0);
+                break;
+        // For LVLONE and CONESTOW
+            case CONESTOW:
+            case LVLONE:
+            default:
+                m_AbsPidController.setP(4.0);
+                break;
         }
         double ref = mapAbs.get(position);
         double pidOut = MathUtil.clamp(m_AbsPidController.calculate(armAbsEncoder.getAbsolutePosition(),ref), Constants.ArmConstants.kArmMinOutput, Constants.ArmConstants.kArmMaxOutput);

@@ -24,7 +24,7 @@ public class NewOnePieceAuto3 extends SequentialCommandGroup {
             Constants.AutoConstants.kMaxSpeedMetersPerSecond,
             Constants.AutoConstants.kMaxAccelerationMetersPerSecondSquared);
 
-        // TODO: Create loop instead of 4 seperate commands
+        // TODO: Create loop instead of 4 seperate commands (To pass in different paths in parameter)
         // m_path.forEach(addCommands(new FollowPathWithEvents(
         //     driveSubsystem.followTrajectoryCommand(m_path.get(0), true),
         //     m_path.get(0).getMarkers(),

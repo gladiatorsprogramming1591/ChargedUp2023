@@ -12,17 +12,16 @@ import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 
-public class NewOnePieceAuto9 extends SequentialCommandGroup {
+public class NewOnePieceAuto4 extends SequentialCommandGroup {
 
-    public NewOnePieceAuto9(DriveSubsystem driveSubsystem, 
+    public NewOnePieceAuto4(DriveSubsystem driveSubsystem, 
                         ArmSubsystem armSubsystem,
                         IntakeSubsystem intakeSubsystem
                         ){
 
-        List<PathPlannerTrajectory> m_path = PathPlanner.loadPathGroup("One Piece Auto 9",
+        List<PathPlannerTrajectory> m_path = PathPlanner.loadPathGroup("One Piece Auto 4",
             Constants.AutoConstants.kMaxSpeedMetersPerSecond,
             Constants.AutoConstants.kMaxAccelerationMetersPerSecondSquared);
-
 
         addCommands(
                 new FollowPathWithEvents(

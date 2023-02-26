@@ -1,4 +1,4 @@
-package frc.robot.commands.driveCommands.PathPlanner;
+package frc.robot.commands.driveCommands.PathPlanner.Tests;
 
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;

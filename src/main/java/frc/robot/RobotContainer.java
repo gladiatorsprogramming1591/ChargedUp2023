@@ -26,10 +26,11 @@ import frc.robot.commands.armCommands.ArmToPositionWithEnd;
 import frc.robot.commands.driveCommands.AutoLevel;
 import frc.robot.commands.driveCommands.DriveToAngle;
 import frc.robot.commands.driveCommands.DriveToLevel;
-import frc.robot.commands.driveCommands.PathPlanner.OnePieceAuto3;
+import frc.robot.commands.driveCommands.PathPlanner.OnePieceAuto5Level;
 import frc.robot.commands.driveCommands.PathPlanner.OnePieceAuto5;
 import frc.robot.commands.driveCommands.PathPlanner.OnePieceAuto6;
 import frc.robot.commands.driveCommands.PathPlanner.NewOnePieceAuto3;
+import frc.robot.commands.driveCommands.PathPlanner.OnePieceAuto3;
 import frc.robot.commands.driveCommands.PathPlanner.OnePieceAuto4;
 import frc.robot.commands.navXCommands.ResetGyro;
 import frc.robot.subsystems.ArmSubsystem;
@@ -93,9 +94,12 @@ public class RobotContainer {
                 -MathUtil.applyDeadband(m_driverController.getLeftX(), OIConstants.kDriveDeadband),
                 -MathUtil.applyDeadband(m_driverController.getRightX(), OIConstants.kDriveDeadband),
                 true, true, true,
-                Constants.DriveConstants.kDriveMaxOutput),
+                m_driverController.rightBumper().getAsBoolean()
+                ? Constants.DriveConstants.kDriveSlow
+                : Constants.DriveConstants.kDriveMaxOutput),
             m_robotDrive));
       
+            // TODO (low priority) May no longer be needed
     m_driverController.rightBumper().whileTrue(new RunCommand(
             () -> m_robotDrive.drive(
                 -MathUtil.applyDeadband(m_driverController.getLeftY(), OIConstants.kDriveDeadband),
@@ -124,7 +128,9 @@ public class RobotContainer {
                 -MathUtil.applyDeadband(m_driverController.getLeftX(), OIConstants.kDriveDeadband),
                 Constants.DriveConstants.faceRight,
                 true, true,
-                Constants.DriveConstants.kDriveMaxOutput),
+                m_driverController.rightBumper().getAsBoolean()
+                ? Constants.DriveConstants.kDriveSlow
+                : Constants.DriveConstants.kDriveMaxOutput),
             m_robotDrive));
       m_driverController.x().whileTrue( new RunCommand (
             () -> m_robotDrive.TurnToTarget(
@@ -132,7 +138,9 @@ public class RobotContainer {
                 -MathUtil.applyDeadband(m_driverController.getLeftX(), OIConstants.kDriveDeadband),
                 Constants.DriveConstants.faceLeft,
                 true, true,
-                Constants.DriveConstants.kDriveMaxOutput),
+                m_driverController.rightBumper().getAsBoolean()
+                ? Constants.DriveConstants.kDriveSlow
+                : Constants.DriveConstants.kDriveMaxOutput),
             m_robotDrive));
       m_driverController.y().whileTrue( new RunCommand (
             () -> m_robotDrive.TurnToTarget(
@@ -140,7 +148,9 @@ public class RobotContainer {
                 -MathUtil.applyDeadband(m_driverController.getLeftX(), OIConstants.kDriveDeadband),
                 Constants.DriveConstants.faceForward,
                 true, true,
-                Constants.DriveConstants.kDriveMaxOutput),
+                m_driverController.rightBumper().getAsBoolean()
+                ? Constants.DriveConstants.kDriveSlow
+                : Constants.DriveConstants.kDriveMaxOutput),
             m_robotDrive));
       m_driverController.a().whileTrue( new RunCommand (
             () -> m_robotDrive.TurnToTarget(
@@ -148,17 +158,19 @@ public class RobotContainer {
                 -MathUtil.applyDeadband(m_driverController.getLeftX(), OIConstants.kDriveDeadband),
                 Constants.DriveConstants.faceBackward,
                 true, true,
-                Constants.DriveConstants.kDriveMaxOutput),
+                m_driverController.rightBumper().getAsBoolean()
+                ? Constants.DriveConstants.kDriveSlow
+                : Constants.DriveConstants.kDriveMaxOutput),
             m_robotDrive));
             
-    m_arm.setDefaultCommand(
-      // The left stick controls moving the arm in and out. 
-        new RunCommand(
+    // m_arm.setDefaultCommand(
+    //   // The left stick controls moving the arm in and out. 
+    //     new RunCommand(
         
-            () -> m_arm.raiseArm(
-                MathUtil.applyDeadband(m_driverController.getRightTriggerAxis()*Constants.ArmConstants.kArmMaxOutput, OIConstants.kArmDeadband),
-                MathUtil.applyDeadband(m_driverController.getLeftTriggerAxis()*Constants.ArmConstants.kArmMaxOutput, OIConstants.kArmDeadband)), 
-            m_arm));
+    //         () -> m_arm.raiseArm(
+    //             MathUtil.applyDeadband(m_driverController.getRightTriggerAxis()*Constants.ArmConstants.kArmMaxOutput, OIConstants.kArmDeadband),
+    //             MathUtil.applyDeadband(m_driverController.getLeftTriggerAxis()*Constants.ArmConstants.kArmMaxOutput, OIConstants.kArmDeadband)), 
+    //         m_arm));
 
         m_manipulatorController.leftStick().toggleOnTrue( new RunCommand(
             () -> m_arm.raiseArm(
@@ -192,6 +204,7 @@ public class RobotContainer {
     m_autoChooser.addOption("NewOnePieceAuto3", new NewOnePieceAuto3(m_robotDrive, m_arm, m_intake));
     m_autoChooser.addOption("OnePieceAuto5", new OnePieceAuto5(m_robotDrive, m_arm, m_intake));
     m_autoChooser.addOption("OnePieceAuto6", new OnePieceAuto6(m_robotDrive, m_arm, m_intake));
+    m_autoChooser.addOption("OnePieceAuto5Level", new OnePieceAuto5Level(m_robotDrive, m_arm, m_intake));
     SmartDashboard.putData("Auto Mode", m_autoChooser);
   }
 
@@ -218,23 +231,27 @@ public class RobotContainer {
     // DRIVER 1
     m_driverController.leftStick().toggleOnTrue(new ResetGyro(m_robotDrive));
 
+    m_driverController.povUp().whileTrue(new DriveToLevel(m_robotDrive));
+
+    m_driverController.povDown().whileTrue(new RunCommand(() -> m_robotDrive.setX(),m_robotDrive));  //Prevents Movement
+
+
     // DRIVER 2
-    m_manipulatorController.x().whileTrue(new RunCommand(() -> m_robotDrive.setX(),m_robotDrive));  //Prevents Movement
 
-    m_manipulatorController.y().toggleOnTrue(new AutoLevel(m_robotDrive));  //Command Group
+    // m_manipulatorController.y().toggleOnTrue(new AutoLevel(m_robotDrive));  //Command Group
+    // m_manipulatorController.leftBumper().toggleOnTrue(new DriveToAngle(m_robotDrive));
+    // m_manipulatorController.leftTrigger().whileTrue(new DriveToLevel(m_robotDrive)); //On Charge Station
 
-    m_manipulatorController.leftBumper().whileTrue(new DriveToAngle(m_robotDrive));
+    m_manipulatorController.leftBumper().onTrue(new InstantCommand(() -> m_LEDs.setPiece(), m_LEDs));
 
-    m_manipulatorController.leftTrigger().whileTrue(new DriveToLevel(m_robotDrive)); //On Charge Station
-
-
-    // m_manipulatorController.a().toggleOnTrue(new NewOnePieceAuto3(m_robotDrive, m_arm, m_intake)); // TEST
+    m_manipulatorController.back().whileTrue(new InstantCommand(() -> m_LEDs.cycle(), m_LEDs));
     
     m_manipulatorController.povDown().onTrue(new ArmToPosition(m_arm, ArmSubsystem.armPositions.HOME)); // TODO: enable quick cancelling of these commands
     m_manipulatorController.povLeft().onTrue(new ArmToPosition(m_arm, ArmSubsystem.armPositions.LVLONE));
     m_manipulatorController.povUp().onTrue(new ArmToPosition(m_arm, ArmSubsystem.armPositions.LVLTWO));
     m_manipulatorController.povRight().onTrue(new ArmToPosition(m_arm, ArmSubsystem.armPositions.LVLTRE));
     m_manipulatorController.rightTrigger().onTrue(new ArmToPosition(m_arm, ArmSubsystem.armPositions.CONESTOW));
+    m_manipulatorController.rightBumper().onTrue(new ArmToPosition(m_arm, ArmSubsystem.armPositions.CONESINGLE));
   
     // String TestPathName = new String("Cone Score 3"); 
     // PathPlannerTrajectory m_coneScore1 = PathPlanner.loadPath(TestPathName, new PathConstraints(.85, .5));

@@ -14,7 +14,6 @@ import frc.robot.subsystems.IntakeSubsystem;
 
 public class NewOnePieceAuto6 extends SequentialCommandGroup {
 
-    // TODO: Path group name as parameter
     public NewOnePieceAuto6(DriveSubsystem driveSubsystem, 
                         ArmSubsystem armSubsystem,
                         IntakeSubsystem intakeSubsystem
@@ -23,12 +22,6 @@ public class NewOnePieceAuto6 extends SequentialCommandGroup {
         List<PathPlannerTrajectory> m_path = PathPlanner.loadPathGroup("One Piece Auto 6",
             Constants.AutoConstants.kMaxSpeedMetersPerSecond,
             Constants.AutoConstants.kMaxAccelerationMetersPerSecondSquared);
-
-        // TODO: Create loop instead of 4 seperate commands
-        // m_path.forEach(addCommands(new FollowPathWithEvents(
-        //     driveSubsystem.followTrajectoryCommand(m_path.get(0), true),
-        //     m_path.get(0).getMarkers(),
-        //     Constants.AutoConstants.AUTO_EVENT_MAP)));
 
         addCommands(
                 new FollowPathWithEvents(
@@ -42,11 +35,11 @@ public class NewOnePieceAuto6 extends SequentialCommandGroup {
                 new FollowPathWithEvents(
                     driveSubsystem.followTrajectoryCommand(m_path.get(2), false),
                     m_path.get(2).getMarkers(),
-                    Constants.AutoConstants.AUTO_EVENT_MAP),
-                new FollowPathWithEvents(
-                    driveSubsystem.followTrajectoryCommand(m_path.get(3), false),
-                    m_path.get(3).getMarkers(),
                     Constants.AutoConstants.AUTO_EVENT_MAP)
+                // new FollowPathWithEvents(
+                //     driveSubsystem.followTrajectoryCommand(m_path.get(3), false),
+                //     m_path.get(3).getMarkers(),
+                //     Constants.AutoConstants.AUTO_EVENT_MAP)
             );
     }
 }

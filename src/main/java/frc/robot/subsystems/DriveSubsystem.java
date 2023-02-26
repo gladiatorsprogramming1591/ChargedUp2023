@@ -333,7 +333,7 @@ public class DriveSubsystem extends SubsystemBase {
     // double currentAngle = m_odometry.;
     // TODO (requires bot): Angle could be positive or negative, need to handle both
     // Should be positive if driving forward, negative if driving backward onto the power station ramp
-    if ( currentAngle <= targetAngle) {
+    if ( currentAngle >= targetAngle) {
         drive(.25, 0, 0, false);  // xSpeed .4
         atAngle = false;
         if (++count %10 == 0) {

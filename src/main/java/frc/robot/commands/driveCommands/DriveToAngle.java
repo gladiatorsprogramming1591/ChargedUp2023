@@ -1,5 +1,8 @@
 package frc.robot.commands.driveCommands;
 
+import org.opencv.core.Mat.Atable;
+
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.DriveSubsystem;
@@ -17,11 +20,18 @@ public class DriveToAngle extends CommandBase {
     public void initialize(){
         atAngle = false;
         Initlevel = m_drivetrain.isLevel();
+        SmartDashboard.putBoolean("DriveToAngle InitLevel", Initlevel);
     }
 
     @Override
     public void execute(){
         atAngle = m_drivetrain.driveToAngle(Constants.AutoConstants.kDriveAngle);
+        SmartDashboard.putBoolean("atAngle", atAngle);
+    }
+
+    @Override
+    public void end(boolean isInterrupted) {
+        // m_drivetrain.drive(0, 0, 0, false);
     }
 
     @Override
