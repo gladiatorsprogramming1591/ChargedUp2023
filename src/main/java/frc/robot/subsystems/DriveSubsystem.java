@@ -114,6 +114,7 @@ public class DriveSubsystem extends SubsystemBase {
         m_field.setRobotPose(m_odometry.getPoseMeters());
 
     SmartDashboard.putNumber("Heading", m_odometry.getPoseMeters().getRotation().getDegrees());
+    SmartDashboard.putNumber("CurrentRoll", m_navX.getRoll());
     // SmartDashboard.putNumber("xTrajSP", xTrajPID.getSetpoint());
     // SmartDashboard.putNumber("xTrajPosErr", xTrajPID.getPositionError());
   }
@@ -156,10 +157,10 @@ public class DriveSubsystem extends SubsystemBase {
    */
   
   public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative) {
-    drive(xSpeed, ySpeed, rot, fieldRelative, false, false, 1, false);  //TODO - Do we want rateLimit for auto?
+    drive(xSpeed, ySpeed, rot, fieldRelative, true, false, 1, false);
   }
   public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative, boolean rateLimit) {
-    drive(xSpeed, ySpeed, rot, fieldRelative, rateLimit, false, 1, false);
+    drive(xSpeed, ySpeed, rot, fieldRelative, rateLimit, true, 1, false);
   }
   public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative, boolean rateLimit, boolean squaredInputs, double maxOutput) {
     drive(xSpeed, ySpeed, rot, fieldRelative, rateLimit, squaredInputs, maxOutput, false);
@@ -311,7 +312,7 @@ public class DriveSubsystem extends SubsystemBase {
   //Charge Station Autos
   public void driveToLevel(){
     double pidOut = MathUtil.clamp(m_rollPidController.calculate(m_navX.getRoll(), 0), -0.30, 0.30);
-    drive(-pidOut, 0, 0, false);
+    drive(pidOut, 0, 0, false);
     if (++count %10 == 0) {
         System.out.println("Roll is :" + m_navX.getRoll());
         System.out.println("Pitch is :" + m_navX.getPitch());
@@ -326,18 +327,18 @@ public class DriveSubsystem extends SubsystemBase {
     return Math.abs(m_navX.getRoll()) < Constants.AutoConstants.kLevelTolerance;
   }
 
-  public boolean driveToAngle (double angle){
+  public boolean driveToAngle (double targetAngle){   // TODO (fix): Currently does not end
     boolean atAngle = true;
     double currentAngle = m_navX.getRoll();
+    // double currentAngle = m_odometry.;
     // TODO (requires bot): Angle could be positive or negative, need to handle both
     // Should be positive if driving forward, negative if driving backward onto the power station ramp
-    if ( currentAngle <= angle) {
-        drive(.4, 0, 0, false);  // was true
+    if ( currentAngle >= targetAngle) {
+        drive(.25, 0, 0, false);  // xSpeed .4
         atAngle = false;
         if (++count %10 == 0) {
           System.out.println("Angle is:" + currentAngle);
         }
-        SmartDashboard.putNumber("CurrentRoll", currentAngle);
     }
     else {
         drive(0, 0, 0, true);
@@ -346,7 +347,7 @@ public class DriveSubsystem extends SubsystemBase {
   }
     
     // Assuming this method is part of a drivetrain subsystem that provides the necessary methods
-    // TODO(requires bot) - Adjust p for x and y
+    // TODO (requires bot): Adjust p for x and y
   public Command followTrajectoryCommand(PathPlannerTrajectory traj, boolean isFirstPath) {
     return new SequentialCommandGroup(
         new InstantCommand(() -> {
@@ -368,7 +369,7 @@ public class DriveSubsystem extends SubsystemBase {
             this // Requires this drive subsystem
 
             //1 inch undershot Forward/Backward. Increasing Xkp and Xki increases this error
-            //TODO (requires bot) - Adjust max vel and acc constaints
+            //TODO (requires bot): Adjust max vel and acc constaints
         )
     );
   }

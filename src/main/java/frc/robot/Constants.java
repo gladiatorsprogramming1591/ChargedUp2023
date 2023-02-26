@@ -4,12 +4,15 @@
 
 package frc.robot;
 
+import java.util.HashMap;
+
 import com.revrobotics.CANSparkMax.IdleMode;
 
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj2.command.Command;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
@@ -75,7 +78,7 @@ public final class Constants {
 
     public static final boolean kGyroReversed = false;
 
-    public static final double kDriveMaxOutput = 0.85;
+    public static final double kDriveMaxOutput = 0.75;  // 0.25
     public static final double kDriveSlow = 0.25;
     public static final double faceForward = 0; //Need to change depending on where robot starts (field orientation must match)
     public static final double faceBackward = 180;
@@ -158,7 +161,9 @@ public final class Constants {
 
     public static final double kLevelTolerance = 2.25;  //field tolerance is 2.25 degrees 
 
-    public static final double kDriveAngle = 14;
+    public static final double kDriveAngle = -11;  // Was 14.0
+
+    public static final HashMap<String, Command> AUTO_EVENT_MAP = new HashMap<>();
   }
 
   public static final class NeoMotorConstants {
@@ -171,20 +176,23 @@ public final class Constants {
     public static final double kArmI = 0.0; // 0.0002
     public static final double kArmD = 0.0; 
     public static final double kArmFF = 0.0; // 0.0005
-    public static final double kArmMinOutput = -0.4; 
-    public static final double kArmMaxOutput = 0.4; //TODO (requires bot): update these (everybot has max as 1, min as -1)
+    public static final double kArmMinOutput = -0.6; 
+    public static final double kArmMaxOutput = 0.6; //TODO (requires bot): update these (everybot has max as 1, min as -1)
     public static final double kArmMaxVel = 0; // unused
     public static final double kArmMinVel = 0; // unused
     public static final double kArmMaxAcc = 0; // unused
-    public static final double kAllowedErr = 0.25; 
-    public static final double kMaxHeight = 78;
+    public static final double kAllowedErrRelative = 0.25;
+    public static final double kAllowedErrAbs = 0.001;
+    public static final double kMaxHeightRelative = 78;
+    public static final double kMaxHeightAbs = 0.152; // The lower the value, the higher the arm
+    public static final double kMinHeightAbs = 0.562; // The higher the value, the lower the arm
   }
 
   public static final class IntakeConstants{
     public static final int kPdhChannel = 0; // TODO (requires bot): Need to determine which PDH channel the intake is plugged into 
     public static final double kStallSpeed = 0.1; // TODO (requires bot): Need to confirm actual stall speed needed
-    public static final double kIntakeMaxOutput = 0.3; 
-    public static final double kIntakeMinOutput = -0.5; 
+    public static final double kIntakePickUp = 0.3;
+    public static final double kIntakeReverse = -0.5; 
   }
  /**
    * How many amps the arm motor can use.

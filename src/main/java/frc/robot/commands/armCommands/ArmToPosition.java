@@ -15,7 +15,7 @@ public class ArmToPosition extends CommandBase {
 
     @Override
     public void execute(){
-        m_arm.raiseArm(m_targetPos);
+        m_arm.raiseArmAbs(m_targetPos);
     }
 
     @Override
@@ -26,6 +26,6 @@ public class ArmToPosition extends CommandBase {
 
     @Override
     public void end(boolean isInterrupted){
-        m_arm.raiseArm(0); // TODO: Do we want this to only stop the arm motor if not interrupted?
+        m_arm.raiseArm(0); // TODO(Low Priority): Do we want this to only stop the arm motor if not interrupted?
     }
 }
