@@ -5,20 +5,23 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class LEDs extends SubsystemBase {
 
-        // 120 degrees is Purple
-        // 110-115 degrees is Yellow
-        //90 degrees is Blue
+        // PWM Microseconds -> Degrees : 0.09x-45
+        // Degrees -> PWM Microseconds : 100/9x+500
     private static Servo m_LEDs;
 
-    private double m_degrees = 90; // Starts at blue
+    private double m_degrees = -1; // Starts at Arduino default
 
     public final double BLUE = 90;
     public final double YELLOW = 110;
     public final double PURPLE = 120;
 
-    boolean called = false;
-    double cycleState = 40;
+    public final double WHITE = 40.6; // minimum color  (below is not defined)
+    public final double TEAL = 130.4; // maximum color (above is off)
+    double cycleState = WHITE;
     double count = 0;
+
+    boolean called = false;
+
 
 
     public LEDs(){
@@ -28,7 +31,7 @@ public class LEDs extends SubsystemBase {
 
     @Override
     public void periodic(){
-        m_LEDs.setAngle(m_degrees);
+        if (m_degrees >= 0) m_LEDs.setAngle(m_degrees);
         // m_LEDs.setAngle(SmartDashboard.getNumber("LED Degrees", m_Degrees));  // Use SmartDashboard not ShuffleBoard
         // SmartDashboard.putNumber("LED Degrees Get", SmartDashboard.getNumber("LED Degrees", m_Degrees));
     }
@@ -48,10 +51,12 @@ public class LEDs extends SubsystemBase {
     }
 
     public void cycle(){
-        setColor(cycleState);
-        cycleState = cycleState + 20;
-        if (cycleState >= 140) cycleState = 40;
-        if (++count %25 == 0) cycle();  // cycles every half second
+        // cycles every quarter second
+        if (++count %12.5 == 0) {
+            setColor(cycleState);
+            cycleState = cycleState + 9;
+            if (cycleState >= TEAL) cycleState = WHITE;
+        }
     }
 
 }

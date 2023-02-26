@@ -19,7 +19,7 @@ public class IntakeSubsystem extends SubsystemBase{
     private final TalonSRX intakeMotor = new TalonSRX(Constants.CANIDConstants.kIntakeCANId);
     
     PowerDistribution powerDist = new PowerDistribution(Constants.CANIDConstants.kPdhCanId, ModuleType.kRev);
-    double intakeCurrent = 3.0;
+    double intakeCurrent = 2.5;
 
     public IntakeSubsystem(){
         intakeMotor.setNeutralMode(NeutralMode.Brake);
@@ -34,6 +34,12 @@ public class IntakeSubsystem extends SubsystemBase{
 
     public void intakeOff(){
         intakeMotor.set(ControlMode.PercentOutput, 0.0);
+    }
+
+    public void intakeStall(double joystick, double speed){
+        if (joystick > 0) intakeMotor.set(ControlMode.PercentOutput, speed);
+        else if (joystick < 0) intakeMotor.set(ControlMode.PercentOutput, -speed);
+        else intakeMotor.set(ControlMode.PercentOutput, 0);
     }
 }
 

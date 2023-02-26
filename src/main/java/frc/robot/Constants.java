@@ -141,8 +141,8 @@ public final class Constants {
     public static final int kDriverControllerPort = 0;
     public static final int kManipulatorControllerPort = 1; 
     public static final double kDriveDeadband = 0.05;
-    public static final double kArmDeadband = 0.05;
-    public static final double kIntakeDeadband = 0.05;
+    public static final double kArmDeadband = 0.02;
+    public static final double kIntakeDeadband = 0.02;
   }
 
   public static final class AutoConstants {
@@ -176,8 +176,8 @@ public final class Constants {
     public static final double kArmI = 0.0; // 0.0002
     public static final double kArmD = 0.0; 
     public static final double kArmFF = 0.0; // 0.0005
-    public static final double kArmMinOutput = -0.6; 
-    public static final double kArmMaxOutput = 0.6; //TODO (requires bot): update these (everybot has max as 1, min as -1)
+    public static final double kArmMinOutput = -0.65; 
+    public static final double kArmMaxOutput = 0.65; //TODO (requires bot): update these (everybot has max as 1, min as -1)
     public static final double kArmMaxVel = 0; // unused
     public static final double kArmMinVel = 0; // unused
     public static final double kArmMaxAcc = 0; // unused
