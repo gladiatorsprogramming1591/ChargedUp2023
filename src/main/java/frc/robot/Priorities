@@ -1,15 +1,13 @@
-Before Rally
-    PWM for LEDs
-    More auto paths
-    Fix DriveToAngle
-
-
-
-
-
-
-
-
+Main TODO:
+    Program ground intake (2 550s for both complients, 1 Neo for raising)
+    Non-balance autos 
+    Slow drive: joystick into drive subsystem 
+    Lengthen 3 and 7 one piece auto paths into charge station 
+    Improve the intake stall (current limit?)
+    April tags 
+    Different autos for real and wood charge stations 
+    Java 17 to 11 
+    Speed up arm
 
 
 
@@ -20,4 +18,8 @@ Before Rally
 
 
 Completed:
-    Switch to Absolute Encoder for Arm
+    Before Rally
+        More auto paths
+        Fix DriveToAngle: Replaced with path during auto
+        PWM for LEDs 
+        Switch to Absolute Encoder for Arm
