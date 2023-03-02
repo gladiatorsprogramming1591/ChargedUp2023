@@ -149,7 +149,11 @@ public class ArmSubsystem extends SubsystemBase{
                 break;
         }
         double ref = mapAbs.get(position);
-        double pidOut = MathUtil.clamp(m_AbsPidController.calculate(armAbsEncoder.getAbsolutePosition(),ref), Constants.ArmConstants.kArmMinOutput, Constants.ArmConstants.kArmMaxOutput);
+
+        double pidOut = MathUtil.clamp(
+            m_AbsPidController.calculate(armAbsEncoder.getAbsolutePosition(),ref),
+            Constants.ArmConstants.kArmMinOutput, Constants.ArmConstants.kArmMaxOutput);
+            
         SmartDashboard.putNumber("Arm Abs Target Pos", ref);
         armMotorLeft.set(-pidOut);
         // TODO: Add a new armPosition that reads a value from the smart dashboard and moves arm to that position.

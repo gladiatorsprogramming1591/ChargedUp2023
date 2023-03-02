@@ -24,7 +24,7 @@ import frc.robot.Constants.OIConstants;
 import frc.robot.commands.armCommands.ArmToPosition;
 import frc.robot.commands.armCommands.ArmToPositionWithEnd;
 import frc.robot.commands.driveCommands.AutoLevel;
-import frc.robot.commands.driveCommands.DriveToAngle;
+// import frc.robot.commands.driveCommands.DriveToAngle;
 import frc.robot.commands.driveCommands.DriveToLevel;
 import frc.robot.commands.driveCommands.PathPlanner.OnePieceAuto5Level;
 import frc.robot.commands.driveCommands.PathPlanner.OnePieceAuto5;
@@ -33,10 +33,11 @@ import frc.robot.commands.driveCommands.PathPlanner.OnePieceAuto7;
 import frc.robot.commands.driveCommands.PathPlanner.NewOnePieceAuto3;
 import frc.robot.commands.driveCommands.PathPlanner.OnePieceAuto3;
 // import frc.robot.commands.driveCommands.PathPlanner.OnePieceAuto7;
-import frc.robot.commands.driveCommands.PathPlanner.OnePieceAuto4;
+// import frc.robot.commands.driveCommands.PathPlanner.OnePieceAuto4;
 import frc.robot.commands.navXCommands.ResetGyro;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.GroundIntakeSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.LEDs;
 import frc.robot.subsystems.ArmSubsystem.armPositions;
@@ -56,6 +57,7 @@ public class RobotContainer {
   private final DriveSubsystem m_robotDrive;
   private final ArmSubsystem m_arm; 
   private final IntakeSubsystem m_intake;
+  private final GroundIntakeSubsystem m_groundIntake;
   private final LEDs m_LEDs;
 
   // The driver's controller
@@ -75,6 +77,7 @@ public class RobotContainer {
     m_arm = new ArmSubsystem(); 
     m_intake = new IntakeSubsystem();
     m_LEDs = new LEDs();
+    m_groundIntake = new GroundIntakeSubsystem();
     // m_LEDs.setDefaultCommand(new RunCommand(() -> m_LEDs.setColor(.6), m_LEDs));
 
     addAutoOptions();

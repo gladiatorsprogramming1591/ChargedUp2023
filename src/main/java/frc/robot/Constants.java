@@ -47,6 +47,11 @@ public final class Constants {
 
     //Power Distribution Hub (PDH) CAN ID
     public static final int kPdhCanId = 1;
+
+    //Ground Intake
+    public static final int kLeftGroundIntakeCANId = 6;
+    public static final int kRightGroundIntakeCANId = 7;
+    public static final int kGroundIntakeJointCANId = 8; 
   }
 
   public static final class DriveConstants {
@@ -194,6 +199,17 @@ public final class Constants {
     public static final double kIntakePickUp = 0.3;
     public static final double kIntakeReverse = -0.5; 
   }
+
+  public static final class GroundIntakeConstants{
+    public static final double kIntakePickUp = 0.3;
+    public static final double kIntakeReverse = -0.3;
+    public static final double kIntakeShoot = -1.0;
+    
+  /**
+   * How many amps the ground intake can take while moving
+   */
+  public static final int GROUND_JOINT_CURRENT_LIMIT_A = 5;
+  }
  /**
    * How many amps the arm motor can use.
    */
@@ -228,5 +244,4 @@ public final class Constants {
    * Time to extend or retract arm in auto
    */
   public static final double ARM_EXTEND_TIME_S = 2.0;
-
 }

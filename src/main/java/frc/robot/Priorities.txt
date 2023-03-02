@@ -1,0 +1,36 @@
+Main TODO:
+    Slow drive: joystick into drive subsystem 
+    Add commands for ground intake
+    Ground Intake PID
+    Non-balance autos
+    April tags 
+    Different autos for real and wood charge stations 
+    Speed up arm
+    Java 17 to 11 (?is already 11 in build.gradle?)
+
+
+
+Requires Testing:
+    Program CANIDs for the 3 ground intake motors
+    Ground Intake w/ PID and verify current limits
+    Lengthen 3 and 7 one piece auto paths into charge station
+    Improve the intake stall (current limit increase?) Both improve operability (remove joystick button) and reduce motor temp
+
+
+
+
+
+
+
+
+
+
+Completed:
+    Instantiate Ground Intake in Container
+    Program ground intake (2 Bags for both complients, 1 Neo for raising)
+
+    Before Rally
+        More auto paths
+        Fix DriveToAngle: Replaced with path during auto
+        PWM for LEDs 
+        Switch to Absolute Encoder for Arm
