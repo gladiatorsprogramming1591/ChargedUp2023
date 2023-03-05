@@ -83,9 +83,14 @@ public final class Constants {
 
     public static final boolean kGyroReversed = false;
 
-    public static final double kDriveMaxOutput = 0.75;  // 0.25
-    public static final double kDriveSlow = 0.25;
-    public static final double faceForward = 0; //Need to change depending on where robot starts (field orientation must match)
+    // Drivetrain Speeds
+    public static final double kDriveMaxOutput = 1.0;  // 0.75
+    public static final double kDriveSlow = 0.30; //0.25
+    public static final double kmaxPOVturnspeed = 0.45; //0.30
+    public static final double kAutoLevelMaxOutput = 0.30;
+
+    // Cardinal Directions
+    public static final double faceForward = 0;
     public static final double faceBackward = 180;
     public static final double faceLeft = 90;
 	  public static final double faceRight = -90;
@@ -181,16 +186,31 @@ public final class Constants {
     public static final double kArmI = 0.0; // 0.0002
     public static final double kArmD = 0.0; 
     public static final double kArmFF = 0.0; // 0.0005
-    public static final double kArmMinOutput = -0.65; 
-    public static final double kArmMaxOutput = 0.65; //TODO (requires bot): update these (everybot has max as 1, min as -1)
-    public static final double kArmMaxVel = 0; // unused
-    public static final double kArmMinVel = 0; // unused
-    public static final double kArmMaxAcc = 0; // unused
-    public static final double kAllowedErrRelative = 0.25;
+
+    // Arm Speed
+    public static final double kArmMinOutput = -1.00; //-0.65
+    public static final double kArmMaxOutput = 1.00; //0.65
+
+    // Arm Positions
+    public static final double kOffset = 0.890;
+    public static final double kCONESTOW = kOffset - 0.011;
+    public static final double kLVLONE = kOffset - 0.150;
+    public static final double kLVLTWO = kOffset - 0.280;
+    public static final double kCONESINGLE = kOffset - 0.325;
+    public static final double kLVLTRE = kOffset - 0.365;
     public static final double kAllowedErrAbs = 0.001;
+
+    // Soft Limits
+    public static final double kMaxHeightAbs = kLVLTRE - 0.002; // The lower the value, the higher the arm
+    public static final double kMinHeightAbs = kOffset + 0.002; // The higher the value, the lower the arm
+
+    // Unused
+    public static final double kArmMaxVel = 0;
+    public static final double kArmMinVel = 0;
+    public static final double kArmMaxAcc = 0;
+    public static final double kAllowedErrRelative = 0.25;
     public static final double kMaxHeightRelative = 78;
-    public static final double kMaxHeightAbs = 0.152; // The lower the value, the higher the arm
-    public static final double kMinHeightAbs = 0.562; // The higher the value, the lower the arm
+
   }
 
   public static final class IntakeConstants{

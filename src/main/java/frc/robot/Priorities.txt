@@ -1,23 +1,29 @@
 Main TODO:
-    Slow drive: joystick into drive subsystem 
-    Add commands for ground intake
-    Ground Intake PID
-    Non-balance autos
-    April tags 
-    Different autos for real and wood charge stations 
-    Speed up arm
+    Ground Intake
+        Add commands for ground intake
+        Ground Intake PID
+    Auto Paths
+        Non-balance autos
+        Different autos for real and wood charge stations 
+    Research April tags with Limelight
+        -Update limelight code
+        -New branch
+        -convert swerveDriveOdometry to swerveDrivePoseEstimator
+        -update swerveDrivePoseEstimator with vision targets
+        -teleop auto score using April tags & vision
     Java 17 to 11 (?is already 11 in build.gradle?)
 
 
 
+
 Requires Testing:
+    Turn to target speed increase
+    Add offset constant for Arm
     Program CANIDs for the 3 ground intake motors
     Ground Intake w/ PID and verify current limits
     Lengthen 3 and 7 one piece auto paths into charge station
-    Improve the intake stall (current limit increase?) Both improve operability (remove joystick button) and reduce motor temp
-
-
-
+    Improve the intake stall (current limit increase?)
+        Both improve operability (remove joystick button) and reduce motor temp
 
 
 
@@ -26,6 +32,8 @@ Requires Testing:
 
 
 Completed:
+    Speed up arm
+    Slow drive: joystick into drive subsystem 
     Instantiate Ground Intake in Container
     Program ground intake (2 Bags for both complients, 1 Neo for raising)
 

@@ -31,13 +31,14 @@ import frc.robot.commands.driveCommands.PathPlanner.OnePieceAuto5;
 import frc.robot.commands.driveCommands.PathPlanner.OnePieceAuto6;
 import frc.robot.commands.driveCommands.PathPlanner.OnePieceAuto7;
 import frc.robot.commands.driveCommands.PathPlanner.NewOnePieceAuto3;
-import frc.robot.commands.driveCommands.PathPlanner.OnePieceAuto3;
+import frc.robot.commands.driveCommands.PathPlanner.OneCubeAuto3Hybrid;
+import frc.robot.commands.driveCommands.PathPlanner.OneConeAuto3;
 // import frc.robot.commands.driveCommands.PathPlanner.OnePieceAuto7;
 // import frc.robot.commands.driveCommands.PathPlanner.OnePieceAuto4;
 import frc.robot.commands.navXCommands.ResetGyro;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.subsystems.GroundIntakeSubsystem;
+// import frc.robot.subsystems.GroundIntakeSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.LEDs;
 import frc.robot.subsystems.ArmSubsystem.armPositions;
@@ -57,7 +58,7 @@ public class RobotContainer {
   private final DriveSubsystem m_robotDrive;
   private final ArmSubsystem m_arm; 
   private final IntakeSubsystem m_intake;
-  private final GroundIntakeSubsystem m_groundIntake;
+  // private final GroundIntakeSubsystem m_groundIntake;
   private final LEDs m_LEDs;
 
   // The driver's controller
@@ -73,11 +74,11 @@ public class RobotContainer {
    */
   public RobotContainer() {
     // The robot's subsystems
-    m_robotDrive = new DriveSubsystem();
+    m_robotDrive = new DriveSubsystem(m_driverController.rightBumper()); //Be careful when pressing this buttton while doing an auto command
     m_arm = new ArmSubsystem(); 
     m_intake = new IntakeSubsystem();
     m_LEDs = new LEDs();
-    m_groundIntake = new GroundIntakeSubsystem();
+    // m_groundIntake = new GroundIntakeSubsystem(); 
     // m_LEDs.setDefaultCommand(new RunCommand(() -> m_LEDs.setColor(.6), m_LEDs));
 
     addAutoOptions();
@@ -99,9 +100,7 @@ public class RobotContainer {
                 -MathUtil.applyDeadband(m_driverController.getLeftX(), OIConstants.kDriveDeadband),
                 -MathUtil.applyDeadband(m_driverController.getRightX(), OIConstants.kDriveDeadband),
                 true, true, true,
-                m_driverController.rightBumper().getAsBoolean()
-                ? Constants.DriveConstants.kDriveSlow
-                : Constants.DriveConstants.kDriveMaxOutput),
+                Constants.DriveConstants.kDriveMaxOutput),
             m_robotDrive));
 
     m_intake.setDefaultCommand(
@@ -110,6 +109,7 @@ public class RobotContainer {
         
             () -> m_intake.intakeOn(
                 MathUtil.applyDeadband(-m_manipulatorController.getRightY(), OIConstants.kIntakeDeadband)), 
+                // MathUtil.clamp(MathUtil.applyDeadband(-m_manipulatorController.getRightY(), OIConstants.kIntakeDeadband), -0.7, 1.0)), 
             m_intake));
                       
   }
@@ -117,7 +117,8 @@ public class RobotContainer {
   // Configure auto options
   // TODO: Add auto that only drives out of community after time set in SmartDashboard
   private void addAutoOptions() {
-    m_autoChooser.setDefaultOption("OnePieceAuto3", new OnePieceAuto3(m_robotDrive, m_arm, m_intake));
+    m_autoChooser.setDefaultOption("OneConeAuto3", new OneConeAuto3(m_robotDrive, m_arm, m_intake));
+    m_autoChooser.addOption("NewOneCubeAuto3Hybrid", new OneCubeAuto3Hybrid(m_robotDrive, m_arm, m_intake));
     m_autoChooser.addOption("NewOnePieceAuto3", new NewOnePieceAuto3(m_robotDrive, m_arm, m_intake));
     m_autoChooser.addOption("OnePieceAuto5", new OnePieceAuto5(m_robotDrive, m_arm, m_intake));
     m_autoChooser.addOption("OnePieceAuto6", new OnePieceAuto6(m_robotDrive, m_arm, m_intake));
@@ -153,6 +154,8 @@ public class RobotContainer {
 
     m_driverController.povDown().whileTrue(new RunCommand(() -> m_robotDrive.setX(),m_robotDrive));  //Prevents Movement
 
+    m_driverController.povLeft().whileTrue(new AutoLevel(m_robotDrive));
+
     // POV Rotation
     m_driverController.b().whileTrue( new RunCommand (
           () -> m_robotDrive.TurnToTarget(
@@ -160,9 +163,7 @@ public class RobotContainer {
               -MathUtil.applyDeadband(m_driverController.getLeftX(), OIConstants.kDriveDeadband),
               Constants.DriveConstants.faceRight,
               true, true,
-              m_driverController.rightBumper().getAsBoolean()
-              ? Constants.DriveConstants.kDriveSlow
-              : Constants.DriveConstants.kDriveMaxOutput),
+              Constants.DriveConstants.kDriveMaxOutput),
           m_robotDrive));
     m_driverController.x().whileTrue( new RunCommand (
           () -> m_robotDrive.TurnToTarget(
@@ -170,9 +171,7 @@ public class RobotContainer {
               -MathUtil.applyDeadband(m_driverController.getLeftX(), OIConstants.kDriveDeadband),
               Constants.DriveConstants.faceLeft,
               true, true,
-              m_driverController.rightBumper().getAsBoolean()
-              ? Constants.DriveConstants.kDriveSlow
-              : Constants.DriveConstants.kDriveMaxOutput),
+              Constants.DriveConstants.kDriveMaxOutput),
           m_robotDrive));
     m_driverController.y().whileTrue( new RunCommand (
           () -> m_robotDrive.TurnToTarget(
@@ -180,9 +179,7 @@ public class RobotContainer {
               -MathUtil.applyDeadband(m_driverController.getLeftX(), OIConstants.kDriveDeadband),
               Constants.DriveConstants.faceForward,
               true, true,
-              m_driverController.rightBumper().getAsBoolean()
-              ? Constants.DriveConstants.kDriveSlow
-              : Constants.DriveConstants.kDriveMaxOutput),
+              Constants.DriveConstants.kDriveMaxOutput),
           m_robotDrive));
     m_driverController.a().whileTrue( new RunCommand (
           () -> m_robotDrive.TurnToTarget(
@@ -190,24 +187,21 @@ public class RobotContainer {
               -MathUtil.applyDeadband(m_driverController.getLeftX(), OIConstants.kDriveDeadband),
               Constants.DriveConstants.faceBackward,
               true, true,
-              m_driverController.rightBumper().getAsBoolean()
-              ? Constants.DriveConstants.kDriveSlow
-              : Constants.DriveConstants.kDriveMaxOutput),
+              Constants.DriveConstants.kDriveMaxOutput),
           m_robotDrive));
 
     // Toggle for field oriented vs robot oriented
     // When right stick pressed down, run the robot oriented drive.
     // When right stick pressed down again, end the robot oriented drive and run default drive, which is field oriented drive
-    m_driverController.rightStick().toggleOnTrue( new RunCommand (
-          () -> m_robotDrive.drive(
-              -MathUtil.applyDeadband(m_driverController.getLeftY(), OIConstants.kDriveDeadband),
-              -MathUtil.applyDeadband(m_driverController.getLeftX(), OIConstants.kDriveDeadband),
-              -MathUtil.applyDeadband(m_driverController.getRightX(), OIConstants.kDriveDeadband),
-              false, true, true,
-              m_driverController.rightBumper().getAsBoolean()
-              ? Constants.DriveConstants.kDriveSlow
-              : Constants.DriveConstants.kDriveMaxOutput),
-          m_robotDrive));
+    // NOT USED IN MATCH PLAY
+    // m_driverController.rightStick().toggleOnTrue( new RunCommand (
+    //       () -> m_robotDrive.drive(
+    //           -MathUtil.applyDeadband(m_driverController.getLeftY(), OIConstants.kDriveDeadband),
+    //           -MathUtil.applyDeadband(m_driverController.getLeftX(), OIConstants.kDriveDeadband),
+    //           -MathUtil.applyDeadband(m_driverController.getRightX(), OIConstants.kDriveDeadband),
+    //           false, true, true,
+    //           Constants.DriveConstants.kDriveMaxOutput),
+    //       m_robotDrive));
 
 
     // DRIVER 2

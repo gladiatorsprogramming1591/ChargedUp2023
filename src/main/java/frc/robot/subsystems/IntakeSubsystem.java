@@ -7,6 +7,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -15,13 +16,18 @@ public class IntakeSubsystem extends SubsystemBase{
     private final TalonSRX intakeMotor = new TalonSRX(Constants.CANIDConstants.kIntakeCANId);
     
     PowerDistribution powerDist = new PowerDistribution(Constants.CANIDConstants.kPdhCanId, ModuleType.kRev);
-    double intakeCurrent = 2.5;
+    double intakeCurrent = 3.0; //2.75
 
     public IntakeSubsystem(){
         intakeMotor.setNeutralMode(NeutralMode.Brake);
-        intakeMotor.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, intakeCurrent, intakeCurrent + 1.5, 0.3));
+        intakeMotor.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, intakeCurrent, intakeCurrent + 1.75, 0.6)); // +1.75, 0.6 seconds
     }
     
+    @Override
+    public void periodic(){
+        SmartDashboard.putNumber("Intake oCurrent", intakeMotor.getStatorCurrent());
+        SmartDashboard.putNumber("Intake iCurrent", intakeMotor.getSupplyCurrent());
+    }
     // TODO: (low priority) Add Sensors (1 Color and 2 Distance[for cone and cube])
     // Color sensor to set motor direction, Distance to determine alignment to grid
     public void intakeOn(double speed){
