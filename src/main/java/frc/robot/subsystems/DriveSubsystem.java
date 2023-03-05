@@ -18,10 +18,8 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-// import frc.robot.Constants;
 import edu.wpi.first.util.WPIUtilJNI;
 import edu.wpi.first.wpilibj.DriverStation;
-// import edu.wpi.first.wpilibj.ADIS16470_IMU;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -30,6 +28,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants;
 import frc.robot.Constants.CANIDConstants;
 import frc.robot.Constants.DriveConstants;
@@ -78,11 +77,10 @@ public class DriveSubsystem extends SubsystemBase {
   private final PIDController m_rollPidController = new PIDController(0.005, 0.00008, 0.00); // 2/15 kp 0.005 kd 0.001  1/21 ki:0.0055 kd: 0.0025
   private final PIDController m_rotPidController = new PIDController(0.01, 0.000, 0.000); // TODO (requires bot): values need testing
 
-  // private final PIDController xTrajPID = new PIDController(0.05, 0, 0);
-
+  private final Trigger m_slowDriveButton;
 
   /** Creates a new DriveSubsystem. */
-  public DriveSubsystem() {
+  public DriveSubsystem(Trigger slowDriveButton) {
     m_navX = new AHRS(SPI.Port.kMXP);
     m_odometry = new SwerveDriveOdometry(
       DriveConstants.kDriveKinematics,
@@ -93,6 +91,7 @@ public class DriveSubsystem extends SubsystemBase {
           m_rearLeft.getPosition(),
           m_rearRight.getPosition()
       });
+    m_slowDriveButton = slowDriveButton;
     m_rotPidController.enableContinuousInput(-180, 180);
     zeroHeading();  //  TODO: find out why gyro does not stay zeroed after deploying
   }
@@ -171,6 +170,9 @@ public class DriveSubsystem extends SubsystemBase {
     
     double xSpeedCommanded;
     double ySpeedCommanded;
+
+    //Override max output when slowdrive button is pressed
+    if (m_slowDriveButton.getAsBoolean()) maxOutput = DriveConstants.kDriveSlow; 
 
     if (squaredInputs) {
       xSpeed = Math.copySign(xSpeed*xSpeed, xSpeed);
@@ -311,15 +313,16 @@ public class DriveSubsystem extends SubsystemBase {
 
   //Charge Station Autos
   public void driveToLevel(){
-    double pidOut = MathUtil.clamp(m_rollPidController.calculate(m_navX.getRoll(), 0), -0.30, 0.30);
+    double pidOut = MathUtil.clamp(m_rollPidController.calculate(
+      m_navX.getRoll(), 0), -DriveConstants.kAutoLevelMaxOutput, DriveConstants.kAutoLevelMaxOutput);
     drive(pidOut, 0, 0, false);
+
     if (++count %10 == 0) {
         System.out.println("Roll is :" + m_navX.getRoll());
         System.out.println("Pitch is :" + m_navX.getPitch());
         System.out.println("PID Output is: " + pidOut);
     }
-    // SmartDashboard.putNumber("DriveSetPnt",0);
-    SmartDashboard.putNumber("DrivePidInput",m_navX.getRoll());
+
     SmartDashboard.putNumber("DrivePidOutput",pidOut);
   }
 
@@ -377,7 +380,7 @@ public class DriveSubsystem extends SubsystemBase {
   // TODO: add %180 and other functionality to ensure rot takes the shortest path
   public void TurnToTarget(double X, double Y, double angle, boolean rateLimit, boolean squaredInputs, double maxOutput){
     // double pidOut = MathUtil.clamp(m_rotPidController.calculate(-m_navX.getAngle()%360, angle), -0.30, 0.30);
-    double pidOut = MathUtil.clamp(m_rotPidController.calculate(MathUtil.inputModulus(m_odometry.getPoseMeters().getRotation().getDegrees(), -180, 180), angle), -0.30, 0.30);
+    double pidOut = MathUtil.clamp(m_rotPidController.calculate(MathUtil.inputModulus(m_odometry.getPoseMeters().getRotation().getDegrees(), -180, 180), angle), -DriveConstants.kmaxPOVturnspeed, DriveConstants.kmaxPOVturnspeed);
     drive(X, Y, pidOut, true, rateLimit, squaredInputs, maxOutput, true); // added rotExeption to keep the driver's SquaredInputs and MaxOutput seperate from PID rotation
   }
 

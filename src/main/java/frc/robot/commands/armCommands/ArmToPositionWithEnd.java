@@ -20,7 +20,7 @@ public class ArmToPositionWithEnd extends CommandBase {
 
     @Override
     public boolean isFinished(){
-        return m_arm.atLevel(m_targetPos);
+        return m_arm.atPosition(m_targetPos);
     }
 
     @Override

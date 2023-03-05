@@ -5,8 +5,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class LEDs extends SubsystemBase {
 
-        // PWM Microseconds -> Degrees : 0.09x-45
-        // Degrees -> PWM Microseconds : 100/9x+500
+        // PWM Microseconds = 0.09(degrees) - 45
+        // Degrees          = 100/9(PWM) + 500
     private static Servo m_LEDs;
 
     private double m_degrees = -1; // Starts at Arduino default
