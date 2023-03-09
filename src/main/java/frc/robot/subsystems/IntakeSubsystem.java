@@ -28,8 +28,7 @@ public class IntakeSubsystem extends SubsystemBase{
         SmartDashboard.putNumber("Intake oCurrent", intakeMotor.getStatorCurrent());
         SmartDashboard.putNumber("Intake iCurrent", intakeMotor.getSupplyCurrent());
     }
-    // TODO: (low priority) Add Sensors (1 Color and 2 Distance[for cone and cube])
-    // Color sensor to set motor direction, Distance to determine alignment to grid
+
     public void intakeOn(double speed){
         intakeMotor.set(ControlMode.PercentOutput, speed);
     }

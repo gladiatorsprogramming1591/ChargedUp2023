@@ -115,7 +115,6 @@ public class RobotContainer {
   }
 
   // Configure auto options
-  // TODO: Add auto that only drives out of community after time set in SmartDashboard
   private void addAutoOptions() {
     m_autoChooser.setDefaultOption("OneConeAuto3", new OneConeAuto3(m_robotDrive, m_arm, m_intake));
     m_autoChooser.addOption("NewOneCubeAuto3Hybrid", new OneCubeAuto3Hybrid(m_robotDrive, m_arm, m_intake));
@@ -127,13 +126,14 @@ public class RobotContainer {
     SmartDashboard.putData("Auto Mode", m_autoChooser);
   }
 
+  // Path with Events
   private void configureAutoCommands(){
     Constants.AutoConstants.AUTO_EVENT_MAP.put("Intake PickUp", new InstantCommand(() -> m_intake.intakeOn(Constants.IntakeConstants.kIntakePickUp), m_intake));
     Constants.AutoConstants.AUTO_EVENT_MAP.put("Arm LVLTRE", new ArmToPositionWithEnd(m_arm, armPositions.LVLTRE).withTimeout(3.0));
     Constants.AutoConstants.AUTO_EVENT_MAP.put("Intake Reverse", new RunCommand(() -> m_intake.intakeOn(Constants.IntakeConstants.kIntakeReverse), m_intake).withTimeout(.25));
     Constants.AutoConstants.AUTO_EVENT_MAP.put("Arm HOME", new ArmToPositionWithEnd(m_arm, armPositions.HOME).withTimeout(2.0));
     // Constants.AutoConstants.AUTO_EVENT_MAP.put("LED", SmartDashboard.putString("LED", "Was called"));
-    Constants.AutoConstants.AUTO_EVENT_MAP.put("AutoLevel", new AutoLevel(m_robotDrive));   // TODO: (requires bot) Parallel or Sequential?
+    Constants.AutoConstants.AUTO_EVENT_MAP.put("AutoLevel", new AutoLevel(m_robotDrive));
   }
 
   /**
@@ -194,14 +194,14 @@ public class RobotContainer {
     // When right stick pressed down, run the robot oriented drive.
     // When right stick pressed down again, end the robot oriented drive and run default drive, which is field oriented drive
     // NOT USED IN MATCH PLAY
-    // m_driverController.rightStick().toggleOnTrue( new RunCommand (
-    //       () -> m_robotDrive.drive(
-    //           -MathUtil.applyDeadband(m_driverController.getLeftY(), OIConstants.kDriveDeadband),
-    //           -MathUtil.applyDeadband(m_driverController.getLeftX(), OIConstants.kDriveDeadband),
-    //           -MathUtil.applyDeadband(m_driverController.getRightX(), OIConstants.kDriveDeadband),
-    //           false, true, true,
-    //           Constants.DriveConstants.kDriveMaxOutput),
-    //       m_robotDrive));
+    m_driverController.rightStick().toggleOnTrue( new RunCommand (
+          () -> m_robotDrive.drive(
+              -MathUtil.applyDeadband(m_driverController.getLeftY(), OIConstants.kDriveDeadband),
+              -MathUtil.applyDeadband(m_driverController.getLeftX(), OIConstants.kDriveDeadband),
+              -MathUtil.applyDeadband(m_driverController.getRightX(), OIConstants.kDriveDeadband),
+              false, true, true,
+              Constants.DriveConstants.kDriveMaxOutput),
+          m_robotDrive));
 
 
     // DRIVER 2
@@ -210,12 +210,23 @@ public class RobotContainer {
 
     m_manipulatorController.back().toggleOnTrue(new RunCommand(() -> m_LEDs.cycle(), m_LEDs));
     
-    m_manipulatorController.povDown().onTrue(new ArmToPosition(m_arm, ArmSubsystem.armPositions.HOME)); // TODO: enable quick cancelling of these commands
+    m_manipulatorController.povDown().onTrue(new ArmToPosition(m_arm, ArmSubsystem.armPositions.HOME));
     m_manipulatorController.povLeft().onTrue(new ArmToPosition(m_arm, ArmSubsystem.armPositions.LVLONE));
     m_manipulatorController.povUp().onTrue(new ArmToPosition(m_arm, ArmSubsystem.armPositions.LVLTWO));
     m_manipulatorController.povRight().onTrue(new ArmToPosition(m_arm, ArmSubsystem.armPositions.LVLTRE));
     m_manipulatorController.rightTrigger().onTrue(new ArmToPosition(m_arm, ArmSubsystem.armPositions.CONESTOW));
     m_manipulatorController.rightBumper().onTrue(new ArmToPosition(m_arm, ArmSubsystem.armPositions.CONESINGLE));
+
+    // m_manipulatorController.start().onTrue(new InstantCommand(() -> m_groundIntake.groundIntakeOff()));
+    // m_manipulatorController.a().onTrue(new 
+    //   RunCommand(() -> m_groundIntake.groundJointPosition(Constants.GroundIntakeConstants.kOutPosition), m_groundIntake).
+    //   until(() -> m_groundIntake.groundJointAtPosition()));
+    // m_manipulatorController.b().onTrue(new 
+    //   RunCommand(() -> m_groundIntake.groundJointPosition(Constants.GroundIntakeConstants.kInPosition)).
+    //   until(() -> m_groundIntake.groundJointAtPosition()));
+    // m_manipulatorController.x().onTrue(new InstantCommand(() -> m_groundIntake.groundIntakePickUp()));
+    // m_manipulatorController.y().onTrue(new InstantCommand(() -> m_groundIntake.groundIntakeReverse()));
+    // m_manipulatorController.leftTrigger().onTrue(new InstantCommand(() -> m_groundIntake.groundIntakeShoot()));
 
     // The left stick controls moving the arm in and out. 
     m_manipulatorController.leftStick().toggleOnTrue( new RunCommand(
@@ -226,18 +237,8 @@ public class RobotContainer {
     m_manipulatorController.rightStick().whileTrue( new RunCommand(
         () -> m_intake.intakeStall(
             -m_manipulatorController.getRightY(),
-            0.2), // cone speed
+            Constants.IntakeConstants.kStallSpeed),
         m_intake));
-
-    // m_manipulatorController.x().whileTrue( new RunCommand(
-    //     () -> m_intake.intakeOn(
-    //         0.2), // cone speed
-    //     m_intake));
-
-    // m_manipulatorController.a().whileTrue( new RunCommand(
-    //     () -> m_intake.intakeOn(
-    //         -0.2), // cube speed
-    //     m_intake));
 
     // String TestPathName = new String("Cone Score 3"); 
     // PathPlannerTrajectory m_coneScore1 = PathPlanner.loadPath(TestPathName, new PathConstraints(.85, .5));

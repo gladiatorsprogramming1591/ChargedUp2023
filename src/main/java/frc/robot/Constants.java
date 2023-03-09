@@ -214,13 +214,16 @@ public final class Constants {
   }
 
   public static final class IntakeConstants{
-    public static final int kPdhChannel = 0; // TODO (requires bot): Need to determine which PDH channel the intake is plugged into 
-    public static final double kStallSpeed = 0.1; // TODO (requires bot): Need to confirm actual stall speed needed
+    public static final int kPdhChannel = 0;
+    public static final double kStallSpeed = 0.2; // + for cone, - for cube
     public static final double kIntakePickUp = 0.3;
     public static final double kIntakeReverse = -0.5; 
   }
 
   public static final class GroundIntakeConstants{
+    public static final double kp = 0.1;
+    public static final double ki = 0.0;
+    public static final double kd = 0.0;
     public static final double kIntakePickUp = 0.3;
     public static final double kIntakeReverse = -0.3;
     public static final double kIntakeShoot = -1.0;
@@ -229,6 +232,10 @@ public final class Constants {
    * How many amps the ground intake can take while moving
    */
   public static final int GROUND_JOINT_CURRENT_LIMIT_A = 5;
+public static final double kMaxForwardOutput = 0.3;
+public static final double kMaxReverseOutput = -0.5;
+public static final double kOutPosition = 0; //TODO: Get output position
+public static final double kInPosition = 0;
   }
  /**
    * How many amps the arm motor can use.

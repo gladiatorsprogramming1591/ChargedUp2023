@@ -75,7 +75,7 @@ public class DriveSubsystem extends SubsystemBase {
   SwerveDriveOdometry m_odometry;
   private int count = 0;
   private final PIDController m_rollPidController = new PIDController(0.005, 0.00008, 0.00); // 2/15 kp 0.005 kd 0.001  1/21 ki:0.0055 kd: 0.0025
-  private final PIDController m_rotPidController = new PIDController(0.01, 0.000, 0.000); // TODO (requires bot): values need testing
+  private final PIDController m_rotPidController = new PIDController(0.01, 0.000, 0.000);
 
   private final Trigger m_slowDriveButton;
 
@@ -93,7 +93,7 @@ public class DriveSubsystem extends SubsystemBase {
       });
     m_slowDriveButton = slowDriveButton;
     m_rotPidController.enableContinuousInput(-180, 180);
-    zeroHeading();  //  TODO: find out why gyro does not stay zeroed after deploying
+    zeroHeading();
   }
 
   @Override
@@ -330,12 +330,10 @@ public class DriveSubsystem extends SubsystemBase {
     return Math.abs(m_navX.getRoll()) < Constants.AutoConstants.kLevelTolerance;
   }
 
-  public boolean driveToAngle (double targetAngle){   // TODO (fix): Currently does not end
+  public boolean driveToAngle (double targetAngle){ 
     boolean atAngle = true;
     double currentAngle = m_navX.getRoll();
     // double currentAngle = m_odometry.;
-    // TODO (requires bot): Angle could be positive or negative, need to handle both
-    // Should be positive if driving forward, negative if driving backward onto the power station ramp
     if ( currentAngle >= targetAngle) {
         drive(.25, 0, 0, false);  // xSpeed .4
         atAngle = false;
@@ -350,7 +348,6 @@ public class DriveSubsystem extends SubsystemBase {
   }
     
     // Assuming this method is part of a drivetrain subsystem that provides the necessary methods
-    // TODO (requires bot): Adjust p for x and y
   public Command followTrajectoryCommand(PathPlannerTrajectory traj, boolean isFirstPath) {
     return new SequentialCommandGroup(
         new InstantCommand(() -> {
@@ -377,7 +374,6 @@ public class DriveSubsystem extends SubsystemBase {
     );
   }
   // TODO: use profiled pid if needed
-  // TODO: add %180 and other functionality to ensure rot takes the shortest path
   public void TurnToTarget(double X, double Y, double angle, boolean rateLimit, boolean squaredInputs, double maxOutput){
     // double pidOut = MathUtil.clamp(m_rotPidController.calculate(-m_navX.getAngle()%360, angle), -0.30, 0.30);
     double pidOut = MathUtil.clamp(m_rotPidController.calculate(MathUtil.inputModulus(m_odometry.getPoseMeters().getRotation().getDegrees(), -180, 180), angle), -DriveConstants.kmaxPOVturnspeed, DriveConstants.kmaxPOVturnspeed);

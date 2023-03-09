@@ -57,7 +57,7 @@ public class ArmSubsystem extends SubsystemBase{
         // mapRelative.put(armPositions.LVLONE, 23.0);
         // mapRelative.put(armPositions.LVLTWO, 60.0);
         // mapRelative.put(armPositions.LVLTRE, 77.5);
-        // mapRelative.put(armPositions.HOME, 0.0); //TODO (requires bot): empirically measure encoder positions and update here
+        // mapRelative.put(armPositions.HOME, 0.0);
         // mapRelative.put(armPositions.CONESTOW, 10.0);
 
         mapAbs.put(armPositions.HOME, ArmConstants.kOffset);
@@ -106,8 +106,7 @@ public class ArmSubsystem extends SubsystemBase{
     public void periodic() {
         SmartDashboard.putNumber("Arm Relative Enc", armMotorLeft.getEncoder().getPosition());
         SmartDashboard.putNumber("ArmABS Absolute", armAbsEncoder.getAbsolutePosition()); 
-        // SmartDashboard.putNumber("ArmABS Offset", armAbsEncoder.getPositionOffset()); 
-        // TODO (Low Priority): If driving too fast, lower arm to home. 
+        // SmartDashboard.putNumber("ArmABS Offset", armAbsEncoder.getPositionOffset());  
         //   Might use global that is set by drive periodic to indicate if driving too fast.
     }
 

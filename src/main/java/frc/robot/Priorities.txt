@@ -1,37 +1,75 @@
 Main TODO:
-    Ground Intake
-        Add commands for ground intake
-        Ground Intake PID
-    Auto Paths
+1:  Auto Paths
         Non-balance autos
-        Different autos for real and wood charge stations 
+        Different autos for real and wood charge stations
+        Add auto that only drives out of community after time set in SmartDashboard
+        Test ALL Autos
+    
+Low Priority:
+    Arm:
+        If driving too fast, lower arm to home
+    
+    Drive:
+        DriveToAngle: Angle could be positive or negative, need to handle both
+        Should be positive if driving forward, negative if driving backward onto the power station ramp
+
     Research April tags with Limelight
-        -Update limelight code
         -New branch
         -convert swerveDriveOdometry to swerveDrivePoseEstimator
         -update swerveDrivePoseEstimator with vision targets
         -teleop auto score using April tags & vision
-    Java 17 to 11 (?is already 11 in build.gradle?)
-
+    
+    Sensors:
+        Add Sensors (1 Color and 2 Distance[for cone and cube])
+        Color sensor to set motor direction, Distance to determine alignment to grid
 
 
 
 Requires Testing:
-    Turn to target speed increase
-    Add offset constant for Arm
-    Program CANIDs for the 3 ground intake motors
-    Ground Intake w/ PID and verify current limits
-    Lengthen 3 and 7 one piece auto paths into charge station
+
+    Autos
+        -Paths with events
+        -Lengthen 3 and 7 one piece auto paths into charge station
+        -4/6 one cone auto level
+
+    Turn to target speed increase, adjust PID accordingly
+
     Improve the intake stall (current limit increase?)
         Both improve operability (remove joystick button) and reduce motor temp
 
+  Low Priority:
+    Limelight/April Tags
+        -Update limelight code
 
+    Test Path with Events
+        -Autolevel: parallel or sequential?
+
+    Ground Intake
+        -Program CANIDs for the 3 ground intake motors
+        -Ground Intake w/ PID and verify current limits
+
+    
+
+
+
+Auto Tracker:
+    Requires Testing:
+        Path with events
+        Everything else
+    Tested:
+        OneConeAuto3
+        OneCubeAuto3Hybrid
+        OnePieceAuto5Level 
+        OnePieceAuto7
 
 
 
 
 
 Completed:
+    Add commands for ground intake
+    Ground Intake PID
+    Add offset constant for Arm
     Speed up arm
     Slow drive: joystick into drive subsystem 
     Instantiate Ground Intake in Container

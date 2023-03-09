@@ -10,7 +10,7 @@ public class AutoLevel extends SequentialCommandGroup {
     public AutoLevel(DriveSubsystem driveSubsystem) {
         addCommands(
             new InstantCommand(()->SmartDashboard.putString("AutoLevel", "DriveToAngle")),
-            new DriveToAngle(driveSubsystem), // TODO (fix): Currently does not end
+            new DriveToAngle(driveSubsystem),
             new InstantCommand(()->SmartDashboard.putString("AutoLevel", "Drive1.5")),
             driveSubsystem.DriveCommand(0.2).withTimeout(1.5),
             new InstantCommand(()->SmartDashboard.putString("AutoLevel", "DriveToLevel")),
