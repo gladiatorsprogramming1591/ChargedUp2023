@@ -123,8 +123,8 @@ public class ArmSubsystem extends SubsystemBase{
     // }
 
     public void raiseArmAbs(armPositions position){
-        if (((armAbsEncoder.getAbsolutePosition() > ArmConstants.kMinHeightAbs) && (position == armPositions.HOME)) ||
-            ((armAbsEncoder.getAbsolutePosition() < ArmConstants.kMaxHeightAbs) && (position == armPositions.LVLTRE))) {
+        if (((armAbsEncoder.getAbsolutePosition() < ArmConstants.kMinHeightAbs) && (position == armPositions.HOME)) ||
+            ((armAbsEncoder.getAbsolutePosition() > ArmConstants.kMaxHeightAbs) && (position == armPositions.LVLTRE))) {
             armMotorLeft.set(0);
             return;
         }
@@ -155,8 +155,8 @@ public class ArmSubsystem extends SubsystemBase{
     }
 
     public void raiseArm(double speed){
-        if (((armAbsEncoder.getAbsolutePosition() > ArmConstants.kMinHeightAbs) && (speed < 0)) ||
-            ((armAbsEncoder.getAbsolutePosition() < ArmConstants.kMaxHeightAbs) && (speed > 0))) {
+        if (((armAbsEncoder.getAbsolutePosition() < ArmConstants.kMinHeightAbs) && (speed < 0)) ||
+            ((armAbsEncoder.getAbsolutePosition() > ArmConstants.kMaxHeightAbs) && (speed > 0))) {
             armMotorLeft.set(0);
             return;
         }
@@ -165,8 +165,8 @@ public class ArmSubsystem extends SubsystemBase{
 
     public void raiseArm(double raiseSpeed, double lowerSpeed){
         double speed = raiseSpeed - lowerSpeed; //positive output to raise arm
-        if (((armAbsEncoder.getAbsolutePosition() > ArmConstants.kMinHeightAbs) && (speed < 0)) ||
-            ((armAbsEncoder.getAbsolutePosition() < ArmConstants.kMaxHeightAbs) && (speed > 0))) {
+        if (((armAbsEncoder.getAbsolutePosition() < ArmConstants.kMinHeightAbs) && (speed < 0)) ||
+            ((armAbsEncoder.getAbsolutePosition() > ArmConstants.kMaxHeightAbs) && (speed > 0))) {
             armMotorLeft.set(0);
             return;
         }

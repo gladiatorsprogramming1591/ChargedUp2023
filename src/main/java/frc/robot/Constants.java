@@ -193,16 +193,16 @@ public final class Constants {
 
     // Arm Positions
     public static final double kOffset = 0.890;
-    public static final double kCONESTOW = kOffset - 0.011;
-    public static final double kLVLONE = kOffset - 0.150;
-    public static final double kLVLTWO = kOffset - 0.280;
-    public static final double kCONESINGLE = kOffset - 0.325;
-    public static final double kLVLTRE = kOffset - 0.365;
+    public static final double kCONESTOW = kOffset + 0.011;
+    public static final double kLVLONE = kOffset + 0.150;
+    public static final double kLVLTWO = kOffset + 0.280;
+    public static final double kCONESINGLE = kOffset + 0.325;
+    public static final double kLVLTRE = kOffset + 0.365;
     public static final double kAllowedErrAbs = 0.001;
 
     // Soft Limits
-    public static final double kMaxHeightAbs = kLVLTRE - 0.002; // The lower the value, the higher the arm
-    public static final double kMinHeightAbs = kOffset + 0.002; // The higher the value, the lower the arm
+    public static final double kMaxHeightAbs = kLVLTRE + 0.002; // The lower the value, the higher the arm
+    public static final double kMinHeightAbs = kOffset - 0.002; // The higher the value, the lower the arm
 
     // Unused
     public static final double kArmMaxVel = 0;

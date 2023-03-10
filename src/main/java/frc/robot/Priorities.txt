@@ -1,5 +1,6 @@
 Main TODO:
 1:  Autos
+        Path w/ events 
         Non-balance autos
         Different autos for real and wood charge stations
         Add auto that only drives out of community after time set in SmartDashboard
@@ -7,7 +8,7 @@ Main TODO:
 
 
 Requires Testing:
-
+    ***Update Offset & test arm Encoder
     Autos
         -Paths with events
             -Autolevel parallel or sequential?
@@ -63,6 +64,7 @@ Low Priority:
 
 
 Completed:
+    Inverted Encoder Logic
     Add commands for ground intake
     Ground Intake PID
     Add offset constant for Arm
