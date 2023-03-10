@@ -17,6 +17,7 @@ public class LEDs extends SubsystemBase {
 
     public final double WHITE = 40.6; // minimum color  (below is not defined)
     public final double TEAL = 130.4; // maximum color (above is off)
+    public final double OFF = 140;
     double cycleState = WHITE;
     double count = 0;
 
@@ -57,6 +58,11 @@ public class LEDs extends SubsystemBase {
             cycleState = cycleState + 9;
             if (cycleState >= TEAL) cycleState = WHITE;
         }
+    }
+
+    public void off(){
+        setColor(OFF);
+        called = false;
     }
 
 }

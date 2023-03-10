@@ -10,16 +10,15 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
 import frc.robot.commands.armCommands.ArmToPositionWithEnd;
-import frc.robot.commands.driveCommands.AutoLevel;
 import frc.robot.commands.driveCommands.DriveToLevel;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ArmSubsystem.armPositions;
 
-public class OnePieceAuto6 extends SequentialCommandGroup {
+public class OnePieceAuto6Level extends SequentialCommandGroup {
 
-    public OnePieceAuto6(DriveSubsystem driveSubsystem, 
+    public OnePieceAuto6Level(DriveSubsystem driveSubsystem, 
                         ArmSubsystem armSubsystem,
                         IntakeSubsystem intakeSubsystem
                         ){

@@ -217,7 +217,7 @@ public final class Constants {
     public static final int kPdhChannel = 0;
     public static final double kStallSpeed = 0.2; // + for cone, - for cube
     public static final double kIntakePickUp = 0.3;
-    public static final double kIntakeReverse = -0.5; 
+    public static final double kIntakeReverse = -0.5; // -0.5
   }
 
   public static final class GroundIntakeConstants{

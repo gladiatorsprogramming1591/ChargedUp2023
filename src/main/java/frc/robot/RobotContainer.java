@@ -28,8 +28,9 @@ import frc.robot.commands.driveCommands.AutoLevel;
 import frc.robot.commands.driveCommands.DriveToLevel;
 import frc.robot.commands.driveCommands.PathPlanner.OnePieceAuto5Level;
 import frc.robot.commands.driveCommands.PathPlanner.OnePieceAuto5;
-import frc.robot.commands.driveCommands.PathPlanner.OnePieceAuto6;
+import frc.robot.commands.driveCommands.PathPlanner.OnePieceAuto6Level;
 import frc.robot.commands.driveCommands.PathPlanner.OnePieceAuto7;
+import frc.robot.commands.driveCommands.PathPlanner.TwoPieceAuto9;
 import frc.robot.commands.driveCommands.PathPlanner.NewOnePieceAuto3;
 import frc.robot.commands.driveCommands.PathPlanner.OneCubeAuto3Hybrid;
 import frc.robot.commands.driveCommands.PathPlanner.OneConeAuto3;
@@ -120,9 +121,10 @@ public class RobotContainer {
     m_autoChooser.addOption("NewOneCubeAuto3Hybrid", new OneCubeAuto3Hybrid(m_robotDrive, m_arm, m_intake));
     m_autoChooser.addOption("NewOnePieceAuto3", new NewOnePieceAuto3(m_robotDrive, m_arm, m_intake));
     m_autoChooser.addOption("OnePieceAuto5", new OnePieceAuto5(m_robotDrive, m_arm, m_intake));
-    m_autoChooser.addOption("OnePieceAuto6", new OnePieceAuto6(m_robotDrive, m_arm, m_intake));
+    m_autoChooser.addOption("OnePieceAuto6Level", new OnePieceAuto6Level(m_robotDrive, m_arm, m_intake));
     m_autoChooser.addOption("OnePieceAuto7", new OnePieceAuto7(m_robotDrive, m_arm, m_intake));
     m_autoChooser.addOption("OnePieceAuto5Level", new OnePieceAuto5Level(m_robotDrive, m_arm, m_intake));
+    m_autoChooser.addOption("TwoPieceAuto9", new TwoPieceAuto9(m_robotDrive, m_arm, m_intake));
     SmartDashboard.putData("Auto Mode", m_autoChooser);
   }
 
@@ -208,7 +210,9 @@ public class RobotContainer {
 
     m_manipulatorController.leftBumper().onTrue(new InstantCommand(() -> m_LEDs.setPiece(), m_LEDs));
 
-    m_manipulatorController.back().toggleOnTrue(new RunCommand(() -> m_LEDs.cycle(), m_LEDs));
+    // m_manipulatorController.back().toggleOnTrue(new RunCommand(() -> m_LEDs.cycle(), m_LEDs));
+
+    m_manipulatorController.back().toggleOnTrue(new RunCommand(() -> m_LEDs.off(), m_LEDs));
     
     m_manipulatorController.povDown().onTrue(new ArmToPosition(m_arm, ArmSubsystem.armPositions.HOME));
     m_manipulatorController.povLeft().onTrue(new ArmToPosition(m_arm, ArmSubsystem.armPositions.LVLONE));

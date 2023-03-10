@@ -1,35 +1,16 @@
 Main TODO:
-    Test Arm
-1:  Auto Paths
+1:  Autos
         Non-balance autos
         Different autos for real and wood charge stations
         Add auto that only drives out of community after time set in SmartDashboard
         Test ALL Autos
-    
-Low Priority:
-    Arm:
-        If driving too fast, lower arm to home
-    
-    Drive:
-        DriveToAngle: Angle could be positive or negative, need to handle both
-        Should be positive if driving forward, negative if driving backward onto the power station ramp
-
-    Research April tags with Limelight
-        -New branch
-        -convert swerveDriveOdometry to swerveDrivePoseEstimator
-        -update swerveDrivePoseEstimator with vision targets
-        -teleop auto score using April tags & vision
-    
-    Sensors:
-        Add Sensors (1 Color and 2 Distance[for cone and cube])
-        Color sensor to set motor direction, Distance to determine alignment to grid
-
 
 
 Requires Testing:
 
     Autos
         -Paths with events
+            -Autolevel parallel or sequential?
         -Lengthen 3 and 7 one piece auto paths into charge station
         -4/6 one cone auto level
 
@@ -38,12 +19,35 @@ Requires Testing:
     Improve the intake stall (current limit increase?)
         Both improve operability (remove joystick button) and reduce motor temp
 
-  Low Priority:
-    Limelight/April Tags
-        -Update limelight code
 
-    Test Path with Events
-        -Autolevel: parallel or sequential?
+Tested Autos:
+    OneConeAuto3
+    OneCubeAuto3Hybrid
+    OnePieceAuto5Level
+    OnePieceAuto6Level
+    OnePieceAuto7
+    TwoPieceAuto9 (needs improvement over cable protector)
+
+
+
+Low Priority:
+
+    Drive:
+        DriveToAngle: Angle could be positive or negative, need to handle both
+        Should be positive if driving forward, negative if driving backward onto the power station ramp
+
+    Research April tags with Limelight:
+        -New branch
+        -convert swerveDriveOdometry to swerveDrivePoseEstimator
+        -update swerveDrivePoseEstimator with vision targets
+        -teleop auto score using April tags & vision
+
+    Arm:
+        If driving too fast, lower arm to home
+        
+    Sensors:
+        Add Sensors (1 Color and 2 Distance[for cone and cube])
+        Color sensor to set motor direction, Distance to determine alignment to grid
 
     Ground Intake
         -Program CANIDs for the 3 ground intake motors
@@ -53,15 +57,6 @@ Requires Testing:
 
 
 
-Auto Tracker:
-    Requires Testing:
-        Path with events
-        Everything else
-    Tested:
-        OneConeAuto3
-        OneCubeAuto3Hybrid
-        OnePieceAuto5Level 
-        OnePieceAuto7
 
 
 
