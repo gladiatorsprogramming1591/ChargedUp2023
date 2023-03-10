@@ -81,9 +81,9 @@ public class RobotContainer {
     // m_groundIntake = new GroundIntakeSubsystem(); 
     // m_LEDs.setDefaultCommand(new RunCommand(() -> m_LEDs.setColor(.6), m_LEDs));
 
-    addAutoOptions();
-
     configureAutoCommands();
+
+    addAutoOptions();
 
     // Configure the button bindings
     configureButtonBindings();
