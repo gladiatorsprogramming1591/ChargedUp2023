@@ -192,7 +192,7 @@ public final class Constants {
     public static final double kArmMaxOutput = 1.00; //0.65
 
     // Arm Positions
-    public static final double kOffset = 0.890;
+    public static final double kOffset = 0.306;
     public static final double kCONESTOW = kOffset + 0.011;
     public static final double kLVLONE = kOffset + 0.150;
     public static final double kLVLTWO = kOffset + 0.280;

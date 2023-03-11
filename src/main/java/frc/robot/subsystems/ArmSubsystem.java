@@ -106,6 +106,7 @@ public class ArmSubsystem extends SubsystemBase{
     public void periodic() {
         SmartDashboard.putNumber("Arm Relative Enc", armMotorLeft.getEncoder().getPosition());
         SmartDashboard.putNumber("ArmABS Absolute", armAbsEncoder.getAbsolutePosition()); 
+        SmartDashboard.putNumber("Arm oCurrent", armMotorLeft.getOutputCurrent());
         // SmartDashboard.putNumber("ArmABS Offset", armAbsEncoder.getPositionOffset());  
         //   Might use global that is set by drive periodic to indicate if driving too fast.
     }
@@ -150,13 +151,13 @@ public class ArmSubsystem extends SubsystemBase{
             Constants.ArmConstants.kArmMinOutput, Constants.ArmConstants.kArmMaxOutput);
             
         SmartDashboard.putNumber("Arm Abs Target Pos", ref);
-        armMotorLeft.set(-pidOut);
+        armMotorLeft.set(pidOut);
         // TODO: Add a new armPosition that reads a value from the smart dashboard and moves arm to that position.
     }
 
     public void raiseArm(double speed){
-        if (((armAbsEncoder.getAbsolutePosition() < ArmConstants.kMinHeightAbs) && (speed < 0)) ||
-            ((armAbsEncoder.getAbsolutePosition() > ArmConstants.kMaxHeightAbs) && (speed > 0))) {
+        if (((armAbsEncoder.getAbsolutePosition() < ArmConstants.kOffset) && (speed < 0)) ||
+            ((armAbsEncoder.getAbsolutePosition() > ArmConstants.kLVLTRE) && (speed > 0))) {
             armMotorLeft.set(0);
             return;
         }
@@ -165,8 +166,8 @@ public class ArmSubsystem extends SubsystemBase{
 
     public void raiseArm(double raiseSpeed, double lowerSpeed){
         double speed = raiseSpeed - lowerSpeed; //positive output to raise arm
-        if (((armAbsEncoder.getAbsolutePosition() < ArmConstants.kMinHeightAbs) && (speed < 0)) ||
-            ((armAbsEncoder.getAbsolutePosition() > ArmConstants.kMaxHeightAbs) && (speed > 0))) {
+        if (((armAbsEncoder.getAbsolutePosition() < ArmConstants.kOffset) && (speed < 0)) ||
+            ((armAbsEncoder.getAbsolutePosition() > ArmConstants.kLVLTRE) && (speed > 0))) {
             armMotorLeft.set(0);
             return;
         }
