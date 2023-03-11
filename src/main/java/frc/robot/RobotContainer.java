@@ -27,7 +27,7 @@ import frc.robot.commands.driveCommands.AutoLevel;
 // import frc.robot.commands.driveCommands.DriveToAngle;
 import frc.robot.commands.driveCommands.DriveToLevel;
 import frc.robot.commands.driveCommands.PathPlanner.OnePieceAuto5Level;
-import frc.robot.commands.driveCommands.PathPlanner.OnePieceAuto5;
+import frc.robot.commands.driveCommands.PathPlanner.OneCubeAuto5;
 import frc.robot.commands.driveCommands.PathPlanner.OnePieceAuto6Level;
 import frc.robot.commands.driveCommands.PathPlanner.OnePieceAuto7;
 import frc.robot.commands.driveCommands.PathPlanner.TwoPieceAuto9;
@@ -120,7 +120,7 @@ public class RobotContainer {
     m_autoChooser.setDefaultOption("OneConeAuto3", new OneConeAuto3(m_robotDrive, m_arm, m_intake));
     m_autoChooser.addOption("NewOneCubeAuto3Hybrid", new OneCubeAuto3Hybrid(m_robotDrive, m_arm, m_intake));
     m_autoChooser.addOption("NewOnePieceAuto3", new NewOnePieceAuto3(m_robotDrive, m_arm, m_intake));
-    m_autoChooser.addOption("OnePieceAuto5", new OnePieceAuto5(m_robotDrive, m_arm, m_intake));
+    m_autoChooser.addOption("OneCubeAuto5", new OneCubeAuto5(m_robotDrive, m_arm, m_intake));
     m_autoChooser.addOption("OnePieceAuto6Level", new OnePieceAuto6Level(m_robotDrive, m_arm, m_intake));
     m_autoChooser.addOption("OnePieceAuto7", new OnePieceAuto7(m_robotDrive, m_arm, m_intake));
     m_autoChooser.addOption("OnePieceAuto5Level", new OnePieceAuto5Level(m_robotDrive, m_arm, m_intake));
