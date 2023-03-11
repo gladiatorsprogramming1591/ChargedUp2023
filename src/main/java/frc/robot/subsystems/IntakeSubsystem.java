@@ -42,5 +42,11 @@ public class IntakeSubsystem extends SubsystemBase{
         else if (joystick < 0) intakeMotor.set(ControlMode.PercentOutput, -speed);
         else intakeMotor.set(ControlMode.PercentOutput, 0);
     }
+
+    public void operatorReverse(double manipulatorY, double speed){
+        if (manipulatorY > 0) intakeMotor.set(ControlMode.PercentOutput, -speed);
+        else if (manipulatorY < 0) intakeMotor.set(ControlMode.PercentOutput, speed);
+        else intakeMotor.set(ControlMode.PercentOutput, 0);
+    }
 }
 

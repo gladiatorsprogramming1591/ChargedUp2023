@@ -1,19 +1,35 @@
 Main TODO:
 1:  Autos
         Path w/ events 
-        Non-balance autos
         Different autos for real and wood charge stations
         Add auto that only drives out of community after time set in SmartDashboard
         Test ALL Autos
 
+    Research April tags with Limelight:
+        -New branch
+        -convert swerveDriveOdometry to swerveDrivePoseEstimator
+        -update swerveDrivePoseEstimator with vision targets
+        -teleop auto score using April tags & vision 
+
+    Review Ground Intake 
+
 
 Requires Testing:
-    ***Update Offset & test arm Encoder
+
+    -Intake button
+    -Update positions with new lexan
+
+    Ground Intake
+        -Program CANIDs for the 3 ground intake motors
+        -Ground Intake w/ PID and verify current limits
+        -Confirm Speed Direction For Intake and Joint(+,-)
+
     Autos
         -Paths with events
             -Autolevel parallel or sequential?
         -Lengthen 3 and 7 one piece auto paths into charge station
         -4/6 one cone auto level
+        -Non-balance autos
 
     Turn to target speed increase, adjust PID accordingly
 
@@ -37,12 +53,6 @@ Low Priority:
         DriveToAngle: Angle could be positive or negative, need to handle both
         Should be positive if driving forward, negative if driving backward onto the power station ramp
 
-    Research April tags with Limelight:
-        -New branch
-        -convert swerveDriveOdometry to swerveDrivePoseEstimator
-        -update swerveDrivePoseEstimator with vision targets
-        -teleop auto score using April tags & vision
-
     Arm:
         If driving too fast, lower arm to home
         
@@ -50,9 +60,7 @@ Low Priority:
         Add Sensors (1 Color and 2 Distance[for cone and cube])
         Color sensor to set motor direction, Distance to determine alignment to grid
 
-    Ground Intake
-        -Program CANIDs for the 3 ground intake motors
-        -Ground Intake w/ PID and verify current limits
+   
 
     
 
@@ -64,6 +72,7 @@ Low Priority:
 
 
 Completed:
+    Update Offset & test arm Encoder
     Inverted Encoder Logic
     Add commands for ground intake
     Ground Intake PID

@@ -4,6 +4,9 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.auto.PIDConstants;
+import com.pathplanner.lib.auto.SwerveAutoBuilder;
+
 // import com.pathplanner.lib.PathConstraints;
 // import com.pathplanner.lib.PathPlanner;
 // import com.pathplanner.lib.PathPlannerTrajectory;
@@ -19,6 +22,8 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.IntakeConstants;
 // import edu.wpi.first.wpilibj.PS4Controller.Button;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.armCommands.ArmToPosition;
@@ -31,6 +36,7 @@ import frc.robot.commands.driveCommands.PathPlanner.OnePieceAuto5;
 import frc.robot.commands.driveCommands.PathPlanner.OnePieceAuto6Level;
 import frc.robot.commands.driveCommands.PathPlanner.OnePieceAuto7;
 import frc.robot.commands.driveCommands.PathPlanner.TwoPieceAuto9;
+import frc.robot.commands.driveCommands.PathPlanner.Tests.TestEvents;
 import frc.robot.commands.driveCommands.PathPlanner.NewOnePieceAuto3;
 import frc.robot.commands.driveCommands.PathPlanner.OneCubeAuto3Hybrid;
 import frc.robot.commands.driveCommands.PathPlanner.OneConeAuto3;
@@ -43,6 +49,7 @@ import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.LEDs;
 import frc.robot.subsystems.ArmSubsystem.armPositions;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 
 
 /*
@@ -79,6 +86,19 @@ public class RobotContainer {
     m_arm = new ArmSubsystem(); 
     m_intake = new IntakeSubsystem();
     m_LEDs = new LEDs();
+
+  //   SwerveAutoBuilder autoBuilder = new SwerveAutoBuilder(
+  //     m_robotDrive::getPose, // Pose2d supplier
+  //     m_robotDrive::resetPose, // Pose2d consumer, used to reset odometry at the beginning of auto
+  //     Constants.DriveConstants.kDriveKinematics., // SwerveDriveKinematics //TODO: fix SwerveDriveKinematics
+  //     new PIDConstants(5.0, 0.0, 0.0), // PID constants to correct for translation error (used to create the X and Y PID controllers)
+  //     new PIDConstants(0.5, 0.0, 0.0), // PID constants to correct for rotation error (used to create the rotation controller)
+  //     m_robotDrive::setModuleStates, // Module states consumer used to output to the drive subsystem
+  //     Constants.AutoConstants.AUTO_EVENT_MAP,
+  //     true, // Should the path be automatically mirrored depending on alliance color. Optional, defaults to true
+  //     m_robotDrive // The drive subsystem. Used to properly set the requirements of path following commands
+  // );
+    
     // m_groundIntake = new GroundIntakeSubsystem(); 
     // m_LEDs.setDefaultCommand(new RunCommand(() -> m_LEDs.setColor(.6), m_LEDs));
 
@@ -125,6 +145,7 @@ public class RobotContainer {
     m_autoChooser.addOption("OnePieceAuto7", new OnePieceAuto7(m_robotDrive, m_arm, m_intake));
     m_autoChooser.addOption("OnePieceAuto5Level", new OnePieceAuto5Level(m_robotDrive, m_arm, m_intake));
     m_autoChooser.addOption("TwoPieceAuto9", new TwoPieceAuto9(m_robotDrive, m_arm, m_intake));
+    m_autoChooser.addOption("Tests Events", new TestEvents(m_robotDrive, m_arm, m_intake));
     SmartDashboard.putData("Auto Mode", m_autoChooser);
   }
 
@@ -155,6 +176,9 @@ public class RobotContainer {
     m_driverController.povUp().whileTrue(new DriveToLevel(m_robotDrive));
 
     m_driverController.povDown().whileTrue(new RunCommand(() -> m_robotDrive.setX(),m_robotDrive));  //Prevents Movement
+
+    m_driverController.rightTrigger().whileTrue(new RunCommand(() -> m_intake.operatorReverse(m_manipulatorController.getRightY(), 
+      m_driverController.getRightTriggerAxis())));
 
     m_driverController.povLeft().whileTrue(new AutoLevel(m_robotDrive));
 

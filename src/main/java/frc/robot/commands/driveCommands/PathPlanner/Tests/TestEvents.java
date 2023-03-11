@@ -1,4 +1,4 @@
-package frc.robot.commands.driveCommands.PathPlanner;
+package frc.robot.commands.driveCommands.PathPlanner.Tests;
 
 import java.util.List;
 
@@ -12,16 +12,16 @@ import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 
-public class NewOnePieceAuto3 extends SequentialCommandGroup {
+public class TestEvents extends SequentialCommandGroup {
 
     // TODO: Path group name as parameter
-    public NewOnePieceAuto3(DriveSubsystem driveSubsystem, 
+    public TestEvents(DriveSubsystem driveSubsystem, 
                         ArmSubsystem armSubsystem,
                         IntakeSubsystem intakeSubsystem
                         ){
 
-        List<PathPlannerTrajectory> m_path = PathPlanner.loadPathGroup("One Piece Auto 3 (4ft)",
-        // PathPlannerTrajectory m_path = PathPlanner.loadPath("One Piece Auto 3 (4ft)",
+        List<PathPlannerTrajectory> m_path = PathPlanner.loadPathGroup("Test Events",
+        // PathPlannerTrajectory m_path = PathPlanner.loadPath("Test Events",
             Constants.AutoConstants.kMaxSpeedMetersPerSecond,
             Constants.AutoConstants.kMaxAccelerationMetersPerSecondSquared);
 
@@ -44,6 +44,7 @@ public class NewOnePieceAuto3 extends SequentialCommandGroup {
                     driveSubsystem.followTrajectoryCommand(m_path.get(2), false),
                     m_path.get(2).getMarkers(),
                     Constants.AutoConstants.AUTO_EVENT_MAP)
+
                 // new FollowPathWithEvents(
                 //     driveSubsystem.followTrajectoryCommand(m_path.get(3), false),
                 //     m_path.get(3).getMarkers(),
