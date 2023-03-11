@@ -6,11 +6,14 @@ import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.commands.FollowPathWithEvents;
 
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
+import frc.robot.commands.armCommands.ArmToPositionWithEnd;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.ArmSubsystem.armPositions;
 
 public class TestEvents extends SequentialCommandGroup {
 
@@ -32,6 +35,8 @@ public class TestEvents extends SequentialCommandGroup {
         //     Constants.AutoConstants.AUTO_EVENT_MAP)));
 
         addCommands(
+                new InstantCommand(() -> intakeSubsystem.intakeOn(Constants.IntakeConstants.kIntakePickUp), intakeSubsystem),
+                new ArmToPositionWithEnd(armSubsystem, armPositions.LVLTRE).withTimeout(1.6),
                 new FollowPathWithEvents(
                     driveSubsystem.followTrajectoryCommand(m_path.get(0), true),
                     m_path.get(0).getMarkers(),

@@ -104,5 +104,19 @@
       }
     }
   ],
-  "markers": []
+  "markers": [
+    {
+      "position": 2.6836363636363783,
+      "names": [
+        "LED Cycle"
+      ]
+    },
+    {
+      "position": 2.2,
+      "names": [
+        "Arm HOME",
+        "IntakeOff"
+      ]
+    }
+  ]
 }

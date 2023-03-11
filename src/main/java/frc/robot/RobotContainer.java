@@ -154,8 +154,9 @@ public class RobotContainer {
     Constants.AutoConstants.AUTO_EVENT_MAP.put("Intake PickUp", new InstantCommand(() -> m_intake.intakeOn(Constants.IntakeConstants.kIntakePickUp), m_intake));
     Constants.AutoConstants.AUTO_EVENT_MAP.put("Arm LVLTRE", new ArmToPositionWithEnd(m_arm, armPositions.LVLTRE).withTimeout(3.0));
     Constants.AutoConstants.AUTO_EVENT_MAP.put("Intake Reverse", new RunCommand(() -> m_intake.intakeOn(Constants.IntakeConstants.kIntakeReverse), m_intake).withTimeout(.25));
+    Constants.AutoConstants.AUTO_EVENT_MAP.put("IntakeOff", new InstantCommand(() -> m_intake.intakeOff(), m_intake));
     Constants.AutoConstants.AUTO_EVENT_MAP.put("Arm HOME", new ArmToPositionWithEnd(m_arm, armPositions.HOME).withTimeout(2.0));
-    // Constants.AutoConstants.AUTO_EVENT_MAP.put("LED", SmartDashboard.putString("LED", "Was called"));
+    Constants.AutoConstants.AUTO_EVENT_MAP.put("LED Cycle", new RunCommand(() -> m_LEDs.cycle()));
     Constants.AutoConstants.AUTO_EVENT_MAP.put("AutoLevel", new AutoLevel(m_robotDrive));
   }
 
