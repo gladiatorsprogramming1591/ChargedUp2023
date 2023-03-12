@@ -1,9 +1,11 @@
 Main TODO:
+    Speed up driving
+
 1:  Autos
-        Path w/ events 
-        Different autos for real and wood charge stations
         Add auto that only drives out of community after time set in SmartDashboard
-        Test ALL Autos
+        Different autos for real and wood charge stations
+        4/6 one cone auto level
+        Non-balance autos
 
     Research April tags with Limelight:
         -New branch
@@ -11,13 +13,13 @@ Main TODO:
         -update swerveDrivePoseEstimator with vision targets
         -teleop auto score using April tags & vision 
 
-    Review Ground Intake 
+    Ground Intake
+        First button: onTrue - lower and run intake.    onFalse - raise arm and turn off intake.
+        Transfer button: onTrue - reverse ground intake and run main intake
 
 
 Requires Testing:
-
-    -Intake button
-    -Update positions with new lexan
+    Test LED debounce
 
     Ground Intake
         -Program CANIDs for the 3 ground intake motors
@@ -25,16 +27,8 @@ Requires Testing:
         -Confirm Speed Direction For Intake and Joint(+,-)
 
     Autos
-        -Paths with events
-            -Autolevel parallel or sequential?
         -Lengthen 3 and 7 one piece auto paths into charge station
-        -4/6 one cone auto level
-        -Non-balance autos
 
-    Turn to target speed increase, adjust PID accordingly
-
-    Improve the intake stall (current limit increase?)
-        Both improve operability (remove joystick button) and reduce motor temp
 
 
 Tested Autos:
@@ -55,7 +49,8 @@ Low Priority:
 
     Arm:
         If driving too fast, lower arm to home
-        
+        If Arm is not at or going to kHOME, enable slow drive
+
     Sensors:
         Add Sensors (1 Color and 2 Distance[for cone and cube])
         Color sensor to set motor direction, Distance to determine alignment to grid
@@ -72,6 +67,8 @@ Low Priority:
 
 
 Completed:
+    Intake button
+    Path w/ events
     Update Offset & test arm Encoder
     Inverted Encoder Logic
     Add commands for ground intake

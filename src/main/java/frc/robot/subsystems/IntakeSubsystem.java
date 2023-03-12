@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Constants.OIConstants;
 
 public class IntakeSubsystem extends SubsystemBase{
     
@@ -44,8 +45,9 @@ public class IntakeSubsystem extends SubsystemBase{
     }
 
     public void operatorReverse(double manipulatorY, double speed){
-        if (manipulatorY > 0) intakeMotor.set(ControlMode.PercentOutput, -speed);
-        else if (manipulatorY < 0) intakeMotor.set(ControlMode.PercentOutput, speed);
+        // Joystick deadband to handle nonzero reading of stick while not used
+        if (manipulatorY > OIConstants.kJoystickDeadband) intakeMotor.set(ControlMode.PercentOutput, speed);
+        else if (manipulatorY < -OIConstants.kJoystickDeadband) intakeMotor.set(ControlMode.PercentOutput, -speed);
         else intakeMotor.set(ControlMode.PercentOutput, 0);
     }
 }

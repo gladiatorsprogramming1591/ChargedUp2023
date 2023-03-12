@@ -84,8 +84,8 @@ public final class Constants {
     public static final boolean kGyroReversed = false;
 
     // Drivetrain Speeds
-    public static final double kDriveMaxOutput = 1.0;  // 0.75
-    public static final double kDriveSlow = 0.30; //0.25
+    public static final double kDriveMaxOutput = 0.40;  // 0.75
+    public static final double kDriveSlow = 0.25; //0.25
     public static final double kmaxPOVturnspeed = 0.45; //0.30
     public static final double kAutoLevelMaxOutput = 0.30;
 
@@ -147,12 +147,15 @@ public final class Constants {
     public static final int kTurningMotorCurrentLimit = 20; // amps
   }
 
+  // Operator Input
   public static final class OIConstants {
     public static final int kDriverControllerPort = 0;
     public static final int kManipulatorControllerPort = 1; 
     public static final double kDriveDeadband = 0.05;
+    public static final double kJoystickDeadband = 0.05;
     public static final double kArmDeadband = 0.02;
     public static final double kIntakeDeadband = 0.02;
+    public static final double kIntakeReverseDeadband = 0.10;
   }
 
   public static final class AutoConstants {

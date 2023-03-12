@@ -53,7 +53,7 @@ public class LEDs extends SubsystemBase {
 
     public void cycle(){
         // cycles every quarter second
-        if (++count %12.5 == 0) {
+        if (++count %3 == 0) {
             setColor(cycleState);
             cycleState = cycleState + 9;
             if (cycleState >= TEAL) cycleState = WHITE;

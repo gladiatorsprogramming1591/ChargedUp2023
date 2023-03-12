@@ -4,8 +4,8 @@
 
 package frc.robot;
 
-import com.pathplanner.lib.auto.PIDConstants;
-import com.pathplanner.lib.auto.SwerveAutoBuilder;
+// import com.pathplanner.lib.auto.PIDConstants;
+// import com.pathplanner.lib.auto.SwerveAutoBuilder;
 
 // import com.pathplanner.lib.PathConstraints;
 // import com.pathplanner.lib.PathPlanner;
@@ -22,8 +22,6 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import frc.robot.Constants.DriveConstants;
-import frc.robot.Constants.IntakeConstants;
 // import edu.wpi.first.wpilibj.PS4Controller.Button;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.armCommands.ArmToPosition;
@@ -49,7 +47,6 @@ import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.LEDs;
 import frc.robot.subsystems.ArmSubsystem.armPositions;
-import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 
 
 /*
@@ -145,7 +142,7 @@ public class RobotContainer {
     m_autoChooser.addOption("OnePieceAuto7", new OnePieceAuto7(m_robotDrive, m_arm, m_intake));
     m_autoChooser.addOption("OnePieceAuto5Level", new OnePieceAuto5Level(m_robotDrive, m_arm, m_intake));
     m_autoChooser.addOption("TwoPieceAuto9", new TwoPieceAuto9(m_robotDrive, m_arm, m_intake));
-    m_autoChooser.addOption("Tests Events", new TestEvents(m_robotDrive, m_arm, m_intake));
+    m_autoChooser.addOption("Tests Events", new TestEvents(m_robotDrive, m_arm, m_intake, m_LEDs));
     SmartDashboard.putData("Auto Mode", m_autoChooser);
   }
 
@@ -178,7 +175,9 @@ public class RobotContainer {
 
     m_driverController.povDown().whileTrue(new RunCommand(() -> m_robotDrive.setX(),m_robotDrive));  //Prevents Movement
 
-    m_driverController.rightTrigger().whileTrue(new RunCommand(() -> m_intake.operatorReverse(m_manipulatorController.getRightY(), 
+    // Intake deadband to prevent accidental activation
+    m_driverController.rightTrigger(OIConstants.kIntakeReverseDeadband).whileTrue(new RunCommand(() -> 
+      m_intake.operatorReverse(m_manipulatorController.getRightY(), 
       m_driverController.getRightTriggerAxis())));
 
     m_driverController.povLeft().whileTrue(new AutoLevel(m_robotDrive));
@@ -235,10 +234,9 @@ public class RobotContainer {
 
     m_manipulatorController.leftBumper().onTrue(new InstantCommand(() -> m_LEDs.setPiece(), m_LEDs));
 
-    // m_manipulatorController.back().toggleOnTrue(new RunCommand(() -> m_LEDs.cycle(), m_LEDs));
+    m_manipulatorController.back().toggleOnTrue(new RunCommand(() -> m_LEDs.off(), m_LEDs)).
+      debounce(2.5).onTrue(new RunCommand(() -> m_LEDs.cycle(), m_LEDs));
 
-    m_manipulatorController.back().toggleOnTrue(new RunCommand(() -> m_LEDs.off(), m_LEDs));
-    
     m_manipulatorController.povDown().onTrue(new ArmToPosition(m_arm, ArmSubsystem.armPositions.HOME));
     m_manipulatorController.povLeft().onTrue(new ArmToPosition(m_arm, ArmSubsystem.armPositions.LVLONE));
     m_manipulatorController.povUp().onTrue(new ArmToPosition(m_arm, ArmSubsystem.armPositions.LVLTWO));
