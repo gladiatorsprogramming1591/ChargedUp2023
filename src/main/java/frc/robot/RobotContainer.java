@@ -22,6 +22,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.Constants.GroundIntakeConstants;
 // import edu.wpi.first.wpilibj.PS4Controller.Button;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.armCommands.ArmToPosition;
@@ -35,6 +36,7 @@ import frc.robot.commands.driveCommands.PathPlanner.OnePieceAuto6Level;
 import frc.robot.commands.driveCommands.PathPlanner.OnePieceAuto7;
 import frc.robot.commands.driveCommands.PathPlanner.TwoPieceAuto9;
 import frc.robot.commands.driveCommands.PathPlanner.Tests.TestEvents;
+import frc.robot.commands.groundIntakeCommands.IntakeHandoff;
 import frc.robot.commands.driveCommands.PathPlanner.NewOnePieceAuto3;
 import frc.robot.commands.driveCommands.PathPlanner.OneCubeAuto3Hybrid;
 import frc.robot.commands.driveCommands.PathPlanner.OneConeAuto3;
@@ -43,9 +45,10 @@ import frc.robot.commands.driveCommands.PathPlanner.OneConeAuto3;
 import frc.robot.commands.navXCommands.ResetGyro;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
-// import frc.robot.subsystems.GroundIntakeSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.LEDs;
+import frc.robot.subsystems.GroundIntakeSubsystem.GroundIntake;
+import frc.robot.subsystems.GroundIntakeSubsystem.GroundJoint;
 import frc.robot.subsystems.ArmSubsystem.armPositions;
 
 
@@ -63,7 +66,8 @@ public class RobotContainer {
   private final DriveSubsystem m_robotDrive;
   private final ArmSubsystem m_arm; 
   private final IntakeSubsystem m_intake;
-  // private final GroundIntakeSubsystem m_groundIntake;
+  private final GroundIntake m_groundIntake;
+  private final GroundJoint m_groundJoint;
   private final LEDs m_LEDs;
 
   // The driver's controller
@@ -73,6 +77,8 @@ public class RobotContainer {
       new CommandXboxController(OIConstants.kManipulatorControllerPort); 
   private final CommandXboxController m_driverController =
       new CommandXboxController(OIConstants.kDriverControllerPort);
+  private final CommandXboxController m_testController =
+      new CommandXboxController(OIConstants.kTestControllerPort);
       
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -83,6 +89,8 @@ public class RobotContainer {
     m_arm = new ArmSubsystem(); 
     m_intake = new IntakeSubsystem();
     m_LEDs = new LEDs();
+    m_groundIntake = new GroundIntake();
+    m_groundJoint = new GroundJoint();
 
   //   SwerveAutoBuilder autoBuilder = new SwerveAutoBuilder(
   //     m_robotDrive::getPose, // Pose2d supplier
@@ -129,7 +137,13 @@ public class RobotContainer {
                 MathUtil.applyDeadband(-m_manipulatorController.getRightY(), OIConstants.kIntakeDeadband)), 
                 // MathUtil.clamp(MathUtil.applyDeadband(-m_manipulatorController.getRightY(), OIConstants.kIntakeDeadband), -0.7, 1.0)), 
             m_intake));
-                      
+    
+    m_groundIntake.setDefaultCommand(
+      new RunCommand(
+        
+            () -> m_groundIntake.groundIntakeSpeed(
+              GroundIntakeConstants.kDefaultSpeed),
+            m_groundIntake));
   }
 
   // Configure auto options
@@ -168,19 +182,24 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
 
+
     // DRIVER 1
-    m_driverController.leftStick().toggleOnTrue(new ResetGyro(m_robotDrive));
 
-    m_driverController.povUp().whileTrue(new DriveToLevel(m_robotDrive));
+    // Zero Heading
+    m_driverController.leftStick().onTrue(new ResetGyro(m_robotDrive));
 
-    m_driverController.povDown().whileTrue(new RunCommand(() -> m_robotDrive.setX(),m_robotDrive));  //Prevents Movement
+    // Prevents Movement
+    m_driverController.povDown().whileTrue(new RunCommand(() -> m_robotDrive.setX(), m_robotDrive));
 
+    // Charge Station Auto Level
+    m_driverController.povUp().whileTrue(new DriveToLevel(m_robotDrive)); // Auto Level while ON Charge Station
+    m_driverController.povLeft().whileTrue(new AutoLevel(m_robotDrive));  // Full AutoLevel Sequence while OFF Charge Station
+
+    // Main Intake Drop-off
     // Intake deadband to prevent accidental activation
     m_driverController.rightTrigger(OIConstants.kIntakeReverseDeadband).whileTrue(new RunCommand(() -> 
       m_intake.operatorReverse(m_manipulatorController.getRightY(), 
       m_driverController.getRightTriggerAxis())));
-
-    m_driverController.povLeft().whileTrue(new AutoLevel(m_robotDrive));
 
     // POV Rotation
     m_driverController.b().whileTrue( new RunCommand (
@@ -232,11 +251,12 @@ public class RobotContainer {
 
     // DRIVER 2
 
+    // LEDs
     m_manipulatorController.leftBumper().onTrue(new InstantCommand(() -> m_LEDs.setPiece(), m_LEDs));
+    m_manipulatorController.back().onTrue(new RunCommand(() -> m_LEDs.off(), m_LEDs)).
+      debounce(1.0).onTrue(new RunCommand(() -> m_LEDs.cycle(), m_LEDs));
 
-    m_manipulatorController.back().toggleOnTrue(new RunCommand(() -> m_LEDs.off(), m_LEDs)).
-      debounce(2.5).onTrue(new RunCommand(() -> m_LEDs.cycle(), m_LEDs));
-
+    // Arm Positions
     m_manipulatorController.povDown().onTrue(new ArmToPosition(m_arm, ArmSubsystem.armPositions.HOME));
     m_manipulatorController.povLeft().onTrue(new ArmToPosition(m_arm, ArmSubsystem.armPositions.LVLONE));
     m_manipulatorController.povUp().onTrue(new ArmToPosition(m_arm, ArmSubsystem.armPositions.LVLTWO));
@@ -244,29 +264,45 @@ public class RobotContainer {
     m_manipulatorController.rightTrigger().onTrue(new ArmToPosition(m_arm, ArmSubsystem.armPositions.CONESTOW));
     m_manipulatorController.rightBumper().onTrue(new ArmToPosition(m_arm, ArmSubsystem.armPositions.CONESINGLE));
 
-    // m_manipulatorController.start().onTrue(new InstantCommand(() -> m_groundIntake.groundIntakeOff()));
-    // m_manipulatorController.a().onTrue(new 
-    //   RunCommand(() -> m_groundIntake.groundJointPosition(Constants.GroundIntakeConstants.kOutPosition), m_groundIntake).
-    //   until(() -> m_groundIntake.groundJointAtPosition()));
-    // m_manipulatorController.b().onTrue(new 
-    //   RunCommand(() -> m_groundIntake.groundJointPosition(Constants.GroundIntakeConstants.kInPosition)).
-    //   until(() -> m_groundIntake.groundJointAtPosition()));
-    // m_manipulatorController.x().onTrue(new InstantCommand(() -> m_groundIntake.groundIntakePickUp()));
-    // m_manipulatorController.y().onTrue(new InstantCommand(() -> m_groundIntake.groundIntakeReverse()));
-    // m_manipulatorController.leftTrigger().onTrue(new InstantCommand(() -> m_groundIntake.groundIntakeShoot()));
-
-    // The left stick controls moving the arm in and out. 
-    m_manipulatorController.leftStick().toggleOnTrue( new RunCommand(
-          () -> m_arm.raiseArm(
-              -MathUtil.applyDeadband(m_manipulatorController.getLeftY()*Constants.ArmConstants.kArmMaxOutput, OIConstants.kArmDeadband)),
-          m_arm)); 
-
+    // Main Intake
     m_manipulatorController.rightStick().whileTrue( new RunCommand(
         () -> m_intake.intakeStall(
             -m_manipulatorController.getRightY(),
             Constants.IntakeConstants.kStallSpeed),
         m_intake));
 
+    // Ground Intake
+    // m_manipulatorController.start().whileTrue(new RunCommand(() -> m_groundIntake.groundIntakeOff(), m_groundIntake));
+    m_manipulatorController.a().onTrue(new 
+      RunCommand(() -> m_groundJoint.groundJointPosition(Constants.GroundIntakeConstants.kOutPosition), m_groundJoint).
+      until(() -> m_groundJoint.groundJointAtPosition()));
+    m_manipulatorController.b().onTrue(new 
+      RunCommand(() -> m_groundJoint.groundJointPosition(Constants.GroundIntakeConstants.kInPosition), m_groundJoint).
+      until(() -> m_groundJoint.groundJointAtPosition()));
+    m_manipulatorController.x().whileTrue(new RunCommand(() -> m_groundIntake.groundIntakePickUp(), m_groundIntake));
+    m_manipulatorController.y().whileTrue(new RunCommand(() -> m_groundIntake.groundIntakeReverse(), m_groundIntake));
+    m_manipulatorController.leftTrigger().whileTrue(new RunCommand(() -> m_groundIntake.groundIntakeShoot(), m_groundIntake));
+    m_manipulatorController.start().onTrue(new IntakeHandoff(m_groundIntake, m_groundJoint, m_intake));
+    // Arm Manual Control
+    m_manipulatorController.leftStick().toggleOnTrue( new RunCommand(
+          () -> m_arm.raiseArm(
+              -MathUtil.applyDeadband(m_manipulatorController.getLeftY()*Constants.ArmConstants.kArmMaxOutput, OIConstants.kArmDeadband)),
+          m_arm)); 
+
+
+    // Test Controller
+
+    // Joint Speed: Positive  is up, negative speed down
+    m_testController.rightStick().toggleOnTrue(new RunCommand(() -> 
+      m_groundJoint.groundJointSpeed(MathUtil.applyDeadband(-m_testController.getRightY()*GroundIntakeConstants.kMaxManualGroundJointSpeed, OIConstants.kIntakeDeadband)), m_groundJoint));
+
+    // Intake Speed: Positive is pick-up, negative is eject
+    m_testController.leftStick().toggleOnTrue(new RunCommand(() -> 
+      m_groundIntake.groundIntakeSpeed(MathUtil.applyDeadband(m_testController.getLeftY(), OIConstants.kIntakeDeadband)), m_groundIntake));
+
+    // Zero Encoder
+    m_testController.a().onTrue(new InstantCommand(() -> m_groundJoint.zeroEncoder(), m_groundJoint));
+    
     // String TestPathName = new String("Cone Score 3"); 
     // PathPlannerTrajectory m_coneScore1 = PathPlanner.loadPath(TestPathName, new PathConstraints(.85, .5));
     // m_driverController.povRight().toggleOnTrue(m_robotDrive.followTrajectoryCommand(m_coneScore1, true));

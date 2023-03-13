@@ -1,4 +1,4 @@
-package frc.robot.subsystems; 
+package frc.robot.subsystems.GroundIntakeSubsystem; 
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FollowerType;
@@ -6,12 +6,13 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.wpilibj.PowerDistribution;
-import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
+// import edu.wpi.first.wpilibj.PowerDistribution;
+// import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.GroundIntakeConstants;
@@ -26,25 +27,29 @@ public class GroundIntakeSubsystem extends SubsystemBase{
 
     private final PIDController GroundIntakePID = new PIDController(GroundIntakeConstants.kp, GroundIntakeConstants.ki, GroundIntakeConstants.kd);
 
-    PowerDistribution powerDist = new PowerDistribution(CANIDConstants.kPdhCanId, ModuleType.kRev);
+    // PowerDistribution powerDist = new PowerDistribution(CANIDConstants.kPdhCanId, ModuleType.kRev);
     double intakeCurrent = 3.0;
 
     double defaultPickUp = GroundIntakeConstants.kIntakePickUp;
     double defaultReverse = GroundIntakeConstants.kIntakeReverse;
     double defaultShoot = GroundIntakeConstants.kIntakeShoot;
 
-    boolean atPosition = true;
+    boolean atPosition;
     int positionCheckCount = 0;
 
     public GroundIntakeSubsystem(){
+        RightGroundIntakeMotor.configFactoryDefault();
+        LeftGroundIntakeMotor.configFactoryDefault();
+        GroundIntakeJoint.restoreFactoryDefaults();
         RightGroundIntakeMotor.setNeutralMode(NeutralMode.Brake);
         LeftGroundIntakeMotor.setNeutralMode(NeutralMode.Brake);
+        GroundIntakeJoint.setIdleMode(IdleMode.kBrake);
 
         RightGroundIntakeMotor.follow(LeftGroundIntakeMotor, FollowerType.PercentOutput);
-        RightGroundIntakeMotor.setInverted(true); //TODO (Test): Follower while inverted?
+        RightGroundIntakeMotor.setInverted(true);
 
-        LeftGroundIntakeMotor.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, intakeCurrent, intakeCurrent + 1.75, 0.6));
-        RightGroundIntakeMotor.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, intakeCurrent, intakeCurrent + 1.75, 0.6));
+        LeftGroundIntakeMotor.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, intakeCurrent, intakeCurrent + 1.75, 0.1));
+        RightGroundIntakeMotor.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, intakeCurrent, intakeCurrent + 1.75, 0.1));
         GroundIntakeJoint.setSmartCurrentLimit(GroundIntakeConstants.GROUND_JOINT_CURRENT_LIMIT_A);
 
         SmartDashboard.putNumber("GroundIntakePickUp", defaultPickUp);
@@ -57,7 +62,13 @@ public class GroundIntakeSubsystem extends SubsystemBase{
         SmartDashboard.putNumber("GroundIntakeJoint oCurrent", GroundIntakeJoint.getOutputCurrent());
         SmartDashboard.putNumber("LeftGroundIntake oCurrent", LeftGroundIntakeMotor.getStatorCurrent());
         SmartDashboard.putNumber("RightGroundIntake oCurrent", RightGroundIntakeMotor.getStatorCurrent());
+        SmartDashboard.putNumber("LeftGroundIntake iCurrent", LeftGroundIntakeMotor.getSupplyCurrent());
+        SmartDashboard.putNumber("RightGroundIntake iCurrent", RightGroundIntakeMotor.getSupplyCurrent());
+        SmartDashboard.putNumber("GroundIntakeJoint Position", GroundIntakeJoint.getEncoder().getPosition());
     }
+
+    // Joint Speed: Positive  is up, negative speed down
+    // Intake Speed: Positive is pick-up, negative is eject
 
     public void groundIntakePickUp(){
         double speed = SmartDashboard.getNumber("GroundIntakePickUp", defaultPickUp);
@@ -78,29 +89,46 @@ public class GroundIntakeSubsystem extends SubsystemBase{
         LeftGroundIntakeMotor.set(ControlMode.PercentOutput, 0.0);
     }
 
+    public void groundIntakeSpeed(double speed){
+        LeftGroundIntakeMotor.set(ControlMode.PercentOutput, speed);
+    }
+
     public void groundJointSpeed(double speed){ // TODO: Eventually needs a PID
         GroundIntakeJoint.set(speed); //TODO: Add soft limits
     }    
 
     public void groundJointPosition(double position){
         atPosition = false;
-        double speed = MathUtil.clamp( GroundIntakePID.calculate(GroundIntakeJoint.getEncoder().getPosition(), position), 
-            GroundIntakeConstants.kMaxReverseOutput, GroundIntakeConstants.kMaxForwardOutput);
-        if (GroundIntakeJoint.getEncoder().getVelocity() == 0){
-            ++positionCheckCount;
-            if (positionCheckCount > 5){
-                GroundIntakeJoint.set(0);
-                positionCheckCount = 0;
-                atPosition = true;
-            }
-        } else {
+        double speed = MathUtil.applyDeadband(MathUtil.clamp(GroundIntakePID.calculate(GroundIntakeJoint.getEncoder().getPosition(), position), 
+            GroundIntakeConstants.kMaxOutwardOutput, GroundIntakeConstants.kMaxInwardOutput),
+            GroundIntakeConstants.kPIDDeadband);
+        SmartDashboard.putNumber("Ground Intake PidOut Speed", speed);
+
+        // between -0.1 and 0.1 RPM for 100ms to set atPosition = true
+        // if (GroundIntakeJoint.getEncoder().getVelocity() == 0){
+        // if (GroundIntakeJoint.getEncoder().getVelocity() <= GroundIntakeConstants.kOffVelocity && 
+        //     GroundIntakeJoint.getEncoder().getVelocity() >= -GroundIntakeConstants.kOffVelocity){
+        //     ++positionCheckCount;
+
+        //     if (positionCheckCount > 100){
+        //         GroundIntakeJoint.set(0);
+        //         positionCheckCount = 0;
+        //         atPosition = true;
+        //     }
+
+        // } else {
             GroundIntakeJoint.set(speed);
             positionCheckCount = 0;
-        }
+        // }
     }
 
     public boolean groundJointAtPosition(){
-        return atPosition;
+        // return atPosition;
+        return false;
+    }
+
+    public void zeroEncoder(){
+        GroundIntakeJoint.getEncoder().setPosition(0.0);
     }
 }
 

@@ -151,6 +151,7 @@ public final class Constants {
   public static final class OIConstants {
     public static final int kDriverControllerPort = 0;
     public static final int kManipulatorControllerPort = 1; 
+    public static final int kTestControllerPort = 2;
     public static final double kDriveDeadband = 0.05;
     public static final double kJoystickDeadband = 0.05;
     public static final double kArmDeadband = 0.02;
@@ -225,21 +226,30 @@ public final class Constants {
   }
 
   public static final class GroundIntakeConstants{
-    public static final double kp = 0.1;
+  // Joint Speed: Positive  is up, negative speed down
+  // Intake Speed: Positive is pick-up, negative is eject
+  //Joint Encoder: If starts inside robot, the the more negative, the more down the arm goes
+    public static final double kp = 0.03;
     public static final double ki = 0.0;
     public static final double kd = 0.0;
-    public static final double kIntakePickUp = 0.3;
-    public static final double kIntakeReverse = -0.3;
+    public static final double kMaxJointOutSpeed = -0.30;
+    public static final double kMaxJointInSpeed = 0.40;
+    public static final double kOutPosition = -14.2; // -15.428 before new hardstop
+    public static final double kInPosition = 0;
+    public static final double kPIDDeadband = 0.001;
+  
+    public static final double kIntakePickUp = 0.4;
+    public static final double kIntakeReverse = -0.5;
     public static final double kIntakeShoot = -1.0;
     
   /**
    * How many amps the ground intake can take while moving
    */
-  public static final int GROUND_JOINT_CURRENT_LIMIT_A = 5;
-public static final double kMaxForwardOutput = 0.3;
-public static final double kMaxReverseOutput = -0.5;
-public static final double kOutPosition = 0; //TODO: Get output position
-public static final double kInPosition = 0;
+  public static final int GROUND_JOINT_CURRENT_LIMIT_A = 15;
+
+  public static final double kOffVelocity = 0.1; // between -0.1 and 0.1 RPM for 100ms to set atPosition = true
+  public static final double kMaxManualGroundJointSpeed = 0.15;
+public static final double kDefaultSpeed = 0.10;
   }
  /**
    * How many amps the arm motor can use.
