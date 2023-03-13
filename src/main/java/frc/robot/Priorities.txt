@@ -1,6 +1,4 @@
 Main TODO:
-    Speed up driving
-
 1:  Autos
         Add auto that only drives out of community after time set in SmartDashboard
         Different autos for real and wood charge stations
@@ -14,17 +12,18 @@ Main TODO:
         -teleop auto score using April tags & vision 
 
     Ground Intake
-        First button: onTrue - lower and run intake.    onFalse - raise arm and turn off intake.
-        Transfer button: onTrue - reverse ground intake and run main intake
+        -Add IntakeJoint Default Command
+        -IntakeHandoff
+            -ArmJoint kP of PID increase
+            -replace ".alongWith" with raceGroup once groundJointToPosition has a proper end.
+                This way the handoff will not happen until arm is at position, and both commands end before handoff.
+        -First button: onTrue - lower and run intake.    onFalse - raise arm and turn off intake.
+
+            
 
 
 Requires Testing:
-    Test LED debounce
-
-    Ground Intake
-        -Program CANIDs for the 3 ground intake motors
-        -Ground Intake w/ PID and verify current limits
-        -Confirm Speed Direction For Intake and Joint(+,-)
+    Update HOME position w/ new bar-hardstop placement
 
     Autos
         -Lengthen 3 and 7 one piece auto paths into charge station
@@ -67,6 +66,12 @@ Low Priority:
 
 
 Completed:
+    Ground Intake
+        -Program CANIDs for the 3 ground intake motors
+        -Ground Intake w/ PID and verify current limits
+        -Confirm Speed Direction For Intake and Joint(+,-)
+        Transfer button: onTrue - reverse ground intake and run main intake
+    Test LED debounce
     Intake button
     Path w/ events
     Update Offset & test arm Encoder

@@ -16,6 +16,7 @@ public class IntakeSubsystem extends SubsystemBase{
     
     private final TalonSRX intakeMotor = new TalonSRX(Constants.CANIDConstants.kIntakeCANId);
     
+    // TODO: Is powerDist needed?
     PowerDistribution powerDist = new PowerDistribution(Constants.CANIDConstants.kPdhCanId, ModuleType.kRev);
     double intakeCurrent = 3.0; //2.75
 
