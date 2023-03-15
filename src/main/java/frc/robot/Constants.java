@@ -84,9 +84,9 @@ public final class Constants {
     public static final boolean kGyroReversed = false;
 
     // Drivetrain Speeds
-    public static final double kDriveMaxOutput = 0.40;  // 0.75
+    public static final double kDriveMaxOutput = 0.90;  // 0.75 , 0.40
     public static final double kDriveSlow = 0.25; //0.25
-    public static final double kmaxPOVturnspeed = 0.45; //0.30
+    public static final double kmaxPOVturnspeed = .6; //0.45
     public static final double kAutoLevelMaxOutput = 0.30;
 
     // Cardinal Directions
@@ -228,24 +228,29 @@ public final class Constants {
   public static final class GroundIntakeConstants{
   // Joint Speed: Positive  is up, negative speed down
   // Intake Speed: Positive is pick-up, negative is eject
-  //Joint Encoder: If starts inside robot, the the more negative, the more down the arm goes
-    public static final double kp = 0.03;
+  //Joint Encoder: 0 = arm inside chassis, negative = down
+    public static final double kOutP = 0.06;
+    public static final double kInP = 0.06;
     public static final double ki = 0.0;
     public static final double kd = 0.0;
-    public static final double kMaxJointOutSpeed = -0.30;
-    public static final double kMaxJointInSpeed = 0.40;
-    public static final double kOutPosition = -14.2; // -15.428 before new hardstop
-    public static final double kInPosition = 0;
+    public static final double kMaxJointOutSpeed = -0.30; // was -0.30
+    public static final double kMaxJointInSpeed = 0.40; // was 0.40
+
+    public static final double kOutPosition = -13.1; // -14.2 before 24T to 25T pulley change
+    public static final double kInPosition = 0.0;
+    public static final double kJointTolerance = 0.10;
+
     public static final double kPIDDeadband = 0.001;
   
-    public static final double kIntakePickUp = 0.4;
+    // Intake
+    public static final double kIntakePickUp = 0.6;
     public static final double kIntakeReverse = -0.5;
     public static final double kIntakeShoot = -1.0;
     
   /**
    * How many amps the ground intake can take while moving
    */
-  public static final int GROUND_JOINT_CURRENT_LIMIT_A = 15;
+  public static final int GROUND_JOINT_CURRENT_LIMIT_A = 25;
 
   public static final double kOffVelocity = 0.1; // between -0.1 and 0.1 RPM for 100ms to set atPosition = true
   public static final double kMaxManualGroundJointSpeed = 0.15;
@@ -254,7 +259,7 @@ public static final double kDefaultSpeed = 0.10;
  /**
    * How many amps the arm motor can use.
    */
-  public static final int ARM_CURRENT_LIMIT_A = 10; //originally 10 for testing
+  public static final int ARM_CURRENT_LIMIT_A = 20; //originally 10 for testing
 
   /**
    * Percent output to run the arm up/down at

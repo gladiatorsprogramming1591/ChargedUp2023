@@ -1,4 +1,4 @@
-package frc.robot.commands.driveCommands.PathPlanner;
+package frc.robot.commands.PathPlanner.Column6;
 
 import java.util.List;
 
@@ -8,21 +8,20 @@ import com.pathplanner.lib.commands.FollowPathWithEvents;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
-import frc.robot.subsystems.ArmSubsystem;
-import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.DriveSubsystem.DriveSubsystem;
+import frc.robot.subsystems.MainIntakeSubsystem.ArmSubsystem;
+import frc.robot.subsystems.MainIntakeSubsystem.IntakeSubsystem;
 
-public class NewOnePieceAuto9 extends SequentialCommandGroup {
+public class NewOnePieceAuto6 extends SequentialCommandGroup {
 
-    public NewOnePieceAuto9(DriveSubsystem driveSubsystem, 
+    public NewOnePieceAuto6(DriveSubsystem driveSubsystem, 
                         ArmSubsystem armSubsystem,
                         IntakeSubsystem intakeSubsystem
                         ){
 
-        List<PathPlannerTrajectory> m_path = PathPlanner.loadPathGroup("One Piece Auto 9",
+        List<PathPlannerTrajectory> m_path = PathPlanner.loadPathGroup("One Piece Auto 6",
             Constants.AutoConstants.kMaxSpeedMetersPerSecond,
             Constants.AutoConstants.kMaxAccelerationMetersPerSecondSquared);
-
 
         addCommands(
                 new FollowPathWithEvents(

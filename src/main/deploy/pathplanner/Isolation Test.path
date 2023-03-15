@@ -2,13 +2,13 @@
   "waypoints": [
     {
       "anchorPoint": {
-        "x": 1.73,
-        "y": 4.95
+        "x": 2.4448817848915634,
+        "y": 4.738860840232004
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.0462230067332174,
-        "y": 4.95
+        "x": 2.761470782495653,
+        "y": 4.75235633817263
       },
       "holonomicAngle": 180.0,
       "isReversal": false,
@@ -24,12 +24,12 @@
     },
     {
       "anchorPoint": {
-        "x": 2.06,
-        "y": 4.95
+        "x": 3.9882987775884717,
+        "y": 4.74
       },
       "prevControl": {
-        "x": 2.0397558964274403,
-        "y": 4.95
+        "x": 3.667322677337345,
+        "y": 4.753658557457495
       },
       "nextControl": null,
       "holonomicAngle": 180.0,
@@ -45,5 +45,12 @@
       }
     }
   ],
-  "markers": []
+  "markers": [
+    {
+      "position": 0.0,
+      "names": [
+        "GroundIntakeTransferArmUp"
+      ]
+    }
+  ]
 }

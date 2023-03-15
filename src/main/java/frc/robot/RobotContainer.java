@@ -20,36 +20,40 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.GroundIntakeConstants;
+import frc.robot.Constants.IntakeConstants;
 // import edu.wpi.first.wpilibj.PS4Controller.Button;
 import frc.robot.Constants.OIConstants;
+import frc.robot.commands.PathPlanner.OnePieceAuto7;
+import frc.robot.commands.PathPlanner.Column3.NewOnePieceAuto3;
+import frc.robot.commands.PathPlanner.Column3.OneConeAuto3;
+import frc.robot.commands.PathPlanner.Column3.OneCubeAuto3Hybrid;
+import frc.robot.commands.PathPlanner.Column5.OnePieceAuto5;
+import frc.robot.commands.PathPlanner.Column5.OnePieceAuto5Level;
+import frc.robot.commands.PathPlanner.Column6.OnePieceAuto6Level;
+import frc.robot.commands.PathPlanner.Column9.TwoPieceAuto9;
+import frc.robot.commands.PathPlanner.Column1.TwoPieceAuto1;
+import frc.robot.commands.PathPlanner.Tests.Debug;
+import frc.robot.commands.PathPlanner.Tests.TestEvents;
 import frc.robot.commands.armCommands.ArmToPosition;
 import frc.robot.commands.armCommands.ArmToPositionWithEnd;
 import frc.robot.commands.driveCommands.AutoLevel;
 // import frc.robot.commands.driveCommands.DriveToAngle;
 import frc.robot.commands.driveCommands.DriveToLevel;
-import frc.robot.commands.driveCommands.PathPlanner.OnePieceAuto5Level;
-import frc.robot.commands.driveCommands.PathPlanner.OnePieceAuto5;
-import frc.robot.commands.driveCommands.PathPlanner.OnePieceAuto6Level;
-import frc.robot.commands.driveCommands.PathPlanner.OnePieceAuto7;
-import frc.robot.commands.driveCommands.PathPlanner.TwoPieceAuto9;
-import frc.robot.commands.driveCommands.PathPlanner.Tests.TestEvents;
 import frc.robot.commands.groundIntakeCommands.IntakeHandoff;
-import frc.robot.commands.driveCommands.PathPlanner.NewOnePieceAuto3;
-import frc.robot.commands.driveCommands.PathPlanner.OneCubeAuto3Hybrid;
-import frc.robot.commands.driveCommands.PathPlanner.OneConeAuto3;
 // import frc.robot.commands.driveCommands.PathPlanner.OnePieceAuto7;
 // import frc.robot.commands.driveCommands.PathPlanner.OnePieceAuto4;
 import frc.robot.commands.navXCommands.ResetGyro;
-import frc.robot.subsystems.ArmSubsystem;
-import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.LEDs;
+import frc.robot.subsystems.DriveSubsystem.DriveSubsystem;
 import frc.robot.subsystems.GroundIntakeSubsystem.GroundIntake;
 import frc.robot.subsystems.GroundIntakeSubsystem.GroundJoint;
-import frc.robot.subsystems.ArmSubsystem.armPositions;
+import frc.robot.subsystems.MainIntakeSubsystem.ArmSubsystem;
+import frc.robot.subsystems.MainIntakeSubsystem.IntakeSubsystem;
+import frc.robot.subsystems.MainIntakeSubsystem.ArmSubsystem.armPositions;
 
 
 /*
@@ -144,6 +148,11 @@ public class RobotContainer {
             () -> m_groundIntake.groundIntakeSpeed(
               GroundIntakeConstants.kDefaultSpeed),
             m_groundIntake));
+
+    m_groundJoint.setDefaultCommand(
+      new RunCommand(
+            () -> m_groundJoint.groundJointOff(),
+            m_groundJoint));
   }
 
   // Configure auto options
@@ -157,6 +166,8 @@ public class RobotContainer {
     m_autoChooser.addOption("OnePieceAuto5Level", new OnePieceAuto5Level(m_robotDrive, m_arm, m_intake));
     m_autoChooser.addOption("TwoPieceAuto9", new TwoPieceAuto9(m_robotDrive, m_arm, m_intake));
     m_autoChooser.addOption("Tests Events", new TestEvents(m_robotDrive, m_arm, m_intake, m_LEDs));
+    m_autoChooser.addOption("TwoPieceAuto1", new TwoPieceAuto1(m_robotDrive, m_arm, m_intake, m_LEDs));
+    m_autoChooser.addOption("Debug", new Debug(m_robotDrive, m_arm, m_intake, m_LEDs));
     SmartDashboard.putData("Auto Mode", m_autoChooser);
   }
 
@@ -169,6 +180,20 @@ public class RobotContainer {
     Constants.AutoConstants.AUTO_EVENT_MAP.put("Arm HOME", new ArmToPositionWithEnd(m_arm, armPositions.HOME).withTimeout(2.0));
     Constants.AutoConstants.AUTO_EVENT_MAP.put("LED Cycle", new RunCommand(() -> m_LEDs.cycle()));
     Constants.AutoConstants.AUTO_EVENT_MAP.put("AutoLevel", new AutoLevel(m_robotDrive));
+    Constants.AutoConstants.AUTO_EVENT_MAP.put("ArmHOME then GroundIntakeOut and PickUp",
+      new SequentialCommandGroup(
+        new ArmToPosition(m_arm, armPositions.HOME).withTimeout(1.6), 
+        new RunCommand(() -> m_groundJoint.groundJointPosition(GroundIntakeConstants.kOutPosition), m_groundJoint)
+        .until(() -> m_groundJoint.groundJointAtPosition())
+        .alongWith(new RunCommand(() -> m_groundIntake.groundIntakePickUp(), m_groundIntake))));
+
+    Constants.AutoConstants.AUTO_EVENT_MAP.put("GroundIntakeTransferArmUp", 
+      new SequentialCommandGroup(
+        new IntakeHandoff(m_groundIntake, m_groundJoint, m_intake),
+        new ArmToPosition(m_arm, armPositions.LVLTRE)
+        .alongWith(new RunCommand(() -> m_intake.intakeOn(-IntakeConstants.kStallSpeed), m_intake)))
+      );
+        
   }
 
   /**
@@ -274,11 +299,11 @@ public class RobotContainer {
     // Ground Intake
     // m_manipulatorController.start().whileTrue(new RunCommand(() -> m_groundIntake.groundIntakeOff(), m_groundIntake));
     m_manipulatorController.a().onTrue(new 
-      RunCommand(() -> m_groundJoint.groundJointPosition(Constants.GroundIntakeConstants.kOutPosition), m_groundJoint).
-      until(() -> m_groundJoint.groundJointAtPosition()));
+      RunCommand(() -> m_groundJoint.groundJointPosition(Constants.GroundIntakeConstants.kOutPosition), m_groundJoint));
+      // until(() -> m_groundJoint.groundJointAtPosition()));   //TODO: setting position out after stowing ends immediatly the first time
     m_manipulatorController.b().onTrue(new 
-      RunCommand(() -> m_groundJoint.groundJointPosition(Constants.GroundIntakeConstants.kInPosition), m_groundJoint).
-      until(() -> m_groundJoint.groundJointAtPosition()));
+      RunCommand(() -> m_groundJoint.groundJointPosition(Constants.GroundIntakeConstants.kInPosition), m_groundJoint));
+      // until(() -> m_groundJoint.groundJointAtPosition()));
     m_manipulatorController.x().whileTrue(new RunCommand(() -> m_groundIntake.groundIntakePickUp(), m_groundIntake));
     m_manipulatorController.y().whileTrue(new RunCommand(() -> m_groundIntake.groundIntakeReverse(), m_groundIntake));
     m_manipulatorController.leftTrigger().whileTrue(new RunCommand(() -> m_groundIntake.groundIntakeShoot(), m_groundIntake));

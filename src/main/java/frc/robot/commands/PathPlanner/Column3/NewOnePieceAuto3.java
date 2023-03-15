@@ -1,4 +1,4 @@
-package frc.robot.commands.driveCommands.PathPlanner;
+package frc.robot.commands.PathPlanner.Column3;
 
 import java.util.List;
 
@@ -8,9 +8,9 @@ import com.pathplanner.lib.commands.FollowPathWithEvents;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
-import frc.robot.subsystems.ArmSubsystem;
-import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.DriveSubsystem.DriveSubsystem;
+import frc.robot.subsystems.MainIntakeSubsystem.ArmSubsystem;
+import frc.robot.subsystems.MainIntakeSubsystem.IntakeSubsystem;
 
 public class NewOnePieceAuto3 extends SequentialCommandGroup {
 

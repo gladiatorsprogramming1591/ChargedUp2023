@@ -1,4 +1,4 @@
-package frc.robot.commands.driveCommands.PathPlanner;
+package frc.robot.commands.PathPlanner.Column5;
 
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
@@ -11,10 +11,10 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
 import frc.robot.commands.armCommands.ArmToPositionWithEnd;
 import frc.robot.commands.driveCommands.DriveToLevel;
-import frc.robot.subsystems.ArmSubsystem;
-import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.subsystems.IntakeSubsystem;
-import frc.robot.subsystems.ArmSubsystem.armPositions;
+import frc.robot.subsystems.DriveSubsystem.DriveSubsystem;
+import frc.robot.subsystems.MainIntakeSubsystem.ArmSubsystem;
+import frc.robot.subsystems.MainIntakeSubsystem.IntakeSubsystem;
+import frc.robot.subsystems.MainIntakeSubsystem.ArmSubsystem.armPositions;
 
 public class OnePieceAuto5Level extends SequentialCommandGroup {
 

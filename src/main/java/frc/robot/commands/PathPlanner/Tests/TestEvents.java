@@ -1,4 +1,4 @@
-package frc.robot.commands.driveCommands.PathPlanner.Tests;
+package frc.robot.commands.PathPlanner.Tests;
 
 import java.util.List;
 
@@ -12,11 +12,11 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants;
 import frc.robot.commands.armCommands.ArmToPositionWithEnd;
-import frc.robot.subsystems.ArmSubsystem;
-import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.LEDs;
-import frc.robot.subsystems.ArmSubsystem.armPositions;
+import frc.robot.subsystems.DriveSubsystem.DriveSubsystem;
+import frc.robot.subsystems.MainIntakeSubsystem.ArmSubsystem;
+import frc.robot.subsystems.MainIntakeSubsystem.IntakeSubsystem;
+import frc.robot.subsystems.MainIntakeSubsystem.ArmSubsystem.armPositions;
 
 public class TestEvents extends SequentialCommandGroup {
 
