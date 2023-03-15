@@ -1,4 +1,4 @@
-package frc.robot.commands.driveCommands.PathPlanner.Tests;
+package frc.robot.commands.PathPlanner.Tests;
 
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
@@ -6,8 +6,7 @@ import com.pathplanner.lib.PathPlannerTrajectory;
 
 // import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-// import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.DriveSubsystem.DriveSubsystem;
 
 public class AutoPathTest extends SequentialCommandGroup {
 

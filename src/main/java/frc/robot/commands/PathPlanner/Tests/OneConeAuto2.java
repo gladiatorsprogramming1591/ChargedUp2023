@@ -1,4 +1,4 @@
-package frc.robot.commands.driveCommands.PathPlanner.Tests;
+package frc.robot.commands.PathPlanner.Tests;
 
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
@@ -12,23 +12,23 @@ import frc.robot.Constants;
 import frc.robot.commands.armCommands.ArmToPositionWithEnd;
 // import frc.robot.commands.driveCommands.AutoLevel;
 import frc.robot.commands.driveCommands.DriveToLevel;
-import frc.robot.subsystems.ArmSubsystem;
-import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.subsystems.IntakeSubsystem;
-import frc.robot.subsystems.ArmSubsystem.armPositions;
+import frc.robot.subsystems.DriveSubsystem.DriveSubsystem;
+import frc.robot.subsystems.MainIntakeSubsystem.ArmSubsystem;
+import frc.robot.subsystems.MainIntakeSubsystem.IntakeSubsystem;
+import frc.robot.subsystems.MainIntakeSubsystem.ArmSubsystem.armPositions;
 
-public class OneConeAuto7 extends SequentialCommandGroup {
+public class OneConeAuto2 extends SequentialCommandGroup {
 
-    public OneConeAuto7(DriveSubsystem driveSubsystem, 
+    public OneConeAuto2(DriveSubsystem driveSubsystem, 
                         ArmSubsystem armSubsystem,
                         IntakeSubsystem intakeSubsystem
                         ){
 
-        PathPlannerTrajectory m_firstPath = PathPlanner.loadPath("Cone Score 7", 
+        PathPlannerTrajectory m_firstPath = PathPlanner.loadPath("Cone Score 2", 
             new PathConstraints(2, 3));
-            PathPlannerTrajectory m_secondPath = PathPlanner.loadPath("Cone Reverse 7", 
+            PathPlannerTrajectory m_secondPath = PathPlanner.loadPath("Cone Reverse 2", 
             new PathConstraints(2, 1));
-        PathPlannerTrajectory m_thirdPath = PathPlanner.loadPath("Leave Community 7 (8ft)",
+        PathPlannerTrajectory m_thirdPath = PathPlanner.loadPath("Leave Community 2",
             new PathConstraints(2, 3));
 
         

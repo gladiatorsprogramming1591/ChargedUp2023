@@ -15,10 +15,11 @@ public class GroundJoint extends SubsystemBase{
         
     private final CANSparkMax GroundIntakeJoint = new CANSparkMax(CANIDConstants.kGroundIntakeJointCANId, MotorType.kBrushless);
 
-    private final PIDController GroundIntakePID = new PIDController(GroundIntakeConstants.kp, GroundIntakeConstants.ki, GroundIntakeConstants.kd);
+    private final PIDController GroundIntakePID = new PIDController(GroundIntakeConstants.kOutP, GroundIntakeConstants.ki, GroundIntakeConstants.kd);
 
+    double m_encoderPos;
     boolean atPosition;
-    int positionCheckCount = 0;
+    // int positionCheckCount = 0;
 
     public GroundJoint(){
         GroundIntakeJoint.restoreFactoryDefaults();
@@ -29,22 +30,49 @@ public class GroundJoint extends SubsystemBase{
 
     @Override
     public void periodic() {
+        m_encoderPos = GroundIntakeJoint.getEncoder().getPosition();
         SmartDashboard.putNumber("GroundIntakeJoint oCurrent", GroundIntakeJoint.getOutputCurrent());
-        SmartDashboard.putNumber("GroundIntakeJoint Position", GroundIntakeJoint.getEncoder().getPosition());
+        SmartDashboard.putNumber("GroundIntakeJoint Position", m_encoderPos);
+        SmartDashboard.putBoolean("GroundJoint atPosition", atPosition);
     }
 
     // Joint Speed: Positive  is up, negative speed down
 
-    public void groundJointSpeed(double speed){ // TODO: Eventually needs a PID
+    public void groundJointSpeed(double speed){
+
         GroundIntakeJoint.set(speed); //TODO: Add soft limits
-    }    
+    }
+
+    public void groundJointOff(){
+        GroundIntakeJoint.set(0);
+    }
+
+    public void setAtPositionBoolean(boolean atPosRequest){
+        atPosition = atPosRequest;
+    }
 
     public void groundJointPosition(double position){
         atPosition = false;
-        double speed = MathUtil.applyDeadband(MathUtil.clamp(GroundIntakePID.calculate(GroundIntakeJoint.getEncoder().getPosition(), position), 
+        double speed = MathUtil.applyDeadband(MathUtil.clamp(GroundIntakePID.calculate(m_encoderPos, position), 
             GroundIntakeConstants.kMaxJointOutSpeed, GroundIntakeConstants.kMaxJointInSpeed),
             GroundIntakeConstants.kPIDDeadband);
         SmartDashboard.putNumber("Ground Intake PidOut Speed", speed);
+        SmartDashboard.putNumber("Ground Intake PidOut Setpoint", position);
+
+        if (position == GroundIntakeConstants.kInPosition){
+            GroundIntakePID.setP(GroundIntakeConstants.kInP);
+            if (m_encoderPos > (GroundIntakeConstants.kInPosition - GroundIntakeConstants.kJointTolerance*10.0)){
+                atPosition = true;
+            }
+        } else  {
+        if (position == GroundIntakeConstants.kOutPosition){
+            GroundIntakePID.setP(GroundIntakeConstants.kOutP);
+            if (m_encoderPos < (GroundIntakeConstants.kOutPosition + GroundIntakeConstants.kJointTolerance)){
+                atPosition = true;
+            }
+        }
+        }
+        GroundIntakeJoint.set(speed);
 
         // between -0.1 and 0.1 RPM for 100ms to set atPosition = true
         // if (GroundIntakeJoint.getEncoder().getVelocity() == 0){
@@ -59,14 +87,13 @@ public class GroundJoint extends SubsystemBase{
         //     }
 
         // } else {
-            GroundIntakeJoint.set(speed);
-            positionCheckCount = 0;
+            // GroundIntakeJoint.set(speed);
+            // positionCheckCount = 0;
         // }
     }
 
     public boolean groundJointAtPosition(){
-        // return atPosition;
-        return false;
+        return atPosition;
     }
 
     public void zeroEncoder(){
