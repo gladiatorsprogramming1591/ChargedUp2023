@@ -5,6 +5,8 @@ Main TODO:
         4/6 one cone auto level
         Non-balance autos
 
+    Fix Flashing LEDs method
+
     Research April tags with Limelight:
         -New branch
         -convert swerveDriveOdometry to swerveDrivePoseEstimator
@@ -38,6 +40,11 @@ Tested Autos:
     OnePieceAuto7
     TwoPieceAuto9 (needs improvement over cable protector)
 
+(Gio) Bring to RIT:
+    Power Strip
+    Monidor
+    Wifi Dongal
+
 
 
 Low Priority:
@@ -66,6 +73,7 @@ Low Priority:
 
 
 Completed:
+LEDPiece and interupts arm (conestow)
     Ground Intake
         -Program CANIDs for the 3 ground intake motors
         -Ground Intake w/ PID and verify current limits

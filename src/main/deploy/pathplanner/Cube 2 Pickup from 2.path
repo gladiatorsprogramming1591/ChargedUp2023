@@ -2,13 +2,13 @@
   "waypoints": [
     {
       "anchorPoint": {
-        "x": 2.06,
-        "y": 2.16
+        "x": 1.82,
+        "y": 4.23
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.0512394049699147,
-        "y": 2.16
+        "x": 3.1444774428010414,
+        "y": 4.721112326840038
       },
       "holonomicAngle": 180.0,
       "isReversal": false,
@@ -24,16 +24,16 @@
     },
     {
       "anchorPoint": {
-        "x": 6.0,
-        "y": 2.16
+        "x": 5.957874992673063,
+        "y": 3.2469690900920267
       },
       "prevControl": {
-        "x": 6.184814245974874,
-        "y": 2.16
+        "x": 5.957874992673063,
+        "y": 5.301264847107811
       },
       "nextControl": {
-        "x": 5.885886357291117,
-        "y": 2.16
+        "x": 5.957874992673063,
+        "y": 3.044635704656026
       },
       "holonomicAngle": 180.0,
       "isReversal": false,
@@ -49,12 +49,12 @@
     },
     {
       "anchorPoint": {
-        "x": 3.9,
-        "y": 2.16
+        "x": 6.940637150505072,
+        "y": 3.13
       },
       "prevControl": {
-        "x": 3.927510518867748,
-        "y": 2.16
+        "x": 6.651589457025071,
+        "y": 3.13
       },
       "nextControl": null,
       "holonomicAngle": 180.0,
@@ -70,5 +70,12 @@
       }
     }
   ],
-  "markers": []
+  "markers": [
+    {
+      "position": 0.0,
+      "names": [
+        "ArmHOME then GroundIntakeOut and PickUp"
+      ]
+    }
+  ]
 }

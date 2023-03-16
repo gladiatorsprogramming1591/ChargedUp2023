@@ -84,7 +84,7 @@ public final class Constants {
     public static final boolean kGyroReversed = false;
 
     // Drivetrain Speeds
-    public static final double kDriveMaxOutput = 0.90;  // 0.75 , 0.40
+    public static final double kDriveMaxOutput = 0.85;  // Field: 0.85 | Arcadia: 0.40
     public static final double kDriveSlow = 0.25; //0.25
     public static final double kmaxPOVturnspeed = .6; //0.45
     public static final double kAutoLevelMaxOutput = 0.30;
@@ -236,7 +236,7 @@ public final class Constants {
     public static final double kMaxJointOutSpeed = -0.30; // was -0.30
     public static final double kMaxJointInSpeed = 0.40; // was 0.40
 
-    public static final double kOutPosition = -13.1; // -14.2 before 24T to 25T pulley change
+    public static final double kOutPosition = -13.35; // -13.1
     public static final double kInPosition = 0.0;
     public static final double kJointTolerance = 0.10;
 
@@ -254,7 +254,7 @@ public final class Constants {
 
   public static final double kOffVelocity = 0.1; // between -0.1 and 0.1 RPM for 100ms to set atPosition = true
   public static final double kMaxManualGroundJointSpeed = 0.15;
-public static final double kDefaultSpeed = 0.10;
+public static final double kDefaultSpeed = 0.15; // 0.10
   }
  /**
    * How many amps the arm motor can use.
