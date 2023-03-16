@@ -27,6 +27,8 @@ import frc.robot.Constants.GroundIntakeConstants;
 import frc.robot.Constants.IntakeConstants;
 // import edu.wpi.first.wpilibj.PS4Controller.Button;
 import frc.robot.Constants.OIConstants;
+import frc.robot.commands.PathPlanner.OneConeScoreSolo;
+import frc.robot.commands.PathPlanner.OneCubeScoreSolo;
 import frc.robot.commands.PathPlanner.OnePieceAuto7;
 import frc.robot.commands.PathPlanner.Column3.NewOnePieceAuto3;
 import frc.robot.commands.PathPlanner.Column3.OneConeAuto3;
@@ -170,6 +172,8 @@ public class RobotContainer {
     m_autoChooser.addOption("TwoPieceAuto1", new TwoPieceAuto1(m_robotDrive, m_arm, m_intake, m_LEDs));
     m_autoChooser.addOption("TwoPieceAuto1_CubePickup", new TwoPieceAuto1_CubePickup(m_robotDrive, m_arm, m_intake, m_LEDs));
     m_autoChooser.addOption("Debug", new Debug(m_robotDrive, m_arm, m_intake, m_LEDs));
+    m_autoChooser.addOption("OneConeScoreSolo", new OneConeScoreSolo(m_robotDrive, m_arm, m_intake));
+    m_autoChooser.addOption("OneCube ScoreSolo", new OneCubeScoreSolo(m_robotDrive, m_arm, m_intake));
     SmartDashboard.putData("Auto Mode", m_autoChooser);
   }
 
