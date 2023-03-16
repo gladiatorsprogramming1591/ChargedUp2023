@@ -19,6 +19,8 @@ public class LEDs extends SubsystemBase {
     public final double TEAL = 130.4; // maximum color (above is off)
     public final double OFF = 140;
     double cycleState = WHITE;
+    double flashState;
+    boolean blink = false;
     double count = 0;
 
     boolean called = false;
@@ -53,7 +55,7 @@ public class LEDs extends SubsystemBase {
 
     public void cycle(){
         // cycles every quarter second
-        if (++count %3 == 0) {
+        if (++count %5 == 0) {      // 3%
             setColor(cycleState);
             cycleState = cycleState + 9;
             if (cycleState >= TEAL) cycleState = WHITE;
@@ -63,6 +65,41 @@ public class LEDs extends SubsystemBase {
     public void off(){
         setColor(OFF);
         called = false;
+    }
+
+    public void flashing(){
+        if (++count %5 == 0) {      // 3%
+            if (called) {           // Previously Purple
+                if (!blink){
+                    blink = true;
+                    setColor(PURPLE);
+                } else {
+                    blink = false;
+                    setColor(OFF);    
+                }
+            } else {
+                if (!blink){
+                    blink = true;
+                    setColor(YELLOW);
+                } else {
+                    blink = false;
+                    setColor(OFF);    
+                }
+            }
+
+            setColor(cycleState);
+            cycleState = cycleState + 9;
+            if (cycleState >= TEAL) cycleState = WHITE;
+        }
+        // if (++count %3 == 0) {
+        //     if (called){
+        //     //     if (flashStatePurple == PURPLE) flashStatePurple = OFF;
+        //     //     else flashStatePurple = PURPLE;
+        //     // }
+        //     // } else {
+        //     //     if (flashStateYellow == YELLOW) flashStateYellow = OFF;
+        //     //     else flashStateYellow = YELLOW;
+        // }
     }
 
 }

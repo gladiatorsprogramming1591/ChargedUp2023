@@ -74,7 +74,7 @@ public class DriveSubsystem extends SubsystemBase {
   // Odometry class for tracking robot pose
   SwerveDriveOdometry m_odometry;
   private int count = 0;
-  private final PIDController m_rollPidController = new PIDController(0.006, 0.00008, 0.00); // 3/9 kp 0.005  2/15 kp 0.005 kd 0.001  1/21 ki:0.0055 kd: 0.0025
+  private final PIDController m_rollPidController = new PIDController(0.0055, 0.00008, 0.0007); // 3/9 kp 0.005  2/15 kp 0.005 kd 0.001  1/21 ki:0.0055 kd: 0.0025
   private final PIDController m_rotPidController = new PIDController(0.01, 0.000, 0.000);
 
   private final Trigger m_slowDriveButton;

@@ -152,6 +152,7 @@ public class RobotContainer {
               GroundIntakeConstants.kDefaultSpeed),
             m_groundIntake));
 
+    // REPLACED IN TELEOP INIT
     m_groundJoint.setDefaultCommand(
       new RunCommand(
             () -> m_groundJoint.groundJointOff(),
@@ -290,15 +291,19 @@ public class RobotContainer {
 
     // LEDs
     m_manipulatorController.leftBumper().onTrue(new InstantCommand(() -> m_LEDs.setPiece(), m_LEDs));
-    m_manipulatorController.back().onTrue(new RunCommand(() -> m_LEDs.off(), m_LEDs)).
-      debounce(1.0).onTrue(new RunCommand(() -> m_LEDs.cycle(), m_LEDs));
+    m_manipulatorController.back().onTrue(new InstantCommand(() -> m_LEDs.off(), m_LEDs))
+      .debounce(1.0).onTrue(new RunCommand(() -> m_LEDs.flashing(), m_LEDs)); //Does Not Work
+
+    // m_manipulatorController.back().onTrue(new InstantCommand(() -> m_LEDs.off(), m_LEDs)).
+    //   debounce(0.5).onTrue(new RunCommand(() -> m_LEDs.cycle(), m_LEDs));
 
     // Arm Positions
     m_manipulatorController.povDown().onTrue(new ArmToPosition(m_arm, ArmSubsystem.armPositions.HOME));
     m_manipulatorController.povLeft().onTrue(new ArmToPosition(m_arm, ArmSubsystem.armPositions.LVLONE));
     m_manipulatorController.povUp().onTrue(new ArmToPosition(m_arm, ArmSubsystem.armPositions.LVLTWO));
     m_manipulatorController.povRight().onTrue(new ArmToPosition(m_arm, ArmSubsystem.armPositions.LVLTRE));
-    m_manipulatorController.rightTrigger().onTrue(new ArmToPosition(m_arm, ArmSubsystem.armPositions.CONESTOW));
+    m_manipulatorController.rightTrigger().onTrue(new ArmToPosition(m_arm, ArmSubsystem.armPositions.CONESTOW)
+      .alongWith(new InstantCommand(() -> m_LEDs.off())));
     m_manipulatorController.rightBumper().onTrue(new ArmToPosition(m_arm, ArmSubsystem.armPositions.CONESINGLE));
 
     // Main Intake
@@ -309,17 +314,23 @@ public class RobotContainer {
         m_intake));
 
     // Ground Intake
-    // m_manipulatorController.start().whileTrue(new RunCommand(() -> m_groundIntake.groundIntakeOff(), m_groundIntake));
-    m_manipulatorController.a().onTrue(new 
-      RunCommand(() -> m_groundJoint.groundJointPosition(Constants.GroundIntakeConstants.kOutPosition), m_groundJoint));
-      // until(() -> m_groundJoint.groundJointAtPosition()));   //TODO: setting position out after stowing ends immediatly the first time
-    m_manipulatorController.b().onTrue(new 
-      RunCommand(() -> m_groundJoint.groundJointPosition(Constants.GroundIntakeConstants.kInPosition), m_groundJoint));
-      // until(() -> m_groundJoint.groundJointAtPosition()));
-    m_manipulatorController.x().whileTrue(new RunCommand(() -> m_groundIntake.groundIntakePickUp(), m_groundIntake));
-    m_manipulatorController.y().whileTrue(new RunCommand(() -> m_groundIntake.groundIntakeReverse(), m_groundIntake));
-    m_manipulatorController.leftTrigger().whileTrue(new RunCommand(() -> m_groundIntake.groundIntakeShoot(), m_groundIntake));
+      //Down and iIntake Pickup
+    m_manipulatorController.a().whileTrue(
+        new RunCommand(() -> m_groundJoint.groundJointPosition(Constants.GroundIntakeConstants.kOutPosition), m_groundJoint)
+        .alongWith(new RunCommand(() -> m_groundIntake.groundIntakePickUp(), m_groundIntake)));
+      //Handoff
     m_manipulatorController.start().onTrue(new IntakeHandoff(m_groundIntake, m_groundJoint, m_intake));
+      //Intake PickUp
+    m_manipulatorController.x().whileTrue(new RunCommand(() -> m_groundIntake.groundIntakePickUp(), m_groundIntake));
+      //Intake Reverse
+    m_manipulatorController.y().whileTrue(new RunCommand(() -> m_groundIntake.groundIntakeReverse(), m_groundIntake));
+      //Down
+    m_manipulatorController.b().onTrue(new RunCommand(() -> m_groundJoint.groundJointPosition(GroundIntakeConstants.kOutPosition), m_groundJoint));
+    
+    // m_manipulatorController.b().onTrue(new 
+    //   RunCommand(() -> m_groundJoint.groundJointPosition(Constants.GroundIntakeConstants.kInPosition), m_groundJoint));
+    // m_manipulatorController.leftTrigger().whileTrue(new RunCommand(() -> m_groundIntake.groundIntakeShoot(), m_groundIntake));
+
     // Arm Manual Control
     m_manipulatorController.leftStick().toggleOnTrue( new RunCommand(
           () -> m_arm.raiseArm(
