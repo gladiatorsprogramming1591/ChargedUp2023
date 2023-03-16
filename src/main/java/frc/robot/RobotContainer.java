@@ -36,6 +36,7 @@ import frc.robot.commands.PathPlanner.Column5.OnePieceAuto5Level;
 import frc.robot.commands.PathPlanner.Column6.OnePieceAuto6Level;
 import frc.robot.commands.PathPlanner.Column9.TwoPieceAuto9;
 import frc.robot.commands.PathPlanner.Column1.TwoPieceAuto1;
+import frc.robot.commands.PathPlanner.Column1.TwoPieceAuto1_CubePickup;
 import frc.robot.commands.PathPlanner.Tests.Debug;
 import frc.robot.commands.PathPlanner.Tests.TestEvents;
 import frc.robot.commands.armCommands.ArmToPosition;
@@ -167,6 +168,7 @@ public class RobotContainer {
     m_autoChooser.addOption("TwoPieceAuto9", new TwoPieceAuto9(m_robotDrive, m_arm, m_intake));
     m_autoChooser.addOption("Tests Events", new TestEvents(m_robotDrive, m_arm, m_intake, m_LEDs));
     m_autoChooser.addOption("TwoPieceAuto1", new TwoPieceAuto1(m_robotDrive, m_arm, m_intake, m_LEDs));
+    m_autoChooser.addOption("TwoPieceAuto1_CubePickup", new TwoPieceAuto1_CubePickup(m_robotDrive, m_arm, m_intake, m_LEDs));
     m_autoChooser.addOption("Debug", new Debug(m_robotDrive, m_arm, m_intake, m_LEDs));
     SmartDashboard.putData("Auto Mode", m_autoChooser);
   }
@@ -194,6 +196,12 @@ public class RobotContainer {
         .alongWith(new RunCommand(() -> m_intake.intakeOn(-IntakeConstants.kStallSpeed), m_intake)))
       );
         
+  }
+
+  public void updateRobotForTeleop() {
+    m_groundJoint.setDefaultCommand(
+      new RunCommand(() -> m_groundJoint.groundJointPosition(GroundIntakeConstants.kInPosition),
+                     m_groundJoint));
   }
 
   /**
