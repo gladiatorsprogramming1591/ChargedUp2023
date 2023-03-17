@@ -1,4 +1,7 @@
 Main TODO:
+-Lower LVLTWO (needs bot, used infrequently)
+-TwoPieceAuto1 for blue side with slightly longer path onto chargeStation
+to account for its additional wheel slip
 1:  Autos
         Add auto that only drives out of community after time set in SmartDashboard
         Different autos for real and wood charge stations

@@ -243,7 +243,8 @@ public final class Constants {
     public static final double kPIDDeadband = 0.001;
   
     // Intake
-    public static final double kIntakePickUp = 0.6;
+    public static final double kAutoIntakePickUp = 0.6;
+    public static final double kIntakePickUp = 0.5; // 0.6
     public static final double kIntakeReverse = -0.5;
     public static final double kIntakeShoot = -1.0;
     
