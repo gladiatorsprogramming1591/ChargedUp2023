@@ -38,6 +38,7 @@ import frc.robot.commands.PathPlanner.Column5.OnePieceAuto5Level;
 import frc.robot.commands.PathPlanner.Column6.OnePieceAuto6Level;
 import frc.robot.commands.PathPlanner.Column9.TwoPieceAuto9;
 import frc.robot.commands.PathPlanner.Column1.TwoPieceAuto1;
+import frc.robot.commands.PathPlanner.Column1.TwoPieceAuto1NOLEVEL;
 import frc.robot.commands.PathPlanner.Column1.TwoPieceAuto1_CubePickup;
 import frc.robot.commands.PathPlanner.Tests.Debug;
 import frc.robot.commands.PathPlanner.Tests.TestEvents;
@@ -171,6 +172,7 @@ public class RobotContainer {
     m_autoChooser.addOption("TwoPieceAuto9", new TwoPieceAuto9(m_robotDrive, m_arm, m_intake));
     m_autoChooser.addOption("Tests Events", new TestEvents(m_robotDrive, m_arm, m_intake, m_LEDs));
     m_autoChooser.addOption("TwoPieceAuto1", new TwoPieceAuto1(m_robotDrive, m_arm, m_intake, m_LEDs));
+    m_autoChooser.addOption("TwoPieceAuto1NOLEVEL", new TwoPieceAuto1NOLEVEL(m_robotDrive, m_arm, m_intake, m_LEDs));
     m_autoChooser.addOption("TwoPieceAuto1_CubePickup", new TwoPieceAuto1_CubePickup(m_robotDrive, m_arm, m_intake, m_LEDs));
     m_autoChooser.addOption("Debug", new Debug(m_robotDrive, m_arm, m_intake, m_LEDs));
     m_autoChooser.addOption("OneConeScoreSolo", new OneConeScoreSolo(m_robotDrive, m_arm, m_intake));
@@ -192,7 +194,7 @@ public class RobotContainer {
         new ArmToPosition(m_arm, armPositions.HOME).withTimeout(1.6), 
         new RunCommand(() -> m_groundJoint.groundJointPosition(GroundIntakeConstants.kOutPosition), m_groundJoint)
         .until(() -> m_groundJoint.groundJointAtPosition())
-        .alongWith(new RunCommand(() -> m_groundIntake.groundIntakePickUp(), m_groundIntake))));
+        .alongWith(new RunCommand(() -> m_groundIntake.groundIntakeSpeed(GroundIntakeConstants.kAutoIntakePickUp), m_groundIntake))));
 
     Constants.AutoConstants.AUTO_EVENT_MAP.put("GroundIntakeTransferArmUp", 
       new SequentialCommandGroup(
