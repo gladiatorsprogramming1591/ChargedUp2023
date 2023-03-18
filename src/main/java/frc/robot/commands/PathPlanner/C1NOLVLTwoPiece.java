@@ -35,6 +35,8 @@ public class C1NOLVLTwoPiece extends SequentialCommandGroup {
             new PathConstraints(2, 1));
         PathPlannerTrajectory m_thirdPath = PathPlanner.loadPath("Cube to 2 from 1", 
             new PathConstraints(2, 2.2));
+        PathPlannerTrajectory m_forthPath = PathPlanner.loadPath("Cube Reverse 2", 
+            new PathConstraints(2, 2));
         // PathPlannerTrajectory m_forthPath = PathPlanner.loadPath("Balance from 2", 
         //     new PathConstraints(2.5, 2.5));
         // PathPlannerTrajectory m_fifthPath = PathPlanner.loadPath("New Drive to Cube 9", 
@@ -56,7 +58,10 @@ public class C1NOLVLTwoPiece extends SequentialCommandGroup {
                 m_thirdPath.getMarkers(),
                 Constants.AutoConstants.AUTO_EVENT_MAP),
             new RunCommand(() -> intakeSubsystem.intakeOn(IntakeConstants.kIntakePickUp), intakeSubsystem).withTimeout(0.25)
-                .alongWith(new InstantCommand(() -> LED.setColor(LED.BLUE))) // TODDO: improve intake constant names
+                .alongWith(new InstantCommand(() -> LED.setColor(LED.BLUE))), // TODDO: improve intake constant names
+            driveSubsystem.followTrajectoryCommand(m_forthPath, false),
+            new ArmToPositionWithEnd(armSubsystem, armPositions.HOME).withTimeout(2.0),
+            new RunCommand(() -> LED.cycle(), LED)
             // new FollowPathWithEvents(
             //     driveSubsystem.followTrajectoryCommand(m_forthPath, false),
             //     m_thirdPath.getMarkers(),

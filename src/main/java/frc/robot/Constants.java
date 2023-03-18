@@ -244,7 +244,7 @@ public final class Constants {
   
     // Intake
     public static final double kAutoIntakePickUp = 0.6;
-    public static final double kIntakePickUp = 0.5; // 0.6
+    public static final double kIntakePickUp = 0.4; // 0.5
     public static final double kIntakeReverse = -0.5;
     public static final double kIntakeShoot = -1.0;
     

@@ -34,7 +34,7 @@ import frc.robot.commands.PathPlanner.C1TwoPieceRED;
 import frc.robot.commands.PathPlanner.C3OneCone;
 import frc.robot.commands.PathPlanner.C3OneCubeHybrid;
 import frc.robot.commands.PathPlanner.C5OneCubeLevel;
-import frc.robot.commands.PathPlanner.C6OneConeLevel;
+import frc.robot.commands.PathPlanner.C4C6OneConeLevel;
 import frc.robot.commands.PathPlanner.C9TwoPiece;
 import frc.robot.commands.PathPlanner.OneConeScoreSolo;
 import frc.robot.commands.PathPlanner.OneCubeScoreSolo;
@@ -157,6 +157,8 @@ public class RobotContainer {
   // Configure auto options
   private void addAutoOptions() {
     m_autoChooser.setDefaultOption("OneCone ScoreSolo", new OneConeScoreSolo(m_robotDrive, m_arm, m_intake));
+    m_autoChooser.addOption("OneCube ScoreSolo", new OneCubeScoreSolo(m_robotDrive, m_arm, m_intake));
+
     m_autoChooser.addOption("C1 RED TwoPiece", new C1TwoPieceRED(m_robotDrive, m_arm, m_intake, m_LEDs));
     m_autoChooser.addOption("C1 BLUE TwoPiece", new C1TwoPieceBLUE(m_robotDrive, m_arm, m_intake, m_LEDs));
     m_autoChooser.addOption("C1 TwoPiece NOLEVEL", new C1NOLVLTwoPiece(m_robotDrive, m_arm, m_intake, m_LEDs));
@@ -164,13 +166,11 @@ public class RobotContainer {
 
     m_autoChooser.addOption("C3 OneCone", new C3OneCone(m_robotDrive, m_arm, m_intake));
     m_autoChooser.addOption("C3 OneCubeHybrid", new C3OneCubeHybrid(m_robotDrive, m_arm, m_intake));
-    
+
+    m_autoChooser.addOption("C4 OR C6 OneConeLevel", new C4C6OneConeLevel(m_robotDrive, m_arm, m_intake));
     m_autoChooser.addOption("C5 OneCubeLevel", new C5OneCubeLevel(m_robotDrive, m_arm, m_intake));
-    m_autoChooser.addOption("C6 OneConeLevel", new C6OneConeLevel(m_robotDrive, m_arm, m_intake));
     m_autoChooser.addOption("C7 OneCone", new C7OneCone(m_robotDrive, m_arm, m_intake));
     m_autoChooser.addOption("C9 TwoPiece", new C9TwoPiece(m_robotDrive, m_arm, m_intake));
-    m_autoChooser.addOption("OneCone ScoreSolo", new OneConeScoreSolo(m_robotDrive, m_arm, m_intake));
-    m_autoChooser.addOption("OneCube ScoreSolo", new OneCubeScoreSolo(m_robotDrive, m_arm, m_intake));
     SmartDashboard.putData("Auto Mode", m_autoChooser);
   }
 

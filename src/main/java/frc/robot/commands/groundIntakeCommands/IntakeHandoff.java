@@ -28,7 +28,7 @@ public class IntakeHandoff extends SequentialCommandGroup {
                 // .withTimeout(2.5),
 
             new RunCommand(() -> m_mainIntake.intakeOn(IntakeConstants.kIntakeReverse))
-                .alongWith( new RunCommand(() -> m_groundIntake.groundIntakeReverse())).withTimeout(0.5)
+                .alongWith( new RunCommand(() -> m_groundIntake.groundIntakeReverse())).withTimeout(0.75)
         
         );
     }

@@ -16,9 +16,9 @@ import frc.robot.subsystems.MainIntakeSubsystem.ArmSubsystem;
 import frc.robot.subsystems.MainIntakeSubsystem.IntakeSubsystem;
 import frc.robot.subsystems.MainIntakeSubsystem.ArmSubsystem.armPositions;
 
-public class C6OneConeLevel extends SequentialCommandGroup {
+public class C4C6OneConeLevel extends SequentialCommandGroup {
 
-    public C6OneConeLevel(DriveSubsystem driveSubsystem, 
+    public C4C6OneConeLevel(DriveSubsystem driveSubsystem, 
                         ArmSubsystem armSubsystem,
                         IntakeSubsystem intakeSubsystem
                         ){
