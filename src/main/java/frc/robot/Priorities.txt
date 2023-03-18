@@ -1,6 +1,8 @@
 Main TODO:
+-Printer cable
 -Lower LVLTWO (needs bot, used infrequently)
--TwoPieceAuto1 for blue side with slightly longer path onto chargeStation
+-Change Limelight to Cam Mode
+
 to account for its additional wheel slip
 1:  Autos
         Add auto that only drives out of community after time set in SmartDashboard
@@ -28,8 +30,7 @@ to account for its additional wheel slip
 
 
 Requires Testing:
-    Update HOME position w/ new bar-hardstop placement
-
+    TwoPieceAuto1 for blue side with slightly longer path onto chargeStation
     Autos
         -Lengthen 3 and 7 one piece auto paths into charge station
 
@@ -43,10 +44,6 @@ Tested Autos:
     OnePieceAuto7
     TwoPieceAuto9 (needs improvement over cable protector)
 
-(Gio) Bring to RIT:
-    Power Strip
-    Monidor
-    Wifi Dongal
 
 
 
@@ -76,6 +73,7 @@ Low Priority:
 
 
 Completed:
+Update HOME position w/ new bar-hardstop placement
 LEDPiece and interupts arm (conestow)
     Ground Intake
         -Program CANIDs for the 3 ground intake motors

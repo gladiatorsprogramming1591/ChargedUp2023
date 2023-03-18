@@ -95,12 +95,9 @@
       }
     }
   ],
-  "maxVelocity": 2.5,
-  "maxAcceleration": 2.5,
-  "isReversed": null,
   "markers": [
     {
-      "position": 0.3999999999999591,
+      "position": 0.4,
       "names": [
         "Arm HOME"
       ]

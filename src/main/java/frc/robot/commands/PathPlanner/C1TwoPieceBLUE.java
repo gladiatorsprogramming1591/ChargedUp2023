@@ -1,6 +1,6 @@
-package frc.robot.commands.PathPlanner.Column1;
+package frc.robot.commands.PathPlanner;
 
-// import java.util.List;
+/* EXTENDED PATH ONTO RIT CHARGESTATION BY 8" */
 
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
@@ -8,7 +8,6 @@ import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.commands.FollowPathWithEvents;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-// import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
@@ -21,9 +20,9 @@ import frc.robot.subsystems.MainIntakeSubsystem.ArmSubsystem;
 import frc.robot.subsystems.MainIntakeSubsystem.IntakeSubsystem;
 import frc.robot.subsystems.MainIntakeSubsystem.ArmSubsystem.armPositions;
 
-public class TwoPieceAuto1 extends SequentialCommandGroup {
+public class C1TwoPieceBLUE extends SequentialCommandGroup {
 
-    public TwoPieceAuto1(DriveSubsystem driveSubsystem, 
+    public C1TwoPieceBLUE(DriveSubsystem driveSubsystem, 
                         ArmSubsystem armSubsystem,
                         IntakeSubsystem intakeSubsystem,
                         LEDs LED
@@ -35,7 +34,7 @@ public class TwoPieceAuto1 extends SequentialCommandGroup {
             new PathConstraints(2, 1));
         PathPlannerTrajectory m_thirdPath = PathPlanner.loadPath("Cube to 2 from 1", 
             new PathConstraints(2, 2.2));
-        PathPlannerTrajectory m_forthPath = PathPlanner.loadPath("Balance from 2", 
+        PathPlannerTrajectory m_forthPath = PathPlanner.loadPath("Balance from 2 BLUE", 
             new PathConstraints(2.5, 2.5));
         // PathPlannerTrajectory m_fifthPath = PathPlanner.loadPath("New Drive to Cube 9", 
         //     new PathConstraints(2, 3));
