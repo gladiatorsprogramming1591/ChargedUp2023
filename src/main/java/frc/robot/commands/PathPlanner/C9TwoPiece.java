@@ -1,4 +1,4 @@
-package frc.robot.commands.PathPlanner.Column9;
+package frc.robot.commands.PathPlanner;
 
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
@@ -15,9 +15,9 @@ import frc.robot.subsystems.MainIntakeSubsystem.ArmSubsystem;
 import frc.robot.subsystems.MainIntakeSubsystem.IntakeSubsystem;
 import frc.robot.subsystems.MainIntakeSubsystem.ArmSubsystem.armPositions;
 
-public class TwoPieceAuto9 extends SequentialCommandGroup {
+public class C9TwoPiece extends SequentialCommandGroup {
 
-    public TwoPieceAuto9(DriveSubsystem driveSubsystem, 
+    public C9TwoPiece(DriveSubsystem driveSubsystem, 
                         ArmSubsystem armSubsystem,
                         IntakeSubsystem intakeSubsystem
                         ){

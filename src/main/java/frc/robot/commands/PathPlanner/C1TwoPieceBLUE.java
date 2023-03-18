@@ -1,6 +1,6 @@
-package frc.robot.commands.PathPlanner.Column1;
+package frc.robot.commands.PathPlanner;
 
-// import java.util.List;
+/* EXTENDED PATH ONTO RIT CHARGESTATION BY 8" */
 
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
@@ -8,21 +8,21 @@ import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.commands.FollowPathWithEvents;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-// import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.commands.armCommands.ArmToPositionWithEnd;
+import frc.robot.commands.driveCommands.DriveToLevel;
 import frc.robot.subsystems.LEDs;
 import frc.robot.subsystems.DriveSubsystem.DriveSubsystem;
 import frc.robot.subsystems.MainIntakeSubsystem.ArmSubsystem;
 import frc.robot.subsystems.MainIntakeSubsystem.IntakeSubsystem;
 import frc.robot.subsystems.MainIntakeSubsystem.ArmSubsystem.armPositions;
 
-public class TwoPieceAuto1_CubePickup extends SequentialCommandGroup {
+public class C1TwoPieceBLUE extends SequentialCommandGroup {
 
-    public TwoPieceAuto1_CubePickup(DriveSubsystem driveSubsystem, 
+    public C1TwoPieceBLUE(DriveSubsystem driveSubsystem, 
                         ArmSubsystem armSubsystem,
                         IntakeSubsystem intakeSubsystem,
                         LEDs LED
@@ -34,8 +34,8 @@ public class TwoPieceAuto1_CubePickup extends SequentialCommandGroup {
             new PathConstraints(2, 1));
         PathPlannerTrajectory m_thirdPath = PathPlanner.loadPath("Cube to 2 from 1", 
             new PathConstraints(2, 2.2));
-        PathPlannerTrajectory m_forthPath = PathPlanner.loadPath("Cube 2 Pickup from 2", 
-            new PathConstraints(2.0, 2.2));
+        PathPlannerTrajectory m_forthPath = PathPlanner.loadPath("Balance from 2 BLUE", 
+            new PathConstraints(2.5, 2.5));
         // PathPlannerTrajectory m_fifthPath = PathPlanner.loadPath("New Drive to Cube 9", 
         //     new PathConstraints(2, 3));
         // PathPlannerTrajectory m_sixthPath = PathPlanner.loadPath("Go to 8 with Cube", 
@@ -59,8 +59,9 @@ public class TwoPieceAuto1_CubePickup extends SequentialCommandGroup {
             new FollowPathWithEvents(
                 driveSubsystem.followTrajectoryCommand(m_forthPath, false),
                 m_thirdPath.getMarkers(),
-                Constants.AutoConstants.AUTO_EVENT_MAP)
-       
+                Constants.AutoConstants.AUTO_EVENT_MAP),
+            new DriveToLevel(driveSubsystem)
+                .alongWith(new RunCommand(() -> LED.cycle()))
             
             // new ParallelCommandGroup(new ArmToPositionWithEnd(armSubsystem, armPositions.HOME).withTimeout(2.0),
             //     driveSubsystem.followTrajectoryCommand(m_thirdPath, true))

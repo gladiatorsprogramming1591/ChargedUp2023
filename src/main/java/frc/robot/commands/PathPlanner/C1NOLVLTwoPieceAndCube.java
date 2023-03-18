@@ -1,4 +1,4 @@
-package frc.robot.commands.PathPlanner.Column1;
+package frc.robot.commands.PathPlanner;
 
 // import java.util.List;
 
@@ -14,16 +14,15 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.commands.armCommands.ArmToPositionWithEnd;
-// import frc.robot.commands.driveCommands.DriveToLevel;
 import frc.robot.subsystems.LEDs;
 import frc.robot.subsystems.DriveSubsystem.DriveSubsystem;
 import frc.robot.subsystems.MainIntakeSubsystem.ArmSubsystem;
 import frc.robot.subsystems.MainIntakeSubsystem.IntakeSubsystem;
 import frc.robot.subsystems.MainIntakeSubsystem.ArmSubsystem.armPositions;
 
-public class TwoPieceAuto1NOLEVEL extends SequentialCommandGroup {
+public class C1NOLVLTwoPieceAndCube extends SequentialCommandGroup {
 
-    public TwoPieceAuto1NOLEVEL(DriveSubsystem driveSubsystem, 
+    public C1NOLVLTwoPieceAndCube(DriveSubsystem driveSubsystem, 
                         ArmSubsystem armSubsystem,
                         IntakeSubsystem intakeSubsystem,
                         LEDs LED
@@ -35,8 +34,8 @@ public class TwoPieceAuto1NOLEVEL extends SequentialCommandGroup {
             new PathConstraints(2, 1));
         PathPlannerTrajectory m_thirdPath = PathPlanner.loadPath("Cube to 2 from 1", 
             new PathConstraints(2, 2.2));
-        // PathPlannerTrajectory m_forthPath = PathPlanner.loadPath("Balance from 2", 
-        //     new PathConstraints(2.5, 2.5));
+        PathPlannerTrajectory m_forthPath = PathPlanner.loadPath("Cube 2 Pickup from 2", 
+            new PathConstraints(2.0, 2.2));
         // PathPlannerTrajectory m_fifthPath = PathPlanner.loadPath("New Drive to Cube 9", 
         //     new PathConstraints(2, 3));
         // PathPlannerTrajectory m_sixthPath = PathPlanner.loadPath("Go to 8 with Cube", 
@@ -56,13 +55,12 @@ public class TwoPieceAuto1NOLEVEL extends SequentialCommandGroup {
                 m_thirdPath.getMarkers(),
                 Constants.AutoConstants.AUTO_EVENT_MAP),
             new RunCommand(() -> intakeSubsystem.intakeOn(IntakeConstants.kIntakePickUp), intakeSubsystem).withTimeout(0.25)
-                .alongWith(new InstantCommand(() -> LED.setColor(LED.BLUE))) // TODDO: improve intake constant names
-            // new FollowPathWithEvents(
-            //     driveSubsystem.followTrajectoryCommand(m_forthPath, false),
-            //     m_thirdPath.getMarkers(),
-            //     Constants.AutoConstants.AUTO_EVENT_MAP),
-            // new DriveToLevel(driveSubsystem)
-            //     .alongWith(new RunCommand(() -> LED.cycle()))
+                .alongWith(new InstantCommand(() -> LED.setColor(LED.BLUE))), // TODDO: improve intake constant names
+            new FollowPathWithEvents(
+                driveSubsystem.followTrajectoryCommand(m_forthPath, false),
+                m_thirdPath.getMarkers(),
+                Constants.AutoConstants.AUTO_EVENT_MAP)
+       
             
             // new ParallelCommandGroup(new ArmToPositionWithEnd(armSubsystem, armPositions.HOME).withTimeout(2.0),
             //     driveSubsystem.followTrajectoryCommand(m_thirdPath, true))

@@ -1,4 +1,4 @@
-package frc.robot.commands.PathPlanner.Column3;
+package frc.robot.commands.PathPlanner;
 
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
@@ -17,9 +17,9 @@ import frc.robot.subsystems.MainIntakeSubsystem.ArmSubsystem;
 import frc.robot.subsystems.MainIntakeSubsystem.IntakeSubsystem;
 import frc.robot.subsystems.MainIntakeSubsystem.ArmSubsystem.armPositions;
 
-public class OneCubeAuto3Hybrid extends SequentialCommandGroup {
+public class C3OneCone extends SequentialCommandGroup {
 
-    public OneCubeAuto3Hybrid(DriveSubsystem driveSubsystem, 
+    public C3OneCone(DriveSubsystem driveSubsystem, 
                         ArmSubsystem armSubsystem,
                         IntakeSubsystem intakeSubsystem
                         ){
@@ -33,15 +33,15 @@ public class OneCubeAuto3Hybrid extends SequentialCommandGroup {
 
         
         addCommands(
-            new InstantCommand(() -> intakeSubsystem.intakeOn(Constants.IntakeConstants.kIntakeReverse), intakeSubsystem),
-            new ArmToPositionWithEnd(armSubsystem, armPositions.LVLONE).withTimeout(1.2),
-            new RunCommand(() -> intakeSubsystem.intakeOn(Constants.IntakeConstants.kIntakePickUp + 0.2), intakeSubsystem).withTimeout(.25),
-            new ParallelCommandGroup(new ArmToPositionWithEnd(armSubsystem, armPositions.HOME).withTimeout(0.8),
-            driveSubsystem.followTrajectoryCommand(m_firstPath, true)),
+            new InstantCommand(() -> intakeSubsystem.intakeOn(Constants.IntakeConstants.kIntakePickUp), intakeSubsystem),
+            new ArmToPositionWithEnd(armSubsystem, armPositions.LVLTRE).withTimeout(1.6),
+            driveSubsystem.followTrajectoryCommand(m_firstPath, true),
+            new RunCommand(() -> intakeSubsystem.intakeOn(Constants.IntakeConstants.kIntakeReverse), intakeSubsystem).withTimeout(.25),
             // new WaitCommand(0.5),
-            new InstantCommand(() -> intakeSubsystem.intakeOff()),
             driveSubsystem.followTrajectoryCommand(m_secondPath, false),
-            driveSubsystem.followTrajectoryCommand(m_thirdPath, false),
+            new InstantCommand(() -> intakeSubsystem.intakeOff()),
+            new ParallelCommandGroup(new ArmToPositionWithEnd(armSubsystem, armPositions.HOME).withTimeout(2.0),
+            driveSubsystem.followTrajectoryCommand(m_thirdPath, false)),
             // new AutoLevel(driveSubsystem)
             new DriveToLevel(driveSubsystem)
             );

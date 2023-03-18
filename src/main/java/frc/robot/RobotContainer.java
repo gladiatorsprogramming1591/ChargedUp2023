@@ -27,29 +27,23 @@ import frc.robot.Constants.GroundIntakeConstants;
 import frc.robot.Constants.IntakeConstants;
 // import edu.wpi.first.wpilibj.PS4Controller.Button;
 import frc.robot.Constants.OIConstants;
+import frc.robot.commands.PathPlanner.C1NOLVLTwoPiece;
+import frc.robot.commands.PathPlanner.C1NOLVLTwoPieceAndCube;
+import frc.robot.commands.PathPlanner.C1TwoPieceBLUE;
+import frc.robot.commands.PathPlanner.C1TwoPieceRED;
+import frc.robot.commands.PathPlanner.C3OneCone;
+import frc.robot.commands.PathPlanner.C3OneCubeHybrid;
+import frc.robot.commands.PathPlanner.C5OneCubeLevel;
+import frc.robot.commands.PathPlanner.C4C6OneConeLevel;
+import frc.robot.commands.PathPlanner.C9TwoPiece;
 import frc.robot.commands.PathPlanner.OneConeScoreSolo;
 import frc.robot.commands.PathPlanner.OneCubeScoreSolo;
-import frc.robot.commands.PathPlanner.OnePieceAuto7;
-import frc.robot.commands.PathPlanner.Column3.NewOnePieceAuto3;
-import frc.robot.commands.PathPlanner.Column3.OneConeAuto3;
-import frc.robot.commands.PathPlanner.Column3.OneCubeAuto3Hybrid;
-import frc.robot.commands.PathPlanner.Column5.OnePieceAuto5;
-import frc.robot.commands.PathPlanner.Column5.OnePieceAuto5Level;
-import frc.robot.commands.PathPlanner.Column6.OnePieceAuto6Level;
-import frc.robot.commands.PathPlanner.Column9.TwoPieceAuto9;
-import frc.robot.commands.PathPlanner.Column1.TwoPieceAuto1;
-import frc.robot.commands.PathPlanner.Column1.TwoPieceAuto1NOLEVEL;
-import frc.robot.commands.PathPlanner.Column1.TwoPieceAuto1_CubePickup;
-import frc.robot.commands.PathPlanner.Tests.Debug;
-import frc.robot.commands.PathPlanner.Tests.TestEvents;
+import frc.robot.commands.PathPlanner.C7OneCone;
 import frc.robot.commands.armCommands.ArmToPosition;
 import frc.robot.commands.armCommands.ArmToPositionWithEnd;
 import frc.robot.commands.driveCommands.AutoLevel;
-// import frc.robot.commands.driveCommands.DriveToAngle;
 import frc.robot.commands.driveCommands.DriveToLevel;
 import frc.robot.commands.groundIntakeCommands.IntakeHandoff;
-// import frc.robot.commands.driveCommands.PathPlanner.OnePieceAuto7;
-// import frc.robot.commands.driveCommands.PathPlanner.OnePieceAuto4;
 import frc.robot.commands.navXCommands.ResetGyro;
 import frc.robot.subsystems.LEDs;
 import frc.robot.subsystems.DriveSubsystem.DriveSubsystem;
@@ -162,21 +156,21 @@ public class RobotContainer {
 
   // Configure auto options
   private void addAutoOptions() {
-    m_autoChooser.setDefaultOption("OneConeAuto3", new OneConeAuto3(m_robotDrive, m_arm, m_intake));
-    m_autoChooser.addOption("NewOneCubeAuto3Hybrid", new OneCubeAuto3Hybrid(m_robotDrive, m_arm, m_intake));
-    m_autoChooser.addOption("NewOnePieceAuto3", new NewOnePieceAuto3(m_robotDrive, m_arm, m_intake));
-    m_autoChooser.addOption("OnePieceAuto5", new OnePieceAuto5(m_robotDrive, m_arm, m_intake));
-    m_autoChooser.addOption("OnePieceAuto6Level", new OnePieceAuto6Level(m_robotDrive, m_arm, m_intake));
-    m_autoChooser.addOption("OnePieceAuto7", new OnePieceAuto7(m_robotDrive, m_arm, m_intake));
-    m_autoChooser.addOption("OnePieceAuto5Level", new OnePieceAuto5Level(m_robotDrive, m_arm, m_intake));
-    m_autoChooser.addOption("TwoPieceAuto9", new TwoPieceAuto9(m_robotDrive, m_arm, m_intake));
-    m_autoChooser.addOption("Tests Events", new TestEvents(m_robotDrive, m_arm, m_intake, m_LEDs));
-    m_autoChooser.addOption("TwoPieceAuto1", new TwoPieceAuto1(m_robotDrive, m_arm, m_intake, m_LEDs));
-    m_autoChooser.addOption("TwoPieceAuto1NOLEVEL", new TwoPieceAuto1NOLEVEL(m_robotDrive, m_arm, m_intake, m_LEDs));
-    m_autoChooser.addOption("TwoPieceAuto1_CubePickup", new TwoPieceAuto1_CubePickup(m_robotDrive, m_arm, m_intake, m_LEDs));
-    m_autoChooser.addOption("Debug", new Debug(m_robotDrive, m_arm, m_intake, m_LEDs));
-    m_autoChooser.addOption("OneConeScoreSolo", new OneConeScoreSolo(m_robotDrive, m_arm, m_intake));
+    m_autoChooser.setDefaultOption("OneCone ScoreSolo", new OneConeScoreSolo(m_robotDrive, m_arm, m_intake));
     m_autoChooser.addOption("OneCube ScoreSolo", new OneCubeScoreSolo(m_robotDrive, m_arm, m_intake));
+
+    m_autoChooser.addOption("C1 RED TwoPiece", new C1TwoPieceRED(m_robotDrive, m_arm, m_intake, m_LEDs));
+    m_autoChooser.addOption("C1 BLUE TwoPiece", new C1TwoPieceBLUE(m_robotDrive, m_arm, m_intake, m_LEDs));
+    m_autoChooser.addOption("C1 TwoPiece NOLEVEL", new C1NOLVLTwoPiece(m_robotDrive, m_arm, m_intake, m_LEDs));
+    m_autoChooser.addOption("C1 TwoPiece & Cube NOLEVEL", new C1NOLVLTwoPieceAndCube(m_robotDrive, m_arm, m_intake, m_LEDs));
+
+    m_autoChooser.addOption("C3 OneCone", new C3OneCone(m_robotDrive, m_arm, m_intake));
+    m_autoChooser.addOption("C3 OneCubeHybrid", new C3OneCubeHybrid(m_robotDrive, m_arm, m_intake));
+
+    m_autoChooser.addOption("C4 OR C6 OneConeLevel", new C4C6OneConeLevel(m_robotDrive, m_arm, m_intake));
+    m_autoChooser.addOption("C5 OneCubeLevel", new C5OneCubeLevel(m_robotDrive, m_arm, m_intake));
+    m_autoChooser.addOption("C7 OneCone", new C7OneCone(m_robotDrive, m_arm, m_intake));
+    m_autoChooser.addOption("C9 TwoPiece", new C9TwoPiece(m_robotDrive, m_arm, m_intake));
     SmartDashboard.putData("Auto Mode", m_autoChooser);
   }
 
@@ -338,6 +332,10 @@ public class RobotContainer {
           () -> m_arm.raiseArm(
               -MathUtil.applyDeadband(m_manipulatorController.getLeftY()*Constants.ArmConstants.kArmMaxOutput, OIConstants.kArmDeadband)),
           m_arm)); 
+
+    // m_manipulatorController.leftTrigger().toggleOnTrue(new RunCommand(() -> 
+    //       m_groundJoint.groundJointSpeed(MathUtil.applyDeadband(-m_manipulatorController.getLeftY()*GroundIntakeConstants.kMaxManualGroundJointSpeed, OIConstants.kIntakeDeadband)), m_groundJoint));
+    
 
 
     // Test Controller

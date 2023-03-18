@@ -74,11 +74,11 @@
     },
     {
       "anchorPoint": {
-        "x": 4.45,
+        "x": 4.85,
         "y": 3.04
       },
       "prevControl": {
-        "x": 4.154871688146519,
+        "x": 4.554871688146519,
         "y": 3.04
       },
       "nextControl": null,
@@ -95,12 +95,9 @@
       }
     }
   ],
-  "maxVelocity": 2.5,
-  "maxAcceleration": 2.5,
-  "isReversed": null,
   "markers": [
     {
-      "position": 0.3999999999999591,
+      "position": 0.4,
       "names": [
         "Arm HOME"
       ]
