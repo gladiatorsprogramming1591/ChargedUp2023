@@ -333,6 +333,10 @@ public class RobotContainer {
               -MathUtil.applyDeadband(m_manipulatorController.getLeftY()*Constants.ArmConstants.kArmMaxOutput, OIConstants.kArmDeadband)),
           m_arm)); 
 
+    // m_manipulatorController.leftTrigger().toggleOnTrue(new RunCommand(() -> 
+    //       m_groundJoint.groundJointSpeed(MathUtil.applyDeadband(-m_manipulatorController.getLeftY()*GroundIntakeConstants.kMaxManualGroundJointSpeed, OIConstants.kIntakeDeadband)), m_groundJoint));
+    
+
 
     // Test Controller
 
