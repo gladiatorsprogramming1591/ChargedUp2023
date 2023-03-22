@@ -86,10 +86,6 @@ public class LEDs extends SubsystemBase {
                     setColor(OFF);    
                 }
             }
-
-            setColor(cycleState);
-            cycleState = cycleState + 9;
-            if (cycleState >= TEAL) cycleState = WHITE;
         }
         // if (++count %3 == 0) {
         //     if (called){

@@ -178,6 +178,9 @@ public final class Constants {
     public static final double kDriveAngle = -11;  // Was 14.0
 
     public static final HashMap<String, Command> AUTO_EVENT_MAP = new HashMap<>();
+
+    // Vision
+    public static final double maxVisionRotSpeed = 0.5;
   }
 
   public static final class NeoMotorConstants {

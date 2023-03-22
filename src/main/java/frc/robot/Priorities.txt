@@ -1,7 +1,12 @@
 Main TODO:
--Printer cable
+-Vision:
+    -Adjust Limelight prioritization of targets via its web interface
+    -Finish Vision PID rot alignment to nodes 
+    -Add Vision PID straff alignment to nodes (square up to grid using nodes 2 & 3 tx offsets from each other)
 -Lower LVLTWO (needs bot, used infrequently)
--Change Limelight to Cam Mode
+-Speed up autonomous
+    -Single path for 'cone reverse' + 'drive to cube' while keeping marker (for HOME and intakeOff) in same spot
+        or sooner with higher accel/speed
 
 to account for its additional wheel slip
 1:  Autos
@@ -73,6 +78,7 @@ Low Priority:
 
 
 Completed:
+-Change Limelight to Cam Mode
 Update HOME position w/ new bar-hardstop placement
 LEDPiece and interupts arm (conestow)
     Ground Intake

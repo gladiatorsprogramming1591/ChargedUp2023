@@ -282,6 +282,16 @@ public class RobotContainer {
               Constants.DriveConstants.kDriveMaxOutput),
           m_robotDrive));
 
+      // Allign with Cone Node
+      m_driverController.start().whileTrue(new RunCommand(
+        () -> m_robotDrive.drive(
+          -MathUtil.applyDeadband(m_driverController.getLeftY(), OIConstants.kDriveDeadband),
+          -MathUtil.applyDeadband(m_driverController.getLeftX(), OIConstants.kDriveDeadband),
+          m_robotDrive.getVisionRotSpeed(),
+          true, true, true,
+          Constants.DriveConstants.kDriveMaxOutput),
+           m_robotDrive));
+
 
     // DRIVER 2
 
@@ -310,7 +320,7 @@ public class RobotContainer {
         m_intake));
 
     // Ground Intake
-      //Down and iIntake Pickup
+      //Down and Intake Pickup
     m_manipulatorController.a().whileTrue(
         new RunCommand(() -> m_groundJoint.groundJointPosition(Constants.GroundIntakeConstants.kOutPosition), m_groundJoint)
         .alongWith(new RunCommand(() -> m_groundIntake.groundIntakePickUp(), m_groundIntake)));
