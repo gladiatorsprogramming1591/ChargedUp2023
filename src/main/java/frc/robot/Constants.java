@@ -88,6 +88,11 @@ public final class Constants {
     public static final double kDriveSlow = 0.25; //0.25
     public static final double kmaxPOVturnspeed = .6; //0.45
     public static final double kAutoLevelMaxOutput = 0.30;
+    // Vision
+    public static final double maxVisionRotSpeed = 0.4;
+    public static final double maxVisionStrafeSpeed = 0.2;
+    public static final double kRobotHeadingTolerance = 1.0; // in degrees
+
 
     // Cardinal Directions
     public static final double faceForward = 0;
@@ -178,9 +183,10 @@ public final class Constants {
     public static final double kDriveAngle = -11;  // Was 14.0
 
     public static final HashMap<String, Command> AUTO_EVENT_MAP = new HashMap<>();
+  }
 
-    // Vision
-    public static final double maxVisionRotSpeed = 0.4;
+  public static final class VisionConstants{
+    public static final double kLimelightOffDelay = 3.0;
   }
 
   public static final class NeoMotorConstants {

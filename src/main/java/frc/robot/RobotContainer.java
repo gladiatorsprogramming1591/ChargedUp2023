@@ -21,12 +21,14 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.GroundIntakeConstants;
 import frc.robot.Constants.IntakeConstants;
 // import edu.wpi.first.wpilibj.PS4Controller.Button;
 import frc.robot.Constants.OIConstants;
+import frc.robot.Constants.VisionConstants;
 import frc.robot.commands.PathPlanner.C1NOLVLTwoPiece;
 import frc.robot.commands.PathPlanner.C1NOLVLTwoPieceAndCube;
 import frc.robot.commands.PathPlanner.C1TwoPieceBLUE;
@@ -291,9 +293,30 @@ public class RobotContainer {
               true, true, true,
               Constants.DriveConstants.kDriveMaxOutput,
               true),
-          m_robotDrive)
-          .beforeStarting(new InstantCommand(() -> m_robotDrive.setLimelightLEDsOn()))
-          .handleInterrupt(() -> m_robotDrive.setLimelightLEDsOff()));
+            m_robotDrive)
+              .beforeStarting(new InstantCommand(() -> m_robotDrive.setLimelightLEDsOn()))
+              .handleInterrupt(() -> new SequentialCommandGroup(
+                new WaitCommand(VisionConstants.kLimelightOffDelay),
+                new InstantCommand(() -> m_robotDrive.setLimelightLEDsOff()))
+              // .handleInterrupt(() -> new RunCommand(() ->
+              //   new WaitCommand(VisionConstants.kLimelightOffDelay)
+              //   .andThen(new InstantCommand(() -> m_robotDrive.setLimelightLEDsOff())))
+      ));
+
+      m_driverController.back().whileTrue(new RunCommand(
+          () -> m_robotDrive.TurnToTarget(
+              m_robotDrive.getVisionStrafeSpeed(),
+              -MathUtil.applyDeadband(m_driverController.getLeftX(), OIConstants.kDriveDeadband),
+              Constants.DriveConstants.faceBackward,
+              true, true,
+              Constants.DriveConstants.kDriveMaxOutput),
+            m_robotDrive)
+              .beforeStarting(new InstantCommand(() -> m_robotDrive.setLimelightLEDsOn()))
+              .handleInterrupt(() -> new SequentialCommandGroup(
+                new WaitCommand(VisionConstants.kLimelightOffDelay),
+                new InstantCommand(() -> m_robotDrive.setLimelightLEDsOff()))
+      ));
+
 
 
     // DRIVER 2

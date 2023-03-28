@@ -33,7 +33,6 @@ import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants;
-import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.CANIDConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.utils.SwerveUtils;
@@ -81,6 +80,7 @@ public class DriveSubsystem extends SubsystemBase {
   private final PIDController m_rollPidController = new PIDController(0.0055, 0.00008, 0.0007); // 3/9 kp 0.005  2/15 kp 0.005 kd 0.001  1/21 ki:0.0055 kd: 0.0025
   private final PIDController m_rotPidController = new PIDController(0.01, 0.000, 0.000);
   private final PIDController m_rotVisionPidController = new PIDController(0.020, 0.0, 0.0);
+  private final PIDController m_strafeVisionPidController = new PIDController(0.010, 0.0, 0.0);
   private final Trigger m_slowDriveButton;
 
   NetworkTable table; 
@@ -95,7 +95,9 @@ public class DriveSubsystem extends SubsystemBase {
   double v = 0.0; 
   double rotVisionSetpoint = 0.0; 
   double rotVisionPieceOffset = 0.0;
-  
+  double strafeVisionSetpoint = 0.0;
+  double strafeVisionPieceOffset = 0.0;
+
   /** Creates a new DriveSubsystem. */
   public DriveSubsystem(Trigger slowDriveButton) {
     m_navX = new AHRS(SPI.Port.kMXP);
@@ -415,6 +417,16 @@ public class DriveSubsystem extends SubsystemBase {
 
   public double getVisionRotSpeed(){
     return MathUtil.clamp(m_rotVisionPidController.calculate(table.getEntry("tx").getDouble(0.0), rotVisionSetpoint), 
-      -AutoConstants.maxVisionRotSpeed, AutoConstants.maxVisionRotSpeed);
+      -DriveConstants.maxVisionRotSpeed, DriveConstants.maxVisionRotSpeed);
+  }
+
+  public double getVisionStrafeSpeed(){
+    double heading = m_odometry.getPoseMeters().getRotation().getDegrees();
+    
+    if (heading > DriveConstants.faceBackward - DriveConstants.kRobotHeadingTolerance 
+      && heading < -DriveConstants.faceBackward + DriveConstants.kRobotHeadingTolerance) {
+        return MathUtil.clamp(m_strafeVisionPidController.calculate(table.getEntry("tx").getDouble(0.0), strafeVisionSetpoint),
+        -DriveConstants.maxVisionStrafeSpeed, DriveConstants.maxVisionStrafeSpeed);
+    } else return 0;
   }
 }
