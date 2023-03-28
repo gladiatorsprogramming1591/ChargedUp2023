@@ -1,7 +1,6 @@
 Main TODO:
 -Vision:
     -Adjust Limelight prioritization of targets via its web interface
-    -Finish Vision PID rot alignment to nodes 
     -Add Vision PID straff alignment to nodes (square up to grid using nodes 2 & 3 tx offsets from each other)
 -Lower LVLTWO (needs bot, used infrequently)
 -Speed up autonomous
@@ -35,9 +34,12 @@ to account for its additional wheel slip
 
 
 Requires Testing:
-    TwoPieceAuto1 for blue side with slightly longer path onto chargeStation
+    Vision
+        Test vision rot scoring
+        confirm if 2nd level node reflective tape is visible on chargeStation
     Autos
         -Lengthen 3 and 7 one piece auto paths into charge station
+        TwoPieceAuto1 for blue side with slightly longer path onto chargeStation (address RIT instance)
 
 
 
@@ -78,6 +80,7 @@ Low Priority:
 
 
 Completed:
+-Finish Vision PID rot alignment to nodes
 -Change Limelight to Cam Mode
 Update HOME position w/ new bar-hardstop placement
 LEDPiece and interupts arm (conestow)

@@ -116,7 +116,7 @@ public class RobotContainer {
     // Configure the button bindings
     configureButtonBindings();
 
-    NetworkTableInstance.getDefault().getTable("limelight").getEntry("camMode").setNumber(1);
+    NetworkTableInstance.getDefault().getTable("limelight").getEntry("camMode").setNumber(0); // 0 is default, 1 is camMode
 
     // Configure default commands
     m_robotDrive.setDefaultCommand(
@@ -284,13 +284,16 @@ public class RobotContainer {
 
       // Allign with Cone Node
       m_driverController.start().whileTrue(new RunCommand(
-        () -> m_robotDrive.drive(
-          -MathUtil.applyDeadband(m_driverController.getLeftY(), OIConstants.kDriveDeadband),
-          -MathUtil.applyDeadband(m_driverController.getLeftX(), OIConstants.kDriveDeadband),
-          m_robotDrive.getVisionRotSpeed(),
-          true, true, true,
-          Constants.DriveConstants.kDriveMaxOutput),
-           m_robotDrive));
+          () -> m_robotDrive.drive(
+              -MathUtil.applyDeadband(m_driverController.getLeftY(), OIConstants.kDriveDeadband),
+              -MathUtil.applyDeadband(m_driverController.getLeftX(), OIConstants.kDriveDeadband),
+              m_robotDrive.getVisionRotSpeed(),
+              true, true, true,
+              Constants.DriveConstants.kDriveMaxOutput,
+              true),
+          m_robotDrive)
+          .beforeStarting(new InstantCommand(() -> m_robotDrive.setLimelightLEDsOn()))
+          .handleInterrupt(() -> m_robotDrive.setLimelightLEDsOff()));
 
 
     // DRIVER 2

@@ -84,7 +84,7 @@ public final class Constants {
     public static final boolean kGyroReversed = false;
 
     // Drivetrain Speeds
-    public static final double kDriveMaxOutput = 0.85;  // Field: 0.85 | Arcadia: 0.40
+    public static final double kDriveMaxOutput = 0.40;  // Field: 0.85 | Arcadia: 0.40
     public static final double kDriveSlow = 0.25; //0.25
     public static final double kmaxPOVturnspeed = .6; //0.45
     public static final double kAutoLevelMaxOutput = 0.30;
@@ -180,7 +180,7 @@ public final class Constants {
     public static final HashMap<String, Command> AUTO_EVENT_MAP = new HashMap<>();
 
     // Vision
-    public static final double maxVisionRotSpeed = 0.5;
+    public static final double maxVisionRotSpeed = 0.4;
   }
 
   public static final class NeoMotorConstants {
