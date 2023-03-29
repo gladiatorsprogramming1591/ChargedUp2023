@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -284,7 +285,7 @@ public class RobotContainer {
               Constants.DriveConstants.kDriveMaxOutput),
           m_robotDrive));
 
-      // Allign with Cone Node
+      // Allign with Cone Node by Rotation
       m_driverController.start().whileTrue(new RunCommand(
           () -> m_robotDrive.drive(
               -MathUtil.applyDeadband(m_driverController.getLeftY(), OIConstants.kDriveDeadband),
@@ -295,27 +296,36 @@ public class RobotContainer {
               true),
             m_robotDrive)
               .beforeStarting(new InstantCommand(() -> m_robotDrive.setLimelightLEDsOn()))
-              .handleInterrupt(() -> new SequentialCommandGroup(
-                new WaitCommand(VisionConstants.kLimelightOffDelay),
-                new InstantCommand(() -> m_robotDrive.setLimelightLEDsOff()))
+              // .beforeStarting(new ParallelCommandGroup(
+                // new InstantCommand(() -> m_robotDrive.setLimelightLEDsOn()), 
+                // new InstantCommand(() -> m_robotDrive.setVisionOriginaltx())))
+              .handleInterrupt(() -> m_robotDrive.setLimelightLEDsOff()
+
+              // .handleInterrupt(() -> new SequentialCommandGroup(
+              //   new WaitCommand(VisionConstants.kLimelightOffDelay),
+              //   new InstantCommand(() -> m_robotDrive.setLimelightLEDsOff()))
+
               // .handleInterrupt(() -> new RunCommand(() ->
               //   new WaitCommand(VisionConstants.kLimelightOffDelay)
               //   .andThen(new InstantCommand(() -> m_robotDrive.setLimelightLEDsOff())))
       ));
 
+      // Allign with Cone Node by Strafe
       m_driverController.back().whileTrue(new RunCommand(
           () -> m_robotDrive.TurnToTarget(
-              m_robotDrive.getVisionStrafeSpeed(),
-              -MathUtil.applyDeadband(m_driverController.getLeftX(), OIConstants.kDriveDeadband),
+              -MathUtil.applyDeadband(m_driverController.getLeftY(), OIConstants.kDriveDeadband),
+              -m_robotDrive.getVisionStrafeSpeed(),
               Constants.DriveConstants.faceBackward,
               true, true,
               Constants.DriveConstants.kDriveMaxOutput),
             m_robotDrive)
               .beforeStarting(new InstantCommand(() -> m_robotDrive.setLimelightLEDsOn()))
-              .handleInterrupt(() -> new SequentialCommandGroup(
-                new WaitCommand(VisionConstants.kLimelightOffDelay),
-                new InstantCommand(() -> m_robotDrive.setLimelightLEDsOff()))
-      ));
+              // .handleInterrupt(() -> m_robotDrive.setLimelightLEDsOff()
+
+              // .handleInterrupt(() -> new SequentialCommandGroup(
+              //   new WaitCommand(VisionConstants.kLimelightOffDelay),
+              //   new InstantCommand(() -> m_robotDrive.setLimelightLEDsOff()))
+      );
 
 
 

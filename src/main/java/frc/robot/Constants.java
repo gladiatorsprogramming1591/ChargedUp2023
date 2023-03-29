@@ -58,11 +58,11 @@ public final class Constants {
     // Driving Parameters - Note that these are not the maximum capable speeds of
     // the robot, rather the allowed maximum speeds
     public static final double kMaxSpeedMetersPerSecond = 4.46;
-    public static final double kMaxAngularSpeed = 2 * Math.PI; // radians per second
+    public static final double kMaxAngularSpeed = 1.5 * Math.PI; // radians per second
 
-    public static final double kDirectionSlewRate = 1.2; // radians per second
-    public static final double kMagnitudeSlewRate = 1.8; // percent per second (1 = 100%)
-    public static final double kRotationalSlewRate = 2.0; // percent per second (1 = 100%)
+    public static final double kDirectionSlewRate = 3.6; // radians per second
+    public static final double kMagnitudeSlewRate = 3.6; // percent per second (1 = 100%)
+    public static final double kRotationalSlewRate = 3.0; // percent per second (1 = 100%)
 
     // Chassis configuration
     public static final double kTrackWidth = Units.inchesToMeters(26.5);
@@ -84,13 +84,13 @@ public final class Constants {
     public static final boolean kGyroReversed = false;
 
     // Drivetrain Speeds
-    public static final double kDriveMaxOutput = 0.40;  // Field: 0.85 | Arcadia: 0.40
+    public static final double kDriveMaxOutput = 0.95;  // Field: 0.85 | Arcadia: 0.40
     public static final double kDriveSlow = 0.25; //0.25
-    public static final double kmaxPOVturnspeed = .6; //0.45
+    public static final double kmaxPOVturnspeed = 1.0; //0.45
     public static final double kAutoLevelMaxOutput = 0.30;
     // Vision
     public static final double maxVisionRotSpeed = 0.4;
-    public static final double maxVisionStrafeSpeed = 0.2;
+    public static final double maxVisionStrafeSpeed = 0.4;
     public static final double kRobotHeadingTolerance = 1.0; // in degrees
 
 
@@ -187,6 +187,7 @@ public final class Constants {
 
   public static final class VisionConstants{
     public static final double kLimelightOffDelay = 3.0;
+    public static final String tLength = "thor";
   }
 
   public static final class NeoMotorConstants {

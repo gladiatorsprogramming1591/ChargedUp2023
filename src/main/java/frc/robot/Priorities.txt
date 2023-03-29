@@ -1,5 +1,12 @@
 Main TODO:
 -Vision:
+    -Switch target filtering ("debouce")
+        idea: PID value changes by large amount, ignore for second to give time for original target to return
+            -Update change in "txPast" to update approximate target tx relative to pasttx (delta)
+                -Update sorting OR get smartTargets working to choose desired peg
+        idea 2: Use Area? Delta of ty?
+    -Limelight target validity for when target is lost for breif moment (2 small deadzones when arm LVLTRE)
+    -Target sorting ("closest" doesn't work reliably)
     -Adjust Limelight prioritization of targets via its web interface
     -Add Vision PID straff alignment to nodes (square up to grid using nodes 2 & 3 tx offsets from each other)
 -Lower LVLTWO (needs bot, used infrequently)
