@@ -4,6 +4,9 @@
 
 package frc.robot;
 
+import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.cscore.UsbCamera;
+
 // import com.pathplanner.lib.auto.PIDConstants;
 // import com.pathplanner.lib.auto.SwerveAutoBuilder;
 
@@ -74,6 +77,7 @@ public class RobotContainer {
   private final GroundIntake m_groundIntake;
   private final GroundJoint m_groundJoint;
   private final LEDs m_LEDs;
+  // private final UsbCamera m_cameraUSB;
 
   // The driver's controller
 //   XboxController m_driverController = new XboxController(OIConstants.kDriverControllerPort);
@@ -96,6 +100,7 @@ public class RobotContainer {
     m_LEDs = new LEDs();
     m_groundIntake = new GroundIntake();
     m_groundJoint = new GroundJoint();
+    // m_cameraUSB = CameraServer.startAutomaticCapture();
 
   //   SwerveAutoBuilder autoBuilder = new SwerveAutoBuilder(
   //     m_robotDrive::getPose, // Pose2d supplier
@@ -295,10 +300,11 @@ public class RobotContainer {
               Constants.DriveConstants.kDriveMaxOutput,
               true),
             m_robotDrive)
-              .beforeStarting(new InstantCommand(() -> m_robotDrive.setLimelightLEDsOn()))
-              // .beforeStarting(new ParallelCommandGroup(
-                // new InstantCommand(() -> m_robotDrive.setLimelightLEDsOn()), 
-                // new InstantCommand(() -> m_robotDrive.setVisionOriginaltx())))
+              // .beforeStarting(new InstantCommand(() -> m_robotDrive.setVisionOriginaltx()))
+              // .beforeStarting(new InstantCommand(() -> m_robotDrive.setLimelightLEDsOn()))
+              .beforeStarting(new SequentialCommandGroup(
+                new RunCommand(() -> m_robotDrive.setLimelightLEDsOn()).withTimeout(0.1), 
+                new InstantCommand(() -> m_robotDrive.setVisionOriginaltx())))
               .handleInterrupt(() -> m_robotDrive.setLimelightLEDsOff()
 
               // .handleInterrupt(() -> new SequentialCommandGroup(

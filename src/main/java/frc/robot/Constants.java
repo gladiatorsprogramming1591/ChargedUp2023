@@ -62,7 +62,7 @@ public final class Constants {
 
     public static final double kDirectionSlewRate = 3.6; // radians per second
     public static final double kMagnitudeSlewRate = 3.6; // percent per second (1 = 100%)
-    public static final double kRotationalSlewRate = 3.0; // percent per second (1 = 100%)
+    public static final double kRotationalSlewRate = 4.0; // percent per second (1 = 100%)
 
     // Chassis configuration
     public static final double kTrackWidth = Units.inchesToMeters(26.5);
@@ -188,6 +188,7 @@ public final class Constants {
   public static final class VisionConstants{
     public static final double kLimelightOffDelay = 3.0;
     public static final String tLength = "thor";
+    public static final double kDeltaThreshhold = 4; // in degrees
   }
 
   public static final class NeoMotorConstants {

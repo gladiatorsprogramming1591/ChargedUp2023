@@ -78,9 +78,10 @@ public class DriveSubsystem extends SubsystemBase {
   // Odometry class for tracking robot pose
   SwerveDriveOdometry m_odometry;
   private int count = 0;
+  private int tvCount = 0;
   private final PIDController m_rollPidController = new PIDController(0.0055, 0.00008, 0.0007); // 3/9 kp 0.005  2/15 kp 0.005 kd 0.001  1/21 ki:0.0055 kd: 0.0025
   private final PIDController m_rotPidController = new PIDController(0.01, 0.000, 0.000);
-  private final PIDController m_rotVisionPidController = new PIDController(0.020, 0.0, 0.0);
+  private final PIDController m_rotVisionPidController = new PIDController(0.020, 0.0, 0.002);
   private final PIDController m_strafeVisionPidController = new PIDController(0.055, 0.0, 0.0);
   private final Trigger m_slowDriveButton;
 
@@ -106,6 +107,10 @@ public class DriveSubsystem extends SubsystemBase {
   double txPast = 0.0;
   double txDelta = 0.0;
   double rotSpeed = 0.0;
+  
+  double txEstimated = 0.0;
+
+  boolean txRejected = false;
 
   /** Creates a new DriveSubsystem. */
   public DriveSubsystem(Trigger slowDriveButton) {
@@ -142,9 +147,15 @@ public class DriveSubsystem extends SubsystemBase {
         m_field.setRobotPose(m_odometry.getPoseMeters());
 
     SmartDashboard.putNumber("Heading", m_odometry.getPoseMeters().getRotation().getDegrees());
-    SmartDashboard.putNumber("CurrentRoll", m_navX.getRoll());
+    SmartDashboard.putNumber("CurrentPitch", m_navX.getRoll());
     // SmartDashboard.putNumber("xTrajSP", xTrajPID.getSetpoint());
     // SmartDashboard.putNumber("xTrajPosErr", xTrajPID.getPositionError());
+
+    // Vision
+    SmartDashboard.putNumber("txCurrent", table.getEntry("tx").getDouble(0.0));
+    SmartDashboard.putNumber("txPast", txPast);
+    SmartDashboard.putBoolean("txRejected", txRejected);
+    SmartDashboard.putNumber("txEstimated", txEstimated);
   }
 
   /**
@@ -425,13 +436,18 @@ public class DriveSubsystem extends SubsystemBase {
     NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(1);
   }
 
-  // public void setVisionOriginaltx(){
-  //   originaltx = table.getEntry("tx").getDouble(0.0);
-  // }
+  public void setVisionOriginaltx(){
+    txPast = table.getEntry("tx").getDouble(0.0);
+    txRejected = false;
+  }
 
   public double getVisionRotSpeed(){
-    // if (table.getEntry("tv").getDouble(0.0) == 0.0) return 0.0;
-
+    if (table.getEntry("tv").getDouble(0.0) == 0.0){
+      if (++tvCount %10 == 0) {
+        txPast = 0.0;
+      }
+    } else tvCount = 0; // When tv is 1
+    
     // Addresses which target to prioritize using smartTargets
     // double targetHalf = table.getEntry(VisionConstants.tLength).getDouble(0.0) / 2;
     // // rotVisionSetpoint = 0.0;
@@ -444,14 +460,20 @@ public class DriveSubsystem extends SubsystemBase {
     //   // // newtx = originaltx - targetHalf;
     //   // rotVisionSetpoint = targetHalf;
     // }
-    
 
-    // // Addresses Target Switching using singleTarget
-    double txDelta = table.getEntry("tx").getDouble(0.0) - txPast;
-    if ((txDelta > 5) || (txDelta < -5)){
-      rotSpeed = MathUtil.clamp(m_rotVisionPidController.calculate(txPast, rotVisionSetpoint), 
+
+    // Addresses Target Switching using singleTarget
+    txDelta = table.getEntry("tx").getDouble(0.0) - txPast;
+    if ((txDelta > VisionConstants.kDeltaThreshhold) || (txDelta < -VisionConstants.kDeltaThreshhold)){
+      if (txRejected = false) {
+        txEstimated = txPast;
+        txRejected = true;
+      }
+      rotSpeed = MathUtil.clamp(m_rotVisionPidController.calculate(txEstimated, rotVisionSetpoint), 
       -DriveConstants.maxVisionRotSpeed, DriveConstants.maxVisionRotSpeed);
+      txEstimated = txEstimated*0.9; // reduced 10% each loop
     } else {
+    txRejected = false;
     rotSpeed = MathUtil.clamp(m_rotVisionPidController.calculate(table.getEntry("tx").getDouble(0.0), rotVisionSetpoint), 
       -DriveConstants.maxVisionRotSpeed, DriveConstants.maxVisionRotSpeed);
       txPast = table.getEntry("tx").getDouble(0.0);
