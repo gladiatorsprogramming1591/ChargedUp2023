@@ -193,10 +193,13 @@ public class RobotContainer {
     Constants.AutoConstants.AUTO_EVENT_MAP.put("AutoLevel", new AutoLevel(m_robotDrive));
     Constants.AutoConstants.AUTO_EVENT_MAP.put("ArmHOME then GroundIntakeOut and PickUp",
       new SequentialCommandGroup(
-        new ArmToPosition(m_arm, armPositions.HOME).withTimeout(1.6), 
-        new RunCommand(() -> m_groundJoint.groundJointPosition(GroundIntakeConstants.kOutPosition), m_groundJoint)
-        .until(() -> m_groundJoint.groundJointAtPosition())
-        .alongWith(new RunCommand(() -> m_groundIntake.groundIntakeSpeed(GroundIntakeConstants.kAutoIntakePickUp), m_groundIntake))));
+        new InstantCommand(() -> m_intake.intakeOff()),
+        new ArmToPosition(m_arm, armPositions.HOME, true).withTimeout(1.0), 
+        new ParallelCommandGroup(
+          new ArmToPosition(m_arm, armPositions.HOME, false).withTimeout(0.6),
+          new RunCommand(() -> m_groundJoint.groundJointPosition(GroundIntakeConstants.kOutPosition), m_groundJoint)
+            .until(() -> m_groundJoint.groundJointAtPosition())
+            .alongWith(new RunCommand(() -> m_groundIntake.groundIntakeSpeed(GroundIntakeConstants.kAutoIntakePickUp), m_groundIntake)))));
 
     Constants.AutoConstants.AUTO_EVENT_MAP.put("GroundIntakeTransferArmUp", 
       new SequentialCommandGroup(

@@ -82,7 +82,7 @@ public class DriveSubsystem extends SubsystemBase {
   private final PIDController m_rollPidController = new PIDController(0.0055, 0.00008, 0.0007); // 3/9 kp 0.005  2/15 kp 0.005 kd 0.001  1/21 ki:0.0055 kd: 0.0025
   private final PIDController m_rotPidController = new PIDController(0.01, 0.000, 0.000);
   private final PIDController m_rotVisionPidController = new PIDController(0.020, 0.0, 0.002);
-  private final PIDController m_strafeVisionPidController = new PIDController(0.055, 0.0, 0.0);
+  private final PIDController m_strafeVisionPidController = new PIDController(0.040, 0.0, 0.0);
   private final Trigger m_slowDriveButton;
 
   NetworkTable table; 

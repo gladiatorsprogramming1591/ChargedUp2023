@@ -90,7 +90,7 @@ public final class Constants {
     public static final double kAutoLevelMaxOutput = 0.30;
     // Vision
     public static final double maxVisionRotSpeed = 0.4;
-    public static final double maxVisionStrafeSpeed = 0.4;
+    public static final double maxVisionStrafeSpeed = 1.0; // handled by maxOutput (TODO: Add xExeption param to drive(...))
     public static final double kRobotHeadingTolerance = 1.0; // in degrees
 
 

@@ -23,7 +23,7 @@ public class LEDs extends SubsystemBase {
     boolean blink = false;
     double count = 0;
 
-    boolean called = false;
+    boolean isPurple = false;
 
 
 
@@ -44,11 +44,11 @@ public class LEDs extends SubsystemBase {
     }
 
     public void setPiece(){
-        if (called) {
-            called = false;
+        if (isPurple) {
+            isPurple = false;
             setColor(PURPLE);
         } else {
-            called = true;
+            isPurple = true;
             setColor(YELLOW);
         }
     }
@@ -64,12 +64,12 @@ public class LEDs extends SubsystemBase {
 
     public void off(){
         setColor(OFF);
-        called = false;
+        isPurple = false;
     }
 
     public void flashing(){
         if (++count %5 == 0) {      // 3%
-            if (called) {           // Previously Purple
+            if (isPurple) {           // Previously Purple
                 if (!blink){
                     blink = true;
                     setColor(PURPLE);

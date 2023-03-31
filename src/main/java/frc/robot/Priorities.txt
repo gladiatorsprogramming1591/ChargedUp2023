@@ -1,5 +1,7 @@
 Main TODO:
 -Vision:
+    -Limelight currently locked on level 2 position
+    -Invesitgate limelight low mount
     -Switch target filtering ("debouce")
         idea: PID value changes by large amount, ignore for second to give time for original target to return
             -Update change in "txPast" to update approximate target tx relative to pasttx (delta)
@@ -16,6 +18,7 @@ Main TODO:
 
 to account for its additional wheel slip
 1:  Autos
+        Arm down parallel to joint out timing needs improvement
         Add auto that only drives out of community after time set in SmartDashboard
         Different autos for real and wood charge stations
         4/6 one cone auto level

@@ -1,7 +1,5 @@
 package frc.robot.commands.PathPlanner;
 
-/* EXTENDED PATH ONTO RIT CHARGESTATION BY 8" */
-
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
@@ -20,9 +18,9 @@ import frc.robot.subsystems.MainIntakeSubsystem.ArmSubsystem;
 import frc.robot.subsystems.MainIntakeSubsystem.IntakeSubsystem;
 import frc.robot.subsystems.MainIntakeSubsystem.ArmSubsystem.armPositions;
 
-public class C1TwoPieceBLUE extends SequentialCommandGroup {
+public class C1TwoPieceREDsave extends SequentialCommandGroup {
 
-    public C1TwoPieceBLUE(DriveSubsystem driveSubsystem, 
+    public C1TwoPieceREDsave(DriveSubsystem driveSubsystem, 
                         ArmSubsystem armSubsystem,
                         IntakeSubsystem intakeSubsystem,
                         LEDs LED
@@ -30,11 +28,11 @@ public class C1TwoPieceBLUE extends SequentialCommandGroup {
 
         PathPlannerTrajectory m_firstPath = PathPlanner.loadPath("Cone Score 1", 
             new PathConstraints(2, 3));
-        // PathPlannerTrajectory m_secondPath = PathPlanner.loadPath("Cone Reverse 1", 
-        //     new PathConstraints(2, 1));
-        PathPlannerTrajectory m_thirdPath = PathPlanner.loadPath("Cube to 2 from 1 Grid", 
+        PathPlannerTrajectory m_secondPath = PathPlanner.loadPath("Cone Reverse 1", 
+            new PathConstraints(2, 1));
+        PathPlannerTrajectory m_thirdPath = PathPlanner.loadPath("Cube to 2 from 1", 
             new PathConstraints(2, 2.2));
-        PathPlannerTrajectory m_forthPath = PathPlanner.loadPath("Balance from 2 BLUE", 
+        PathPlannerTrajectory m_forthPath = PathPlanner.loadPath("Balance from 2 RED", 
             new PathConstraints(2.5, 2.5));
         // PathPlannerTrajectory m_fifthPath = PathPlanner.loadPath("New Drive to Cube 9", 
         //     new PathConstraints(2, 3));
@@ -48,8 +46,8 @@ public class C1TwoPieceBLUE extends SequentialCommandGroup {
             driveSubsystem.followTrajectoryCommand(m_firstPath, true),
             new RunCommand(() -> intakeSubsystem.intakeOn(Constants.IntakeConstants.kIntakeReverse), intakeSubsystem).withTimeout(.25),
             // new WaitCommand(0.5),
-            // driveSubsystem.followTrajectoryCommand(m_secondPath, false),
-            // new InstantCommand(() -> intakeSubsystem.intakeOff()),
+            driveSubsystem.followTrajectoryCommand(m_secondPath, false),
+            new InstantCommand(() -> intakeSubsystem.intakeOff()),
             new FollowPathWithEvents(
                 driveSubsystem.followTrajectoryCommand(m_thirdPath, false),
                 m_thirdPath.getMarkers(),
