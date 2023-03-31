@@ -1,4 +1,5 @@
 Main TODO:
+-Ground intake shoot button?
 -Vision:
     -Limelight currently locked on level 2 position
     -Invesitgate limelight low mount
@@ -18,6 +19,16 @@ Main TODO:
 
 to account for its additional wheel slip
 1:  Autos
+        New autos over cable protector:
+            AUTO DESCRIPTION                                                    GOAL                POINTS      OPENING DURATION
+        -Score 2 high                                                       (for LVL3)               (6+6 = 12p)    (~15s)
+        -Score 1 high w/ +1 and balance                                     (for Score)    (6+(8-12)+5 = 19-23p)    (~15+3s)
+        -Score hybrid then shoot 2 cubes into community to link             (for RP)           (3+2+2+[5] = 12p)    (~15+5s)
+        -Score 1 high then shoot 2 cubes into community                     (for LVL3)             (6+5+5 = 16p)    (~15+10s)
+        -Score 1 high, shoot 1 to community, race nearest Loading Zone      (for LVL3)         (6+5+5+[5] = 21p)    (~15+7s)
+
+        Test marker commands Auto (w/o path)
+
         Arm down parallel to joint out timing needs improvement
         Add auto that only drives out of community after time set in SmartDashboard
         Different autos for real and wood charge stations
