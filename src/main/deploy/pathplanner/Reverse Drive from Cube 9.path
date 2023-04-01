@@ -2,13 +2,13 @@
   "waypoints": [
     {
       "anchorPoint": {
-        "x": 2.06,
-        "y": 0.5
+        "x": 6.88,
+        "y": 1.02
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.6820011332330376,
-        "y": 0.4913810789160056
+        "x": 6.179478224341066,
+        "y": 0.4721112326840052
       },
       "holonomicAngle": 180.0,
       "isReversal": false,
@@ -24,16 +24,16 @@
     },
     {
       "anchorPoint": {
-        "x": 3.7514775991090468,
+        "x": 4.107969754401049,
         "y": 0.5
       },
       "prevControl": {
-        "x": 3.717662910389635,
-        "y": 0.5015914200655238
+        "x": 4.089507489417064,
+        "y": 0.5
       },
       "nextControl": {
-        "x": 4.753509603173054,
-        "y": 0.4528413864520048
+        "x": 4.140518389010924,
+        "y": 0.5
       },
       "holonomicAngle": 180.0,
       "isReversal": false,
@@ -49,12 +49,12 @@
     },
     {
       "anchorPoint": {
-        "x": 6.88,
-        "y": 1.02
+        "x": 2.06,
+        "y": 0.5
       },
       "prevControl": {
-        "x": 5.842255915281064,
-        "y": 1.040571696528009
+        "x": 2.053170721271253,
+        "y": 0.5
       },
       "nextControl": null,
       "holonomicAngle": 180.0,
@@ -70,15 +70,5 @@
       }
     }
   ],
-  "maxVelocity": 2.0,
-  "maxAcceleration": 2.0,
-  "isReversed": null,
-  "markers": [
-    {
-      "position": 0.0,
-      "names": [
-        "ArmHOME then GroundIntakeOut and PickUp"
-      ]
-    }
-  ]
+  "markers": []
 }
