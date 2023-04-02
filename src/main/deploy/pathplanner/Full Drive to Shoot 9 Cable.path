@@ -2,17 +2,17 @@
   "waypoints": [
     {
       "anchorPoint": {
-        "x": 2.06,
-        "y": 4.95
+        "x": 3.6,
+        "y": 0.4978787496798777
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.0502219387091083,
-        "y": 4.95
+        "x": 3.63385211649241,
+        "y": 0.4978787496798777
       },
       "holonomicAngle": 180.0,
       "isReversal": false,
-      "velOverride": null,
+      "velOverride": 0.1,
       "isLocked": false,
       "isStopPoint": false,
       "stopEvent": {
@@ -24,17 +24,17 @@
     },
     {
       "anchorPoint": {
-        "x": 1.73,
-        "y": 4.95
+        "x": 4.227323533094631,
+        "y": 0.5
       },
       "prevControl": {
-        "x": 1.7297911344667163,
-        "y": 4.949999999999999
+        "x": 3.924734004497936,
+        "y": 0.4908167070669399
       },
       "nextControl": null,
       "holonomicAngle": 180.0,
       "isReversal": false,
-      "velOverride": null,
+      "velOverride": 0.1,
       "isLocked": false,
       "isStopPoint": false,
       "stopEvent": {
@@ -45,12 +45,8 @@
       }
     }
   ],
-  "markers": [
-    {
-      "position": 0.0,
-      "names": [
-        "Arm LVLTRE"
-      ]
-    }
-  ]
+  "maxVelocity": null,
+  "maxAcceleration": 1.6,
+  "isReversed": null,
+  "markers": []
 }

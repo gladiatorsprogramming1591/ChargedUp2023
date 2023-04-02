@@ -4,12 +4,11 @@
 
 package frc.robot;
 
+// import edu.wpi.first.cameraserver.CameraServer;
+// import edu.wpi.first.cscore.UsbCamera;
+
 // import com.pathplanner.lib.auto.PIDConstants;
 // import com.pathplanner.lib.auto.SwerveAutoBuilder;
-
-// import com.pathplanner.lib.PathConstraints;
-// import com.pathplanner.lib.PathPlanner;
-// import com.pathplanner.lib.PathPlannerTrajectory;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -19,13 +18,13 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.GroundIntakeConstants;
 import frc.robot.Constants.IntakeConstants;
-// import edu.wpi.first.wpilibj.PS4Controller.Button;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.PathPlanner.C1NOLVLTwoPiece;
 import frc.robot.commands.PathPlanner.C1NOLVLTwoPieceAndCube;
@@ -39,6 +38,7 @@ import frc.robot.commands.PathPlanner.C9TwoPiece;
 import frc.robot.commands.PathPlanner.OneConeScoreSolo;
 import frc.robot.commands.PathPlanner.OneCubeScoreSolo;
 import frc.robot.commands.PathPlanner.C7OneCone;
+import frc.robot.commands.PathPlanner.C9OneConeShootTwo;
 import frc.robot.commands.armCommands.ArmToPosition;
 import frc.robot.commands.armCommands.ArmToPositionWithEnd;
 import frc.robot.commands.driveCommands.AutoLevel;
@@ -71,6 +71,7 @@ public class RobotContainer {
   private final GroundIntake m_groundIntake;
   private final GroundJoint m_groundJoint;
   private final LEDs m_LEDs;
+  // private final UsbCamera m_cameraUSB;
 
   // The driver's controller
 //   XboxController m_driverController = new XboxController(OIConstants.kDriverControllerPort);
@@ -93,6 +94,7 @@ public class RobotContainer {
     m_LEDs = new LEDs();
     m_groundIntake = new GroundIntake();
     m_groundJoint = new GroundJoint();
+    // m_cameraUSB = CameraServer.startAutomaticCapture();
 
   //   SwerveAutoBuilder autoBuilder = new SwerveAutoBuilder(
   //     m_robotDrive::getPose, // Pose2d supplier
@@ -116,7 +118,7 @@ public class RobotContainer {
     // Configure the button bindings
     configureButtonBindings();
 
-    NetworkTableInstance.getDefault().getTable("limelight").getEntry("camMode").setNumber(1);
+    NetworkTableInstance.getDefault().getTable("limelight").getEntry("camMode").setNumber(0); // 0 is default, 1 is camMode
 
     // Configure default commands
     m_robotDrive.setDefaultCommand(
@@ -170,25 +172,30 @@ public class RobotContainer {
     m_autoChooser.addOption("C4 OR C6 OneConeLevel", new C4C6OneConeLevel(m_robotDrive, m_arm, m_intake));
     m_autoChooser.addOption("C5 OneCubeLevel", new C5OneCubeLevel(m_robotDrive, m_arm, m_intake));
     m_autoChooser.addOption("C7 OneCone", new C7OneCone(m_robotDrive, m_arm, m_intake));
-    m_autoChooser.addOption("C9 TwoPiece", new C9TwoPiece(m_robotDrive, m_arm, m_intake));
+    m_autoChooser.addOption("C9 TwoPiece", new C9TwoPiece(m_robotDrive, m_arm, m_intake, m_LEDs));
+    m_autoChooser.addOption("C9 OneConeShootTwo", new C9OneConeShootTwo(m_robotDrive, m_arm, m_intake, m_LEDs));
     SmartDashboard.putData("Auto Mode", m_autoChooser);
   }
 
   // Path with Events
   private void configureAutoCommands(){
     Constants.AutoConstants.AUTO_EVENT_MAP.put("Intake PickUp", new InstantCommand(() -> m_intake.intakeOn(Constants.IntakeConstants.kIntakePickUp), m_intake));
-    Constants.AutoConstants.AUTO_EVENT_MAP.put("Arm LVLTRE", new ArmToPositionWithEnd(m_arm, armPositions.LVLTRE).withTimeout(3.0));
-    Constants.AutoConstants.AUTO_EVENT_MAP.put("Intake Reverse", new RunCommand(() -> m_intake.intakeOn(Constants.IntakeConstants.kIntakeReverse), m_intake).withTimeout(.25));
     Constants.AutoConstants.AUTO_EVENT_MAP.put("IntakeOff", new InstantCommand(() -> m_intake.intakeOff(), m_intake));
+    Constants.AutoConstants.AUTO_EVENT_MAP.put("Arm LVLTRE", new ArmToPosition(m_arm, armPositions.LVLTRE, false).withTimeout(2.0));
+    Constants.AutoConstants.AUTO_EVENT_MAP.put("Intake Reverse", new RunCommand(() -> m_intake.intakeOn(Constants.IntakeConstants.kIntakeReverse), m_intake).withTimeout(.25));
     Constants.AutoConstants.AUTO_EVENT_MAP.put("Arm HOME", new ArmToPositionWithEnd(m_arm, armPositions.HOME).withTimeout(2.0));
     Constants.AutoConstants.AUTO_EVENT_MAP.put("LED Cycle", new RunCommand(() -> m_LEDs.cycle()));
     Constants.AutoConstants.AUTO_EVENT_MAP.put("AutoLevel", new AutoLevel(m_robotDrive));
+
     Constants.AutoConstants.AUTO_EVENT_MAP.put("ArmHOME then GroundIntakeOut and PickUp",
       new SequentialCommandGroup(
-        new ArmToPosition(m_arm, armPositions.HOME).withTimeout(1.6), 
-        new RunCommand(() -> m_groundJoint.groundJointPosition(GroundIntakeConstants.kOutPosition), m_groundJoint)
-        .until(() -> m_groundJoint.groundJointAtPosition())
-        .alongWith(new RunCommand(() -> m_groundIntake.groundIntakeSpeed(GroundIntakeConstants.kAutoIntakePickUp), m_groundIntake))));
+        new InstantCommand(() -> m_intake.intakeOff()),
+        new ArmToPosition(m_arm, armPositions.HOME, true).withTimeout(1.0), 
+        new ParallelCommandGroup(
+          new ArmToPosition(m_arm, armPositions.HOME, false).withTimeout(0.6),
+          new RunCommand(() -> m_groundJoint.groundJointPosition(GroundIntakeConstants.kOutPosition), m_groundJoint)
+            .until(() -> m_groundJoint.groundJointAtPosition())
+            .alongWith(new RunCommand(() -> m_groundIntake.groundIntakeSpeed(GroundIntakeConstants.kAutoIntakePickUp), m_groundIntake)))));
 
     Constants.AutoConstants.AUTO_EVENT_MAP.put("GroundIntakeTransferArmUp", 
       new SequentialCommandGroup(
@@ -196,7 +203,23 @@ public class RobotContainer {
         new ArmToPosition(m_arm, armPositions.LVLTRE)
         .alongWith(new RunCommand(() -> m_intake.intakeOn(-IntakeConstants.kStallSpeed), m_intake)))
       );
-        
+
+      Constants.AutoConstants.AUTO_EVENT_MAP.put("GroundIntakeShootPos", // TODO: optimize shooting pos
+        new RunCommand(() -> m_groundJoint.groundJointPosition(Constants.GroundIntakeConstants.kAutoShootPosition),
+          m_groundJoint)
+          // .until(() -> m_groundJoint.groundJointAtPosition()).withTimeout(1.5)
+      );
+
+      Constants.AutoConstants.AUTO_EVENT_MAP.put("Shoot", //TODO: run while moving earlier in path to use robot's momentum 
+        new SequentialCommandGroup(
+          new RunCommand(() -> m_groundIntake.groundIntakePickUp(), m_groundIntake).withTimeout(0.10),
+          new RunCommand(() -> m_groundIntake.groundIntakeShoot(), m_groundIntake)
+        ));
+
+      Constants.AutoConstants.AUTO_EVENT_MAP.put("GroundIntakeOut and PickUp",
+        new RunCommand(() -> m_groundJoint.groundJointPosition(GroundIntakeConstants.kOutPosition), m_groundJoint)
+          .until(() -> m_groundJoint.groundJointAtPosition())
+          .alongWith(new RunCommand(() -> m_groundIntake.groundIntakeSpeed(GroundIntakeConstants.kAutoIntakePickUp), m_groundIntake)));
   }
 
   public void updateRobotForTeleop() {
@@ -282,13 +305,51 @@ public class RobotContainer {
               Constants.DriveConstants.kDriveMaxOutput),
           m_robotDrive));
 
+      // Allign with Cone Node by Rotation
+      m_driverController.start().whileTrue(new RunCommand(
+          () -> m_robotDrive.drive(
+              -MathUtil.applyDeadband(m_driverController.getLeftY(), OIConstants.kDriveDeadband),
+              -MathUtil.applyDeadband(m_driverController.getLeftX(), OIConstants.kDriveDeadband),
+              m_robotDrive.getVisionRotSpeed(),
+              true, true, true,
+              Constants.DriveConstants.kDriveMaxOutput,
+              true),
+            m_robotDrive)
+              .beforeStarting(new SequentialCommandGroup(
+                new RunCommand(() -> m_robotDrive.setLimelightLEDsOn()).withTimeout(0.1), 
+                new InstantCommand(() -> m_robotDrive.setVisionOriginaltx())))
+              .handleInterrupt(() -> m_robotDrive.setLimelightLEDsOff()
+
+              // .handleInterrupt(() -> new SequentialCommandGroup(
+              //   new WaitCommand(VisionConstants.kLimelightOffDelay),
+              //   new InstantCommand(() -> m_robotDrive.setLimelightLEDsOff()))
+      ));
+
+      // Allign with Cone Node by Strafe
+      m_driverController.back().whileTrue(new RunCommand(
+          () -> m_robotDrive.TurnToTarget(
+              -MathUtil.applyDeadband(m_driverController.getLeftY(), OIConstants.kDriveDeadband),
+              -m_robotDrive.getVisionStrafeSpeed(),
+              Constants.DriveConstants.faceBackward,
+              true, true,
+              Constants.DriveConstants.kDriveMaxOutput),
+            m_robotDrive)
+              .beforeStarting(new InstantCommand(() -> m_robotDrive.setLimelightLEDsOn()))
+              // .handleInterrupt(() -> m_robotDrive.setLimelightLEDsOff()
+
+              // .handleInterrupt(() -> new SequentialCommandGroup(
+              //   new WaitCommand(VisionConstants.kLimelightOffDelay),
+              //   new InstantCommand(() -> m_robotDrive.setLimelightLEDsOff()))
+      );
+
+
 
     // DRIVER 2
 
     // LEDs
     m_manipulatorController.leftBumper().onTrue(new InstantCommand(() -> m_LEDs.setPiece(), m_LEDs));
     m_manipulatorController.back().onTrue(new InstantCommand(() -> m_LEDs.off(), m_LEDs))
-      .debounce(1.0).onTrue(new RunCommand(() -> m_LEDs.flashing(), m_LEDs)); //Does Not Work
+      .debounce(1.0).onTrue(new RunCommand(() -> m_LEDs.flashing(), m_LEDs)); // TODO: Optimize
 
     // m_manipulatorController.back().onTrue(new InstantCommand(() -> m_LEDs.off(), m_LEDs)).
     //   debounce(0.5).onTrue(new RunCommand(() -> m_LEDs.cycle(), m_LEDs));
@@ -310,7 +371,7 @@ public class RobotContainer {
         m_intake));
 
     // Ground Intake
-      //Down and iIntake Pickup
+      //Down and Intake Pickup
     m_manipulatorController.a().whileTrue(
         new RunCommand(() -> m_groundJoint.groundJointPosition(Constants.GroundIntakeConstants.kOutPosition), m_groundJoint)
         .alongWith(new RunCommand(() -> m_groundIntake.groundIntakePickUp(), m_groundIntake)));
@@ -319,23 +380,27 @@ public class RobotContainer {
       //Intake PickUp
     m_manipulatorController.x().whileTrue(new RunCommand(() -> m_groundIntake.groundIntakePickUp(), m_groundIntake));
       //Intake Reverse
-    m_manipulatorController.y().whileTrue(new RunCommand(() -> m_groundIntake.groundIntakeReverse(), m_groundIntake));
+    m_manipulatorController.y().whileTrue(new RunCommand(() -> m_groundIntake.groundIntakeShoot(), m_groundIntake));
       //Down
     m_manipulatorController.b().onTrue(new RunCommand(() -> m_groundJoint.groundJointPosition(GroundIntakeConstants.kOutPosition), m_groundJoint));
-    
-    // m_manipulatorController.b().onTrue(new 
-    //   RunCommand(() -> m_groundJoint.groundJointPosition(Constants.GroundIntakeConstants.kInPosition), m_groundJoint));
-    // m_manipulatorController.leftTrigger().whileTrue(new RunCommand(() -> m_groundIntake.groundIntakeShoot(), m_groundIntake));
+      //Shoot Position
+    m_manipulatorController.leftTrigger().whileTrue(new RunCommand(() -> m_groundJoint.groundJointPosition(GroundIntakeConstants.kShootPosition), m_groundJoint));
+    //TODO: Add setpoint that +/- "1" depending on staring pos of groundJoint
 
-    // Arm Manual Control
-    m_manipulatorController.leftStick().toggleOnTrue( new RunCommand(
+    // Arm / Ground Joint Manual Control
+    m_manipulatorController.leftStick().toggleOnTrue(new RunCommand(
           () -> m_arm.raiseArm(
               -MathUtil.applyDeadband(m_manipulatorController.getLeftY()*Constants.ArmConstants.kArmMaxOutput, OIConstants.kArmDeadband)),
-          m_arm)); 
+          m_arm)
+        .alongWith(new InstantCommand(
+          () -> m_LEDs.setColor(m_LEDs.WHITE), m_LEDs)))
 
-    // m_manipulatorController.leftTrigger().toggleOnTrue(new RunCommand(() -> 
-    //       m_groundJoint.groundJointSpeed(MathUtil.applyDeadband(-m_manipulatorController.getLeftY()*GroundIntakeConstants.kMaxManualGroundJointSpeed, OIConstants.kIntakeDeadband)), m_groundJoint));
-    
+      .debounce(0.5).toggleOnTrue(new RunCommand(
+          () -> m_groundJoint.groundJointSpeed(
+              MathUtil.applyDeadband(-m_manipulatorController.getLeftY()*GroundIntakeConstants.kMaxManualGroundJointSpeed, OIConstants.kIntakeDeadband)),
+          m_groundJoint)
+        .alongWith(new RunCommand(
+          () -> m_LEDs.flashing(m_LEDs.WHITE), m_LEDs)));     
 
 
     // Test Controller

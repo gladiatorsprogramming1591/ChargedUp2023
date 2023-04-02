@@ -28,9 +28,9 @@ public class C1TwoPieceRED extends SequentialCommandGroup {
 
         PathPlannerTrajectory m_firstPath = PathPlanner.loadPath("Cone Score 1", 
             new PathConstraints(2, 3));
-            PathPlannerTrajectory m_secondPath = PathPlanner.loadPath("Cone Reverse 1", 
-            new PathConstraints(2, 1));
-        PathPlannerTrajectory m_thirdPath = PathPlanner.loadPath("Cube to 2 from 1", 
+        // PathPlannerTrajectory m_secondPath = PathPlanner.loadPath("Cone Reverse 1", 
+        //     new PathConstraints(2, 1));
+        PathPlannerTrajectory m_thirdPath = PathPlanner.loadPath("Cube to 2 from 1 Grid", 
             new PathConstraints(2, 2.2));
         PathPlannerTrajectory m_forthPath = PathPlanner.loadPath("Balance from 2 RED", 
             new PathConstraints(2.5, 2.5));
@@ -42,12 +42,15 @@ public class C1TwoPieceRED extends SequentialCommandGroup {
         
         addCommands(
             new InstantCommand(() -> intakeSubsystem.intakeOn(Constants.IntakeConstants.kIntakePickUp), intakeSubsystem),
-            new ArmToPositionWithEnd(armSubsystem, armPositions.LVLTRE).withTimeout(1.6),
-            driveSubsystem.followTrajectoryCommand(m_firstPath, true),
+            new ArmToPositionWithEnd(armSubsystem, armPositions.LVLTRE).withTimeout(1.40),
+            new FollowPathWithEvents(
+                driveSubsystem.followTrajectoryCommand(m_firstPath, true),
+                m_firstPath.getMarkers(),
+                Constants.AutoConstants.AUTO_EVENT_MAP),
             new RunCommand(() -> intakeSubsystem.intakeOn(Constants.IntakeConstants.kIntakeReverse), intakeSubsystem).withTimeout(.25),
             // new WaitCommand(0.5),
-            driveSubsystem.followTrajectoryCommand(m_secondPath, false),
-            new InstantCommand(() -> intakeSubsystem.intakeOff()),
+            // driveSubsystem.followTrajectoryCommand(m_secondPath, false),
+            // new InstantCommand(() -> intakeSubsystem.intakeOff()),
             new FollowPathWithEvents(
                 driveSubsystem.followTrajectoryCommand(m_thirdPath, false),
                 m_thirdPath.getMarkers(),
@@ -56,10 +59,11 @@ public class C1TwoPieceRED extends SequentialCommandGroup {
                 .alongWith(new InstantCommand(() -> LED.setColor(LED.BLUE))), // TODDO: improve intake constant names
             new FollowPathWithEvents(
                 driveSubsystem.followTrajectoryCommand(m_forthPath, false),
-                m_thirdPath.getMarkers(),
+                m_forthPath.getMarkers(),                                                   //No markers
                 Constants.AutoConstants.AUTO_EVENT_MAP),
             new DriveToLevel(driveSubsystem)
                 .alongWith(new RunCommand(() -> LED.cycle()))
+                // .alongWith(new ) //TODO: Add 'groundJoint in' runCommand to prevent joint from comming out (PathPlanner Markers Issue)
             
             // new ParallelCommandGroup(new ArmToPositionWithEnd(armSubsystem, armPositions.HOME).withTimeout(2.0),
             //     driveSubsystem.followTrajectoryCommand(m_thirdPath, true))

@@ -18,6 +18,9 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.util.WPIUtilJNI;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SPI;
@@ -32,6 +35,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants;
 import frc.robot.Constants.CANIDConstants;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.VisionConstants;
 import frc.utils.SwerveUtils;
 
 public class DriveSubsystem extends SubsystemBase {
@@ -74,10 +78,39 @@ public class DriveSubsystem extends SubsystemBase {
   // Odometry class for tracking robot pose
   SwerveDriveOdometry m_odometry;
   private int count = 0;
+  private int tvCount = 0;
   private final PIDController m_rollPidController = new PIDController(0.0055, 0.00008, 0.0007); // 3/9 kp 0.005  2/15 kp 0.005 kd 0.001  1/21 ki:0.0055 kd: 0.0025
   private final PIDController m_rotPidController = new PIDController(0.01, 0.000, 0.000);
-
+  private final PIDController m_rotVisionPidController = new PIDController(0.020, 0.0, 0.002);
+  private final PIDController m_strafeVisionPidController = new PIDController(0.040, 0.0, 0.0);
   private final Trigger m_slowDriveButton;
+
+  NetworkTable table; 
+  NetworkTableEntry tx; 
+  NetworkTableEntry ty; 
+  NetworkTableEntry ta; 
+  NetworkTableEntry tv; 
+
+  double x = 0.0; 
+  double y = 0.0; 
+  double area = 0.0; 
+  double v = 0.0; 
+  double rotVisionSetpoint = 0.0; 
+  double rotVisionPieceOffset = 0.0;
+  double strafeVisionSetpoint = 0.0;
+  double strafeVisionPieceOffset = 0.0;
+
+  // double target = 0.0;
+  // double tLength = 0.0;
+  double originaltx = 0.0;
+  // double newtx = 0.0;
+  double txPast = 0.0;
+  double txDelta = 0.0;
+  double rotSpeed = 0.0;
+  
+  double txEstimated = 0.0;
+
+  boolean txRejected = false;
 
   /** Creates a new DriveSubsystem. */
   public DriveSubsystem(Trigger slowDriveButton) {
@@ -94,6 +127,7 @@ public class DriveSubsystem extends SubsystemBase {
     m_slowDriveButton = slowDriveButton;
     m_rotPidController.enableContinuousInput(-180, 180);
     zeroHeading();
+    table = NetworkTableInstance.getDefault().getTable("limelight");
   }
 
   @Override
@@ -113,9 +147,15 @@ public class DriveSubsystem extends SubsystemBase {
         m_field.setRobotPose(m_odometry.getPoseMeters());
 
     SmartDashboard.putNumber("Heading", m_odometry.getPoseMeters().getRotation().getDegrees());
-    SmartDashboard.putNumber("CurrentRoll", m_navX.getRoll());
+    SmartDashboard.putNumber("CurrentPitch", m_navX.getRoll());
     // SmartDashboard.putNumber("xTrajSP", xTrajPID.getSetpoint());
     // SmartDashboard.putNumber("xTrajPosErr", xTrajPID.getPositionError());
+
+    // Vision
+    SmartDashboard.putNumber("txCurrent", table.getEntry("tx").getDouble(0.0));
+    SmartDashboard.putNumber("txPast", txPast);
+    SmartDashboard.putBoolean("txRejected", txRejected);
+    SmartDashboard.putNumber("txEstimated", txEstimated);
   }
 
   /**
@@ -223,7 +263,8 @@ public class DriveSubsystem extends SubsystemBase {
       
       xSpeedCommanded = m_currentTranslationMag * Math.cos(m_currentTranslationDir);
       ySpeedCommanded = m_currentTranslationMag * Math.sin(m_currentTranslationDir);
-      m_currentRotation = m_rotLimiter.calculate(rot);
+      if (!rotException) m_currentRotation = m_rotLimiter.calculate(rot);
+      else m_currentRotation = rot;
 
 
     } else {
@@ -385,5 +426,70 @@ public class DriveSubsystem extends SubsystemBase {
       () -> drive(speed,0,0,false), 
       () -> drive(0,0,0,false),
       this);
+  }
+
+  public void setLimelightLEDsOn(){
+    NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(3);
+  }
+
+  public void setLimelightLEDsOff(){
+    NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(1);
+  }
+
+  public void setVisionOriginaltx(){
+    txPast = table.getEntry("tx").getDouble(0.0);
+    txRejected = false;
+  }
+
+  public double getVisionRotSpeed(){
+    if (table.getEntry("tv").getDouble(0.0) == 0.0){
+      if (++tvCount %10 == 0) {
+        txPast = 0.0;
+      }
+    } else tvCount = 0; // When tv is 1
+    
+    // Addresses which target to prioritize using smartTargets
+    // double targetHalf = table.getEntry(VisionConstants.tLength).getDouble(0.0) / 2;
+    // // rotVisionSetpoint = 0.0;
+
+    // if (originaltx > 0){ // target center to the right (cam relative)
+    //   // // newtx = originaltx + targetHalf;
+    //   // rotVisionSetpoint = -targetHalf;
+
+    // } else if (originaltx < 0){ // target center to the left (cam relative)
+    //   // // newtx = originaltx - targetHalf;
+    //   // rotVisionSetpoint = targetHalf;
+    // }
+
+
+    // Addresses Target Switching using singleTarget
+    txDelta = table.getEntry("tx").getDouble(0.0) - txPast;
+    if ((txDelta > VisionConstants.kDeltaThreshhold) || (txDelta < -VisionConstants.kDeltaThreshhold)){
+      if (txRejected = false) {
+        txEstimated = txPast;
+        txRejected = true;
+      }
+      rotSpeed = MathUtil.clamp(m_rotVisionPidController.calculate(txEstimated, rotVisionSetpoint), 
+      -DriveConstants.maxVisionRotSpeed, DriveConstants.maxVisionRotSpeed);
+      txEstimated = txEstimated*0.9; // reduced 10% each loop
+    } else {
+    txRejected = false;
+    rotSpeed = MathUtil.clamp(m_rotVisionPidController.calculate(table.getEntry("tx").getDouble(0.0), rotVisionSetpoint), 
+      -DriveConstants.maxVisionRotSpeed, DriveConstants.maxVisionRotSpeed);
+      txPast = table.getEntry("tx").getDouble(0.0);
+      }
+
+    return rotSpeed;
+    
+  }
+
+  public double getVisionStrafeSpeed(){
+    // double heading = m_odometry.getPoseMeters().getRotation().getDegrees();
+    
+    // if (heading > DriveConstants.faceBackward - DriveConstants.kRobotHeadingTolerance 
+    //   && heading < -DriveConstants.faceBackward + DriveConstants.kRobotHeadingTolerance) {
+        return MathUtil.clamp(m_strafeVisionPidController.calculate(table.getEntry("tx").getDouble(0.0), strafeVisionSetpoint),
+        -DriveConstants.maxVisionStrafeSpeed, DriveConstants.maxVisionStrafeSpeed);
+    // } else return 0;
   }
 }

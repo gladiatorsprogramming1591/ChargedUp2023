@@ -11,6 +11,7 @@ public class LEDs extends SubsystemBase {
 
     private double m_degrees = -1; // Starts at Arduino default
 
+    // TODO: Add more colors (for Amperage status, manual modes, etc)
     public final double BLUE = 90;
     public final double YELLOW = 110;
     public final double PURPLE = 120;
@@ -23,7 +24,7 @@ public class LEDs extends SubsystemBase {
     boolean blink = false;
     double count = 0;
 
-    boolean called = false;
+    boolean isPurple = false;
 
 
 
@@ -44,11 +45,11 @@ public class LEDs extends SubsystemBase {
     }
 
     public void setPiece(){
-        if (called) {
-            called = false;
+        if (isPurple) {
+            isPurple = false;
             setColor(PURPLE);
         } else {
-            called = true;
+            isPurple = true;
             setColor(YELLOW);
         }
     }
@@ -64,12 +65,12 @@ public class LEDs extends SubsystemBase {
 
     public void off(){
         setColor(OFF);
-        called = false;
+        isPurple = false;
     }
 
     public void flashing(){
         if (++count %5 == 0) {      // 3%
-            if (called) {           // Previously Purple
+            if (isPurple) {           // Previously Purple
                 if (!blink){
                     blink = true;
                     setColor(PURPLE);
@@ -86,10 +87,6 @@ public class LEDs extends SubsystemBase {
                     setColor(OFF);    
                 }
             }
-
-            setColor(cycleState);
-            cycleState = cycleState + 9;
-            if (cycleState >= TEAL) cycleState = WHITE;
         }
         // if (++count %3 == 0) {
         //     if (called){
@@ -100,6 +97,18 @@ public class LEDs extends SubsystemBase {
         //     //     if (flashStateYellow == YELLOW) flashStateYellow = OFF;
         //     //     else flashStateYellow = YELLOW;
         // }
+    }
+
+    public void flashing(double color){
+        if (++count %5 == 0) {
+            if (!blink){
+                blink = true;
+                setColor(color);
+            } else {
+                blink = false;
+                setColor(OFF);    
+            }
+        }
     }
 
 }

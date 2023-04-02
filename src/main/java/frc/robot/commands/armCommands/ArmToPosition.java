@@ -6,10 +6,19 @@ import frc.robot.subsystems.MainIntakeSubsystem.ArmSubsystem;
 public class ArmToPosition extends CommandBase {
     private ArmSubsystem m_arm;
     private ArmSubsystem.armPositions m_targetPos;
+    private boolean m_keepRunning;
 
     public ArmToPosition(ArmSubsystem arm, ArmSubsystem.armPositions pos){
         m_arm = arm;
         m_targetPos = pos;
+        m_keepRunning = false;
+        addRequirements(m_arm);
+    }
+
+    public ArmToPosition(ArmSubsystem arm, ArmSubsystem.armPositions pos, boolean keepRunning){
+        m_arm = arm;
+        m_targetPos = pos;
+        m_keepRunning = keepRunning;
         addRequirements(m_arm);
     }
 
@@ -26,6 +35,6 @@ public class ArmToPosition extends CommandBase {
 
     @Override
     public void end(boolean isInterrupted){
-        m_arm.raiseArm(0);
+        if (!m_keepRunning) m_arm.raiseArm(0);
     }
 }
