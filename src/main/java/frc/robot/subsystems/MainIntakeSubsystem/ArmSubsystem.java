@@ -12,9 +12,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
-// import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax.IdleMode;
-// import com.revrobotics.RelativeEncoder;
 
 import java.util.EnumMap;
 import frc.robot.Constants.ArmConstants;
@@ -31,18 +29,10 @@ public class ArmSubsystem extends SubsystemBase{
         
     private final CANSparkMax armMotorLeft = new CANSparkMax(Constants.CANIDConstants.kLeftArmCANId, MotorType.kBrushless);
     private final CANSparkMax armMotorRight = new CANSparkMax(Constants.CANIDConstants.kRightArmCANId, MotorType.kBrushless);
-
-    // private final SparkMaxPIDController armPID = armMotorLeft.getPIDController(); 
-
-    // private final ProfiledPIDController armPID = 
-    //     new ProfiledPIDController(ArmConstants.kArmP, ArmConstants.kArmI, ArmConstants.kArmD, 
-    //     new Constraints(ArmConstants.kArmMaxVel, ArmConstants.kArmMaxAcc));
-    
-    // private final RelativeEncoder armEncoder = armMotorLeft.getEncoder(); 
     
     private final DutyCycleEncoder armAbsEncoder = new DutyCycleEncoder(0);
 
-    // EnumMap<armPositions, Double> mapRelative = new EnumMap<>(armPositions.class); 
+    double m_speed = 0.0;
 
     EnumMap<armPositions, Double> mapAbs = new EnumMap<>(armPositions.class);
 
@@ -51,14 +41,6 @@ public class ArmSubsystem extends SubsystemBase{
     public ArmSubsystem(){
         armMotorLeft.setInverted(true);
         armMotorRight.follow(armMotorLeft, true); 
- 
-        // Adding elements to the Map
-        // using standard put() method
-        // mapRelative.put(armPositions.LVLONE, 23.0);
-        // mapRelative.put(armPositions.LVLTWO, 60.0);
-        // mapRelative.put(armPositions.LVLTRE, 77.5);
-        // mapRelative.put(armPositions.HOME, 0.0);
-        // mapRelative.put(armPositions.CONESTOW, 10.0);
 
         mapAbs.put(armPositions.HOME, ArmConstants.kOffset);
         mapAbs.put(armPositions.CONESTOW, ArmConstants.kCONESTOW);
@@ -66,14 +48,7 @@ public class ArmSubsystem extends SubsystemBase{
         mapAbs.put(armPositions.LVLTWO, ArmConstants.kLVLTWO);
         mapAbs.put(armPositions.CONESINGLE, ArmConstants.kCONESINGLE); // Single Substation
         mapAbs.put(armPositions.LVLTRE, ArmConstants.kLVLTRE); //At hard stop:
-        // .235
         
-        // armPID.setP(ArmConstants.kArmP);
-        // armPID.setI(ArmConstants.kArmI);
-        // armPID.setD(ArmConstants.kArmD);
-        // armPID.setFF(ArmConstants.kArmFF);
-        // armPID.setOutputRange(ArmConstants.kArmMinOutput, ArmConstants.kArmMaxOutput);
-
         armMotorLeft.setIdleMode(IdleMode.kBrake);
         armMotorRight.setIdleMode(IdleMode.kBrake);
 
@@ -91,15 +66,6 @@ public class ArmSubsystem extends SubsystemBase{
      * - setSmartMotionAllowedClosedLoopError() will set the max allowed
      * error for the pid controller in Smart Motion mode
      */
-    // int smartMotionSlot = 0;
-    // armPID.setSmartMotionMaxVelocity(ArmConstants.kArmMaxVel, smartMotionSlot); // not used
-    // armPID.setSmartMotionMinOutputVelocity(ArmConstants.kArmMinVel, smartMotionSlot); // not used
-    // armPID.setSmartMotionMaxAccel(ArmConstants.kArmMaxAcc, smartMotionSlot);
-    // armPID.setSmartMotionAllowedClosedLoopError(ArmConstants.kAllowedErrRelative, smartMotionSlot);
-
-    // SmartDashboard.putNumber("Arm base position",baseEncoderPosition);
-    // SmartDashboard.putNumber("Arm Enc", armMotorLeft.getEncoder().getPosition());
-
     }
 
     @Override
@@ -107,21 +73,18 @@ public class ArmSubsystem extends SubsystemBase{
         SmartDashboard.putNumber("Arm Relative Enc", armMotorLeft.getEncoder().getPosition());
         SmartDashboard.putNumber("ArmABS Absolute", armAbsEncoder.getAbsolutePosition()); 
         SmartDashboard.putNumber("Arm oCurrent", armMotorLeft.getOutputCurrent());
+        SmartDashboard.putNumber("Arm Motor Speed", m_speed);
         // SmartDashboard.putNumber("ArmABS Offset", armAbsEncoder.getPositionOffset());  
         //   Might use global that is set by drive periodic to indicate if driving too fast.
-    }
 
-    // public void raiseArmRelative(armPositions position){
-    //     if (((armEncoder.getPosition() < 0) && (position == armPositions.HOME)) ||
-    //         ((armEncoder.getPosition() > ArmConstants.kMaxHeightRelative) && (position == armPositions.LVLTRE))) {
-    //         armMotorLeft.set(0);
-    //         return;
-    //     }
-    //     double ref = mapRelative.get(position);
-    //     SmartDashboard.putNumber("Arm Target Pos", ref);
-    //     armPID.setReference(ref, CANSparkMax.ControlType.kPosition);
-    //     armPID.setFeedbackDevice(armEncoder);
-    // }
+        m_speed = armMotorLeft.getEncoder().getVelocity();
+
+        if (((armAbsEncoder.getAbsolutePosition() < ArmConstants.kMinHeightAbs) && (m_speed < 0)) ||
+            ((armAbsEncoder.getAbsolutePosition() > ArmConstants.kMaxHeightAbs) && (m_speed > 0))) {
+            armMotorLeft.set(0);
+            }
+
+    }
 
     public void raiseArmAbs(armPositions position){
         if (((armAbsEncoder.getAbsolutePosition() < ArmConstants.kMinHeightAbs) && (position == armPositions.HOME)) ||

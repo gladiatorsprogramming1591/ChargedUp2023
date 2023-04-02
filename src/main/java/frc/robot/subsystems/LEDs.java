@@ -11,6 +11,7 @@ public class LEDs extends SubsystemBase {
 
     private double m_degrees = -1; // Starts at Arduino default
 
+    // TODO: Add more colors (for Amperage status, manual modes, etc)
     public final double BLUE = 90;
     public final double YELLOW = 110;
     public final double PURPLE = 120;
@@ -96,6 +97,18 @@ public class LEDs extends SubsystemBase {
         //     //     if (flashStateYellow == YELLOW) flashStateYellow = OFF;
         //     //     else flashStateYellow = YELLOW;
         // }
+    }
+
+    public void flashing(double color){
+        if (++count %5 == 0) {
+            if (!blink){
+                blink = true;
+                setColor(color);
+            } else {
+                blink = false;
+                setColor(OFF);    
+            }
+        }
     }
 
 }

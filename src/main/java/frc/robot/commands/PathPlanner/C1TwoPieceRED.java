@@ -42,8 +42,11 @@ public class C1TwoPieceRED extends SequentialCommandGroup {
         
         addCommands(
             new InstantCommand(() -> intakeSubsystem.intakeOn(Constants.IntakeConstants.kIntakePickUp), intakeSubsystem),
-            new ArmToPositionWithEnd(armSubsystem, armPositions.LVLTRE).withTimeout(1.6),
-            driveSubsystem.followTrajectoryCommand(m_firstPath, true),
+            new ArmToPositionWithEnd(armSubsystem, armPositions.LVLTRE).withTimeout(1.40),
+            new FollowPathWithEvents(
+                driveSubsystem.followTrajectoryCommand(m_firstPath, true),
+                m_firstPath.getMarkers(),
+                Constants.AutoConstants.AUTO_EVENT_MAP),
             new RunCommand(() -> intakeSubsystem.intakeOn(Constants.IntakeConstants.kIntakeReverse), intakeSubsystem).withTimeout(.25),
             // new WaitCommand(0.5),
             // driveSubsystem.followTrajectoryCommand(m_secondPath, false),
@@ -56,7 +59,7 @@ public class C1TwoPieceRED extends SequentialCommandGroup {
                 .alongWith(new InstantCommand(() -> LED.setColor(LED.BLUE))), // TODDO: improve intake constant names
             new FollowPathWithEvents(
                 driveSubsystem.followTrajectoryCommand(m_forthPath, false),
-                m_thirdPath.getMarkers(),
+                m_forthPath.getMarkers(),                                                   //No markers
                 Constants.AutoConstants.AUTO_EVENT_MAP),
             new DriveToLevel(driveSubsystem)
                 .alongWith(new RunCommand(() -> LED.cycle()))

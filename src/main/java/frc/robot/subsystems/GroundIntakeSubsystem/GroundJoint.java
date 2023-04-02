@@ -19,7 +19,7 @@ public class GroundJoint extends SubsystemBase{
 
     double m_encoderPos;
     boolean atPosition;
-    // int positionCheckCount = 0;
+    double currentPosition;
 
     public GroundJoint(){
         GroundIntakeJoint.restoreFactoryDefaults();
@@ -61,7 +61,7 @@ public class GroundJoint extends SubsystemBase{
 
         if (position == GroundIntakeConstants.kInPosition){
             GroundIntakePID.setP(GroundIntakeConstants.kInP);
-            if (m_encoderPos > (GroundIntakeConstants.kInPosition - GroundIntakeConstants.kJointTolerance*10.0)){
+            if (m_encoderPos > (GroundIntakeConstants.kInPosition - GroundIntakeConstants.kJointTolerance*10.0)){ // Stops sooner before setpoint to protect "hardstop" (Gearbox)
                 atPosition = true;
             }
         } else  {
@@ -69,6 +69,20 @@ public class GroundJoint extends SubsystemBase{
             GroundIntakePID.setP(GroundIntakeConstants.kOutP);
             if (m_encoderPos < (GroundIntakeConstants.kOutPosition + GroundIntakeConstants.kJointTolerance)){
                 atPosition = true;
+            }
+        } else {
+        if (position == GroundIntakeConstants.kShootPosition){
+            if (GroundIntakeJoint.getEncoder().getPosition() > (GroundIntakeConstants.kOutPosition / 2)){    // if Starting from inPosition
+                GroundIntakePID.setP(GroundIntakeConstants.kInP);
+                if (m_encoderPos < (GroundIntakeConstants.kShootPosition - GroundIntakeConstants.kShootJointTolerance)){
+                    atPosition = true;
+                }    
+            } else {
+                GroundIntakePID.setP(GroundIntakeConstants.kOutP);
+                if (m_encoderPos < (GroundIntakeConstants.kShootPosition + GroundIntakeConstants.kShootJointTolerance)){
+                    atPosition = true;
+                }  
+            }
             }
         }
         }

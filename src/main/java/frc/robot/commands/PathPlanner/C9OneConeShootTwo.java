@@ -10,16 +10,16 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
 import frc.robot.commands.armCommands.ArmToPosition;
-import frc.robot.commands.driveCommands.DriveToLevel;
+// import frc.robot.commands.driveCommands.DriveToLevel;
 import frc.robot.subsystems.LEDs;
 import frc.robot.subsystems.DriveSubsystem.DriveSubsystem;
 import frc.robot.subsystems.MainIntakeSubsystem.ArmSubsystem;
 import frc.robot.subsystems.MainIntakeSubsystem.IntakeSubsystem;
 import frc.robot.subsystems.MainIntakeSubsystem.ArmSubsystem.armPositions;
 
-public class C9TwoPiece extends SequentialCommandGroup {
+public class C9OneConeShootTwo extends SequentialCommandGroup {
 
-    public C9TwoPiece(DriveSubsystem driveSubsystem, 
+    public C9OneConeShootTwo(DriveSubsystem driveSubsystem, 
                         ArmSubsystem armSubsystem,
                         IntakeSubsystem intakeSubsystem,
                         LEDs LED
@@ -27,10 +27,10 @@ public class C9TwoPiece extends SequentialCommandGroup {
 
         PathPlannerTrajectory m_firstPath = PathPlanner.loadPath("Cone Score 9", 
             new PathConstraints(2, 3));
-        PathPlannerTrajectory m_secondPath = PathPlanner.loadPath("Full Drive to Cube 9", 
-            new PathConstraints(2, 1.6));
-        PathPlannerTrajectory m_thirdPath = PathPlanner.loadPath("Balance from 8 RED", 
-            new PathConstraints(3.0, 3.0));
+        PathPlannerTrajectory m_secondPath = PathPlanner.loadPath("Full Drive to Shoot 9", 
+            new PathConstraints(4, 1.65));
+        // PathPlannerTrajectory m_thirdPath = PathPlanner.loadPath("Balance from 8 RED", 
+        //     new PathConstraints(3.0, 3.0));
         
         addCommands(
             new InstantCommand(() -> intakeSubsystem.intakeOn(Constants.IntakeConstants.kIntakePickUp), intakeSubsystem),
@@ -43,14 +43,14 @@ public class C9TwoPiece extends SequentialCommandGroup {
             new FollowPathWithEvents(
                 driveSubsystem.followTrajectoryCommand(m_secondPath, false),
                 m_secondPath.getMarkers(),
-                Constants.AutoConstants.AUTO_EVENT_MAP),
-            new InstantCommand(() -> LED.setColor(LED.BLUE)),
-            new FollowPathWithEvents(
-                driveSubsystem.followTrajectoryCommand(m_thirdPath, false), 
-                m_thirdPath.getMarkers(),
-                Constants.AutoConstants.AUTO_EVENT_MAP),
-            new DriveToLevel(driveSubsystem)
-                .alongWith(new RunCommand(() -> LED.cycle()))
+                Constants.AutoConstants.AUTO_EVENT_MAP)
+            // new InstantCommand(() -> LED.setColor(LED.BLUE)),
+            // new FollowPathWithEvents(
+            //     driveSubsystem.followTrajectoryCommand(m_thirdPath, false), 
+            //     m_thirdPath.getMarkers(),
+            //     Constants.AutoConstants.AUTO_EVENT_MAP),
+            // new DriveToLevel(driveSubsystem)
+            //     .alongWith(new RunCommand(() -> LED.cycle()))
             );
     }
 }

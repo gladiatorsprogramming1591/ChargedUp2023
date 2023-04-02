@@ -24,11 +24,11 @@
     },
     {
       "anchorPoint": {
-        "x": 1.68,
+        "x": 1.73,
         "y": 0.5
       },
       "prevControl": {
-        "x": 1.68,
+        "x": 1.73,
         "y": 0.5
       },
       "nextControl": null,
@@ -45,5 +45,12 @@
       }
     }
   ],
-  "markers": []
+  "markers": [
+    {
+      "position": 0.0,
+      "names": [
+        "Arm LVLTRE"
+      ]
+    }
+  ]
 }

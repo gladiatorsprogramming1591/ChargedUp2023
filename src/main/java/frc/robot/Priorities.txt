@@ -1,62 +1,53 @@
 Main TODO:
--Ground intake shoot button?
--Vision:
-    -Limelight currently locked on level 2 position
+-Ground intake shoot button (Shoot pos method needs improvment)
+-Go through 'TODOs'
+-Set reminder to straighten out modules before running any auto (Systems Check Responsibility)
+TEST: Manual Ground/Arm button debounce and corresponding LEDs
+
+Sensors & 3D printed parts:
+    Add Distance Sensor to determine alignment to grid
     -Invesitgate limelight low mount
+
+Current(Amps):
+    -Use current to know if cube is picked-up during auto
+        (eg. if current > "5" while intake running at any point, continue auto. else, ...)
+    -If main or ground intake current > "5", flash LEDs some color
+
+-Vision:
+    -Look for more reflective tape (Warehouse?)
+    -Limelight currently locked on level 2 position
     -Switch target filtering ("debouce")
-        idea: PID value changes by large amount, ignore for second to give time for original target to return
-            -Update change in "txPast" to update approximate target tx relative to pasttx (delta)
+        idea: Update change in "txPast" to update approximate target tx relative to pasttx (delta)
                 -Update sorting OR get smartTargets working to choose desired peg
         idea 2: Use Area? Delta of ty?
-    -Limelight target validity for when target is lost for breif moment (2 small deadzones when arm LVLTRE)
-    -Target sorting ("closest" doesn't work reliably)
+    -Target sorting
     -Adjust Limelight prioritization of targets via its web interface
     -Add Vision PID straff alignment to nodes (square up to grid using nodes 2 & 3 tx offsets from each other)
+    
 -Lower LVLTWO (needs bot, used infrequently)
--Speed up autonomous
-    -Single path for 'cone reverse' + 'drive to cube' while keeping marker (for HOME and intakeOff) in same spot
-        or sooner with higher accel/speed
 
 to account for its additional wheel slip
 1:  Autos
         New autos over cable protector:
             AUTO DESCRIPTION                                                    GOAL                POINTS      OPENING DURATION
-        -Score 2 high                                                       (for LVL3)               (6+6 = 12p)    (~15s)
         -Score 1 high w/ +1 and balance                                     (for Score)    (6+(8-12)+5 = 19-23p)    (~15+3s)
         -Score hybrid then shoot 2 cubes into community to link             (for RP)           (3+2+2+[5] = 12p)    (~15+5s)
-        -Score 1 high then shoot 2 cubes into community                     (for LVL3)             (6+5+5 = 16p)    (~15+10s)
         -Score 1 high, shoot 1 to community, race nearest Loading Zone      (for LVL3)         (6+5+5+[5] = 21p)    (~15+7s)
 
-        Test marker commands Auto (w/o path)
+        -Improve C9OneConeShootTwo Auto's speed (by seperating cable-protector path)
 
-        Arm down parallel to joint out timing needs improvement
-        Add auto that only drives out of community after time set in SmartDashboard
-        Different autos for real and wood charge stations
-        4/6 one cone auto level
-        Non-balance autos
+        -Arm down parallel to joint out timing needs improvement
+        -Add auto that only drives out of community after time set in SmartDashboard
 
-    Fix Flashing LEDs method
 
-    Research April tags with Limelight:
-        -New branch
-        -convert swerveDriveOdometry to swerveDrivePoseEstimator
-        -update swerveDrivePoseEstimator with vision targets
-        -teleop auto score using April tags & vision 
-
-    Ground Intake
-        -Add IntakeJoint Default Command
-        -IntakeHandoff
-            -ArmJoint kP of PID increase
-            -replace ".alongWith" with raceGroup once groundJointToPosition has a proper end.
-                This way the handoff will not happen until arm is at position, and both commands end before handoff.
-        -First button: onTrue - lower and run intake.    onFalse - raise arm and turn off intake.
+April Tags:
+    -Treat as reflective target and use distance/ty to balance?
 
             
 
 
 Requires Testing:
     Vision
-        Test vision rot scoring
         confirm if 2nd level node reflective tape is visible on chargeStation
     Autos
         -Lengthen 3 and 7 one piece auto paths into charge station
@@ -65,24 +56,29 @@ Requires Testing:
 
 
 Tested Autos:
-    OneConeAuto3
-    OneCubeAuto3Hybrid
-    OnePieceAuto5Level
-    OnePieceAuto6Level
-    OnePieceAuto7
-    TwoPieceAuto9 (needs improvement over cable protector)
+    OneConeScoreSolo
+    OneCubeScoreSolo
+    C3OneCone
+    C3OneCubeHybrid
+    C5OneCubeLevel
+    C4C6OneConeLevel
+    C7OneCone
+    C9TwoPiece (+balance)
+    C9OneConeShootTwo
 
 
 
 
 Low Priority:
+Research April tags with Limelight:
+    -New branch
+    -convert swerveDriveOdometry to swerveDrivePoseEstimator
+    -update swerveDrivePoseEstimator with vision targets
+    -teleop auto score using April tags & vision 
 
-    Drive:
-        DriveToAngle: Angle could be positive or negative, need to handle both
-        Should be positive if driving forward, negative if driving backward onto the power station ramp
+    -Different autos for real and wood charge stations
 
     Arm:
-        If driving too fast, lower arm to home
         If Arm is not at or going to kHOME, enable slow drive
 
     Sensors:
@@ -101,10 +97,30 @@ Low Priority:
 
 
 Completed:
--Finish Vision PID rot alignment to nodes
+New autos over cable protector:
+        AUTO DESCRIPTION                                                    GOAL                POINTS      OPENING DURATION
+    -Score 2 high                                                       (for LVL3)               (6+6 = 12p)    (~15s)
+    -Score 1 high then shoot 2 cubes into hybrid                        (for LVL3)             (6+5+5 = 16p)    (~15+10s)
+-Speed up autonomous
+    -Single path for 'cone reverse' + 'drive to cube' while keeping marker (for HOME and intakeOff) in same spot
+        or sooner with higher accel/speed
+Fix Flashing LEDs method
+Vision:
+    -Test vision rot scoring
+    -PID value changes by large amount, ignore for second to give time for original target to return (debounce)
+        (Limelight target validity for when target is lost for breif moment (2 small deadzones when arm LVLTRE))
+    -Finish Vision PID rot alignment to nodes
+Ground Intake
+    -Add IntakeJoint Default Command
+    -IntakeHandoff
+        -ArmJoint kP of PID increase
+        -replace ".alongWith" with raceGroup once groundJointToPosition has a proper end.
+            This way the handoff will not happen until arm is at position, and both commands end before handoff.
+    -First button: onTrue - lower and run intake.    onFalse - raise arm and turn off intake.
 -Change Limelight to Cam Mode
 Update HOME position w/ new bar-hardstop placement
 LEDPiece and interupts arm (conestow)
+-4/6 one cone auto level
     Ground Intake
         -Program CANIDs for the 3 ground intake motors
         -Ground Intake w/ PID and verify current limits
