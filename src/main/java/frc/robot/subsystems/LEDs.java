@@ -111,4 +111,16 @@ public class LEDs extends SubsystemBase {
         }
     }
 
+    public void flashing(double color, double frequency){
+        if (++count %frequency == 0) {
+            if (!blink){
+                blink = true;
+                setColor(color);
+            } else {
+                blink = false;
+                setColor(OFF);    
+            }
+        }
+    }
+
 }

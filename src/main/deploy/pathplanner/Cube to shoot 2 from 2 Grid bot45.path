@@ -2,15 +2,15 @@
   "waypoints": [
     {
       "anchorPoint": {
-        "x": 1.82,
-        "y": 4.95
+        "x": 2.12,
+        "y": 3.88
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.1160733310229185,
-        "y": 4.721467302763966
+        "x": 3.6741519560660922,
+        "y": 4.445201854895867
       },
-      "holonomicAngle": 180.0,
+      "holonomicAngle": 0.0,
       "isReversal": false,
       "velOverride": null,
       "isLocked": false,
@@ -24,19 +24,19 @@
     },
     {
       "anchorPoint": {
-        "x": 6.83,
-        "y": 4.35
+        "x": 6.99,
+        "y": 3.8
       },
       "prevControl": {
-        "x": 6.509023899748872,
-        "y": 4.356829278728747
+        "x": 6.508302628496257,
+        "y": 4.234957294984781
       },
       "nextControl": {
-        "x": 7.150976100251128,
-        "y": 4.343170721271252
+        "x": 6.508302628496257,
+        "y": 4.234957294984781
       },
-      "holonomicAngle": 180.0,
-      "isReversal": false,
+      "holonomicAngle": 135.0,
+      "isReversal": true,
       "velOverride": null,
       "isLocked": false,
       "isStopPoint": false,
@@ -49,15 +49,15 @@
     },
     {
       "anchorPoint": {
-        "x": 1.816588141846804,
-        "y": 4.23
+        "x": 2.42,
+        "y": 5.03
       },
       "prevControl": {
-        "x": 2.6096070277728627,
-        "y": 4.401311879645849
+        "x": 4.663909107669578,
+        "y": 5.575690546839394
       },
       "nextControl": null,
-      "holonomicAngle": 180.0,
+      "holonomicAngle": 0.0,
       "isReversal": false,
       "velOverride": null,
       "isLocked": false,
@@ -70,20 +70,23 @@
       }
     }
   ],
-  "maxVelocity": 2.0,
-  "maxAcceleration": 2.2,
-  "isReversed": null,
   "markers": [
     {
       "position": 0.1,
       "names": [
-        "ArmHOME then GroundIntakeOut and PickUp"
+        "GroundIntakeOut and PickUp"
       ]
     },
     {
-      "position": 1.13,
+      "position": 1.09,
       "names": [
-        "GroundIntakeTransferArmUp"
+        "ShootPosL3"
+      ]
+    },
+    {
+      "position": 2.0,
+      "names": [
+        "Shoot"
       ]
     }
   ]

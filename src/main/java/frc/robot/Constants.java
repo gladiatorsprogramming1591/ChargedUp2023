@@ -250,9 +250,7 @@ public final class Constants {
     public static final double kOutPosition = -13.35; // -13.1
     public static final double kInPosition = 0.0;
 
-    public static final double kInShootPosition = -8.0; // starting from inPosition
-    public static final double kShootPosition = -7.0; // setpoint
-    public static final double kOutShootPosition = -7.0; // starting from outPosition
+    public static final double kShootPosition = -7.0; // setpoint (executed from outPosition)
     public static final double kAutoShootPosition = -9.0;
 
     public static final double kJointTolerance = 0.10;

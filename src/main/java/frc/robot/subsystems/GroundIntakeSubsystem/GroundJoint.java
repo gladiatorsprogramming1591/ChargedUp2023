@@ -43,6 +43,13 @@ public class GroundJoint extends SubsystemBase{
         GroundIntakeJoint.set(speed); //TODO: Add soft limits
     }
 
+    public void groundJointEmergencyControl(double speed){
+
+        GroundIntakeJoint.set(speed);
+
+        this.zeroEncoder();
+    }
+
     public void groundJointOff(){
         GroundIntakeJoint.set(0);
     }
