@@ -28,9 +28,8 @@ import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.PathPlanner.C1NOLVLTwoPiece;
 import frc.robot.commands.PathPlanner.C1NOLVLTwoPieceAndCube;
-import frc.robot.commands.PathPlanner.C1ThreePieceRED;
-import frc.robot.commands.PathPlanner.C1TwoPieceBLUE;
-import frc.robot.commands.PathPlanner.C1TwoPieceRED;
+import frc.robot.commands.PathPlanner.C1ThreePiece;
+import frc.robot.commands.PathPlanner.C1TwoPiece;
 import frc.robot.commands.PathPlanner.C3OneCone;
 import frc.robot.commands.PathPlanner.C3OneCubeHybrid;
 import frc.robot.commands.PathPlanner.C5OneCubeLevel;
@@ -169,11 +168,11 @@ public class RobotContainer {
     m_autoChooser.setDefaultOption("OneCone ScoreSolo", new OneConeScoreSolo(m_robotDrive, m_arm, m_intake));
     m_autoChooser.addOption("OneCube ScoreSolo", new OneCubeScoreSolo(m_robotDrive, m_arm, m_intake));
 
-    m_autoChooser.addOption("C1 RED TwoPiece", new C1TwoPieceRED(m_robotDrive, m_arm, m_intake, m_LEDs));
-    m_autoChooser.addOption("C1 BLUE TwoPiece", new C1TwoPieceBLUE(m_robotDrive, m_arm, m_intake, m_LEDs));
+    m_autoChooser.addOption("C1 RED TwoPiece", new C1TwoPiece(true, m_robotDrive, m_arm, m_intake, m_LEDs));
+    m_autoChooser.addOption("C1 BLUE TwoPiece", new C1TwoPiece(false, m_robotDrive, m_arm, m_intake, m_LEDs));
     m_autoChooser.addOption("C1 TwoPiece NOLEVEL", new C1NOLVLTwoPiece(m_robotDrive, m_arm, m_intake, m_LEDs));
     m_autoChooser.addOption("C1 TwoPiece & Cube NOLEVEL", new C1NOLVLTwoPieceAndCube(m_robotDrive, m_arm, m_intake, m_LEDs));
-    m_autoChooser.addOption("C1 RED ThreePiece", new C1ThreePieceRED(m_robotDrive, m_arm, m_intake, m_LEDs));
+    m_autoChooser.addOption("C1 ThreePiece", new C1ThreePiece(true, m_robotDrive, m_arm, m_intake, m_LEDs));    // Add Blue Option if Charge Station behaves differently
 
     m_autoChooser.addOption("C3 OneCone", new C3OneCone(m_robotDrive, m_arm, m_intake));
     m_autoChooser.addOption("C3 OneCubeHybrid", new C3OneCubeHybrid(m_robotDrive, m_arm, m_intake));
@@ -189,11 +188,11 @@ public class RobotContainer {
 
   // Path with Events
   private void configureAutoCommands(){
-    Constants.AutoConstants.AUTO_EVENT_MAP.put("Intake PickUp", new InstantCommand(() -> m_intake.intakeOn(Constants.IntakeConstants.kIntakePickUp), m_intake));
+    Constants.AutoConstants.AUTO_EVENT_MAP.put("Intake PickUp", new InstantCommand(() -> m_intake.intakeOn(Constants.IntakeConstants.kConePickUp), m_intake));
     Constants.AutoConstants.AUTO_EVENT_MAP.put("IntakeOff", new InstantCommand(() -> m_intake.intakeOff(), m_intake));
     Constants.AutoConstants.AUTO_EVENT_MAP.put("Arm LVLTRE", new ArmToPosition(m_arm, armPositions.LVLTRE, false).withTimeout(2.0));
     Constants.AutoConstants.AUTO_EVENT_MAP.put("Arm LVLONE", new ArmToPosition(m_arm, armPositions.LVLONE, false).withTimeout(2.0));
-    Constants.AutoConstants.AUTO_EVENT_MAP.put("Intake Reverse", new RunCommand(() -> m_intake.intakeOn(Constants.IntakeConstants.kIntakeReverse), m_intake).withTimeout(.25));
+    Constants.AutoConstants.AUTO_EVENT_MAP.put("Intake Reverse", new RunCommand(() -> m_intake.intakeOn(Constants.IntakeConstants.kConeEject), m_intake).withTimeout(.25));
     Constants.AutoConstants.AUTO_EVENT_MAP.put("Arm HOME", new ArmToPositionWithEnd(m_arm, armPositions.HOME).withTimeout(2.0));
     Constants.AutoConstants.AUTO_EVENT_MAP.put("LED Cycle", new RunCommand(() -> m_LEDs.cycle()));
     Constants.AutoConstants.AUTO_EVENT_MAP.put("AutoLevel", new AutoLevel(m_robotDrive));
@@ -212,7 +211,7 @@ public class RobotContainer {
       new SequentialCommandGroup(
         new IntakeHandoff(m_groundIntake, m_groundJoint, m_intake),
         new ArmToPosition(m_arm, armPositions.LVLTRE)
-        .alongWith(new RunCommand(() -> m_intake.intakeOn(-IntakeConstants.kStallSpeed), m_intake)))
+        .alongWith(new RunCommand(() -> m_intake.intakeOn(-IntakeConstants.kIntakeStall), m_intake)))
       );
 
       Constants.AutoConstants.AUTO_EVENT_MAP.put("GroundIntakeShootPos", // TODO: optimize shooting pos, Change name
@@ -399,7 +398,7 @@ public class RobotContainer {
     m_manipulatorController.rightStick().whileTrue( new RunCommand(
         () -> m_intake.intakeStall(
             -m_manipulatorController.getRightY(),
-            Constants.IntakeConstants.kStallSpeed),
+            Constants.IntakeConstants.kIntakeStall),
         m_intake));
 
     // Ground Intake

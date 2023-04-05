@@ -34,10 +34,10 @@ public class OnePieceAuto4 extends SequentialCommandGroup {
 
         
         addCommands(
-            new InstantCommand(() -> intakeSubsystem.intakeOn(Constants.IntakeConstants.kIntakePickUp), intakeSubsystem),
+            new InstantCommand(() -> intakeSubsystem.intakeOn(Constants.IntakeConstants.kConePickUp), intakeSubsystem),
             new ArmToPositionWithEnd(armSubsystem, armPositions.LVLTRE).withTimeout(3.0),
             driveSubsystem.followTrajectoryCommand(m_firstPath, true),
-            new RunCommand(() -> intakeSubsystem.intakeOn(Constants.IntakeConstants.kIntakeReverse), intakeSubsystem).withTimeout(.25),
+            new RunCommand(() -> intakeSubsystem.intakeOn(Constants.IntakeConstants.kConeEject), intakeSubsystem).withTimeout(.25),
             driveSubsystem.followTrajectoryCommand(m_secondPath, false),
             new InstantCommand(() -> intakeSubsystem.intakeOff()),
             new ParallelCommandGroup(new ArmToPositionWithEnd(armSubsystem, armPositions.HOME).withTimeout(2.0)),

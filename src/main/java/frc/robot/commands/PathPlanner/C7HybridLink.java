@@ -26,7 +26,7 @@ public class C7HybridLink extends SequentialCommandGroup {
 
         
         addCommands(
-            new InstantCommand(() -> intakeSubsystem.intakeOn(Constants.IntakeConstants.kIntakeReverse), intakeSubsystem),
+            new InstantCommand(() -> intakeSubsystem.intakeOn(Constants.IntakeConstants.kConeEject), intakeSubsystem),
             new ArmToPosition(armSubsystem, armPositions.LVLONE, true).withTimeout(0.45),
             new FollowPathWithEvents(
                 driveSubsystem.followTrajectoryCommand(m_firstPath, true),

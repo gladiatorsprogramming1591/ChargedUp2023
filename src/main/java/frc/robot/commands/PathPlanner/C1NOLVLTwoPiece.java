@@ -46,10 +46,10 @@ public class C1NOLVLTwoPiece extends SequentialCommandGroup {
 
         
         addCommands(
-            new InstantCommand(() -> intakeSubsystem.intakeOn(Constants.IntakeConstants.kIntakePickUp), intakeSubsystem),
+            new InstantCommand(() -> intakeSubsystem.intakeOn(Constants.IntakeConstants.kConePickUp), intakeSubsystem),
             new ArmToPositionWithEnd(armSubsystem, armPositions.LVLTRE).withTimeout(1.6),
             driveSubsystem.followTrajectoryCommand(m_firstPath, true),
-            new RunCommand(() -> intakeSubsystem.intakeOn(Constants.IntakeConstants.kIntakeReverse), intakeSubsystem).withTimeout(.25),
+            new RunCommand(() -> intakeSubsystem.intakeOn(Constants.IntakeConstants.kConeEject), intakeSubsystem).withTimeout(.25),
             // new WaitCommand(0.5),
             driveSubsystem.followTrajectoryCommand(m_secondPath, false),
             new InstantCommand(() -> intakeSubsystem.intakeOff()),
@@ -57,7 +57,7 @@ public class C1NOLVLTwoPiece extends SequentialCommandGroup {
                 driveSubsystem.followTrajectoryCommand(m_thirdPath, false),
                 m_thirdPath.getMarkers(),
                 Constants.AutoConstants.AUTO_EVENT_MAP),
-            new RunCommand(() -> intakeSubsystem.intakeOn(IntakeConstants.kIntakePickUp), intakeSubsystem).withTimeout(0.25)
+            new RunCommand(() -> intakeSubsystem.intakeOn(IntakeConstants.kConePickUp), intakeSubsystem).withTimeout(0.25)
                 .alongWith(new InstantCommand(() -> LED.setColor(LED.BLUE))), // TODDO: improve intake constant names
             driveSubsystem.followTrajectoryCommand(m_forthPath, false),
             new ArmToPositionWithEnd(armSubsystem, armPositions.HOME).withTimeout(2.0),

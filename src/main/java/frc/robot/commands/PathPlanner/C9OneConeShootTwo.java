@@ -33,13 +33,13 @@ public class C9OneConeShootTwo extends SequentialCommandGroup {
         //     new PathConstraints(3.0, 3.0));
         
         addCommands(
-            new InstantCommand(() -> intakeSubsystem.intakeOn(Constants.IntakeConstants.kIntakePickUp), intakeSubsystem),
+            new InstantCommand(() -> intakeSubsystem.intakeOn(Constants.IntakeConstants.kConePickUp), intakeSubsystem),
             new ArmToPosition(armSubsystem, armPositions.LVLTRE, true).withTimeout(1.40),
             new FollowPathWithEvents(
                 driveSubsystem.followTrajectoryCommand(m_firstPath, true),
                 m_firstPath.getMarkers(),
                 Constants.AutoConstants.AUTO_EVENT_MAP),
-            new RunCommand(() -> intakeSubsystem.intakeOn(Constants.IntakeConstants.kIntakeReverse), intakeSubsystem).withTimeout(.25),
+            new RunCommand(() -> intakeSubsystem.intakeOn(Constants.IntakeConstants.kConeEject), intakeSubsystem).withTimeout(.25),
             new FollowPathWithEvents(
                 driveSubsystem.followTrajectoryCommand(m_secondPath, false),
                 m_secondPath.getMarkers(),
