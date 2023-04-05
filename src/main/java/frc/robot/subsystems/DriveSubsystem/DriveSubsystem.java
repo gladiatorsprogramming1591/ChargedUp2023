@@ -414,6 +414,36 @@ public class DriveSubsystem extends SubsystemBase {
         )
     );
   }
+    // Assuming this method is part of a drivetrain subsystem that provides the necessary methods
+  public Command followTrajectoryCommand(PathPlannerTrajectory traj, boolean isFirstPath,
+    double kpX, double kiX, double kdX,
+    double kpY, double kiY, double kdY,
+    double kpR, double kiR, double kdR) {
+    return new SequentialCommandGroup(
+        new InstantCommand(() -> {
+          // Reset odometry for the first path you run during auto
+          if(isFirstPath){
+              PathPlannerTrajectory transformed = PathPlannerTrajectory.transformTrajectoryForAlliance(traj, DriverStation.getAlliance());
+              this.resetOdometry(transformed.getInitialHolonomicPose());
+          }
+        }),
+        new PPSwerveControllerCommand(
+            traj, 
+            this::getPose, // Pose supplier
+            Constants.DriveConstants.kDriveKinematics, // SwerveDriveKinematics
+            new PIDController(kpX, kiX, kdX), // Forward/Backward X controller. Tune these values for your robot. Leaving them 0 will only use feedforwards.
+            new PIDController(kpY, kiY, kdY), // Strafe Y controller (usually the same values as X controller)
+            new PIDController(kpR, kiR, kdR), // Rotation controller. Tune these values for your robot. Leaving them 0 will only use feedforwards.
+            this::setModuleStates, // Module states consumer
+            true, // Should the path be automatically mirrored depending on alliance color. Optional, defaults to true
+            this // Requires this drive subsystem
+
+            //1 inch undershot Forward/Backward. Increasing Xkp and Xki increases this error
+            //TODO (requires bot): Adjust max vel and acc constaints
+        )
+    );
+  }
+
   // TODO: use profiled pid if needed
   public void TurnToTarget(double X, double Y, double angle, boolean rateLimit, boolean squaredInputs, double maxOutput){
     // double pidOut = MathUtil.clamp(m_rotPidController.calculate(-m_navX.getAngle()%360, angle), -0.30, 0.30);

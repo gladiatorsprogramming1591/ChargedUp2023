@@ -23,7 +23,7 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import frc.robot.Constants.GroundIntakeConstants;
+import frc.robot.Constants.GroundArmConstants;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.PathPlanner.C1NOLVLTwoPiece;
@@ -148,7 +148,7 @@ public class RobotContainer {
       new RunCommand(
         
             () -> m_groundIntake.groundIntakeSpeed(
-              GroundIntakeConstants.kDefaultSpeed),
+              GroundArmConstants.kDefaultSpeed),
             m_groundIntake));
 
     // REPLACED IN TELEOP INIT
@@ -204,9 +204,9 @@ public class RobotContainer {
         new ArmToPosition(m_arm, armPositions.HOME, true).withTimeout(1.0), 
         new ParallelCommandGroup(
           new ArmToPosition(m_arm, armPositions.HOME, false).withTimeout(0.6),
-          new RunCommand(() -> m_groundJoint.groundJointPosition(GroundIntakeConstants.kOutPosition), m_groundJoint)
+          new RunCommand(() -> m_groundJoint.groundJointPosition(GroundArmConstants.kOutPosition), m_groundJoint)
             .until(() -> m_groundJoint.groundJointAtPosition())
-            .alongWith(new RunCommand(() -> m_groundIntake.groundIntakeSpeed(GroundIntakeConstants.kAutoIntakePickUp), m_groundIntake)))));
+            .alongWith(new RunCommand(() -> m_groundIntake.groundIntakeSpeed(GroundArmConstants.kAutoIntakePickUp), m_groundIntake)))));
 
     Constants.AutoConstants.AUTO_EVENT_MAP.put("GroundIntakeTransferArmUp", 
       new SequentialCommandGroup(
@@ -215,30 +215,40 @@ public class RobotContainer {
         .alongWith(new RunCommand(() -> m_intake.intakeOn(-IntakeConstants.kStallSpeed), m_intake)))
       );
 
-      Constants.AutoConstants.AUTO_EVENT_MAP.put("GroundIntakeShootPos", // TODO: optimize shooting pos
-        new RunCommand(() -> m_groundJoint.groundJointPosition(Constants.GroundIntakeConstants.kAutoShootPosition),
+      Constants.AutoConstants.AUTO_EVENT_MAP.put("GroundIntakeShootPos", // TODO: optimize shooting pos, Change name
+        new RunCommand(() -> m_groundJoint.groundJointPosition(Constants.GroundArmConstants.kAutoFarShootPosition),
           m_groundJoint)
           // .until(() -> m_groundJoint.groundJointAtPosition()).withTimeout(1.5)
       );
 
       Constants.AutoConstants.AUTO_EVENT_MAP.put("ShootPosL3", 
-        new RunCommand(() -> m_groundJoint.groundJointPosition(Constants.GroundIntakeConstants.kShootPosition),
+        new RunCommand(() -> m_groundJoint.groundJointPosition(Constants.GroundArmConstants.kAutoHighShootPosition),
           m_groundJoint)
       );
 
-      Constants.AutoConstants.AUTO_EVENT_MAP.put("Shoot", //TODO: run while moving earlier in path to use robot's momentum 
+      Constants.AutoConstants.AUTO_EVENT_MAP.put("ShootPosL2", 
+        new RunCommand(() -> m_groundJoint.groundJointPosition(Constants.GroundArmConstants.kAutoMidShootPosition),
+          m_groundJoint)
+      );
+
+      Constants.AutoConstants.AUTO_EVENT_MAP.put("Shoot",
         new SequentialCommandGroup(
           // new RunCommand(() -> m_groundIntake.groundIntakePickUp(), m_groundIntake).withTimeout(0.10), // 2.95, 5.95 markers on C7
           new RunCommand(() -> m_groundIntake.groundIntakeShoot(), m_groundIntake)
         ));
 
+      Constants.AutoConstants.AUTO_EVENT_MAP.put("ShootToL2",
+        new SequentialCommandGroup(
+          new RunCommand(() -> m_groundIntake.groundIntakeSpeed(GroundArmConstants.kIntakeShootL2), m_groundIntake)
+        ));
+
       Constants.AutoConstants.AUTO_EVENT_MAP.put("GroundIntakeOut and PickUp",
-        new RunCommand(() -> m_groundJoint.groundJointPosition(GroundIntakeConstants.kOutPosition), m_groundJoint)
+        new RunCommand(() -> m_groundJoint.groundJointPosition(GroundArmConstants.kOutPosition), m_groundJoint)
           .until(() -> m_groundJoint.groundJointAtPosition())
-          .alongWith(new RunCommand(() -> m_groundIntake.groundIntakeSpeed(GroundIntakeConstants.kAutoIntakePickUp), m_groundIntake)));
+          .alongWith(new RunCommand(() -> m_groundIntake.groundIntakeSpeed(GroundArmConstants.kAutoIntakePickUp), m_groundIntake)));
 
       Constants.AutoConstants.AUTO_EVENT_MAP.put("GroundJointIn",
-        new RunCommand(() -> m_groundJoint.groundJointPosition(GroundIntakeConstants.kInPosition), m_groundJoint));
+        new RunCommand(() -> m_groundJoint.groundJointPosition(GroundArmConstants.kInPosition), m_groundJoint));
 
       Constants.AutoConstants.AUTO_EVENT_MAP.put("GroundIntake PickUp",
         new RunCommand(() -> m_groundIntake.groundIntakePickUp(), m_groundIntake));
@@ -246,7 +256,7 @@ public class RobotContainer {
 
   public void updateRobotForTeleop() {
     m_groundJoint.setDefaultCommand(
-      new RunCommand(() -> m_groundJoint.groundJointPosition(GroundIntakeConstants.kInPosition),
+      new RunCommand(() -> m_groundJoint.groundJointPosition(GroundArmConstants.kInPosition),
                      m_groundJoint));
   }
 
@@ -395,7 +405,7 @@ public class RobotContainer {
     // Ground Intake
       //Down and Intake Pickup
     m_manipulatorController.a().whileTrue(
-        new RunCommand(() -> m_groundJoint.groundJointPosition(Constants.GroundIntakeConstants.kOutPosition), m_groundJoint)
+        new RunCommand(() -> m_groundJoint.groundJointPosition(Constants.GroundArmConstants.kOutPosition), m_groundJoint)
         .alongWith(new RunCommand(() -> m_groundIntake.groundIntakePickUp(), m_groundIntake)));
       //Handoff
     m_manipulatorController.start().onTrue(new IntakeHandoff(m_groundIntake, m_groundJoint, m_intake));
@@ -404,9 +414,9 @@ public class RobotContainer {
       //Intake Reverse
     m_manipulatorController.y().whileTrue(new RunCommand(() -> m_groundIntake.groundIntakeShoot(), m_groundIntake));
       //Down
-    m_manipulatorController.b().onTrue(new RunCommand(() -> m_groundJoint.groundJointPosition(GroundIntakeConstants.kOutPosition), m_groundJoint));
+    m_manipulatorController.b().onTrue(new RunCommand(() -> m_groundJoint.groundJointPosition(GroundArmConstants.kOutPosition), m_groundJoint));
       //Shoot Position
-    m_manipulatorController.leftTrigger().whileTrue(new RunCommand(() -> m_groundJoint.groundJointPosition(GroundIntakeConstants.kShootPosition), m_groundJoint));
+    m_manipulatorController.leftTrigger().whileTrue(new RunCommand(() -> m_groundJoint.groundJointPosition(GroundArmConstants.kShootPosition), m_groundJoint));
     //TODO: Add setpoint that +/- "1" depending on staring pos of groundJoint
 
     // Arm Manual Control
@@ -426,7 +436,7 @@ public class RobotContainer {
       .toggleOnTrue(new ParallelCommandGroup(
         new RunCommand(
           () -> m_groundJoint.groundJointEmergencyControl(
-              MathUtil.applyDeadband(-m_manipulatorController.getLeftY()*GroundIntakeConstants.kMaxManualGroundJointSpeed, OIConstants.kIntakeDeadband)),
+              MathUtil.applyDeadband(-m_manipulatorController.getLeftY()*GroundArmConstants.kMaxManualGroundJointSpeed, OIConstants.kIntakeDeadband)),
           m_groundJoint)
           .handleInterrupt(() -> m_LEDs.setColor(m_LEDs.OFF)),
         new RunCommand(
@@ -437,7 +447,7 @@ public class RobotContainer {
 
     // Joint Speed: Positive  is up, negative speed down
     m_testController.rightStick().toggleOnTrue(new RunCommand(() -> 
-      m_groundJoint.groundJointSpeed(MathUtil.applyDeadband(-m_testController.getRightY()*GroundIntakeConstants.kMaxManualGroundJointSpeed, OIConstants.kIntakeDeadband)), m_groundJoint));
+      m_groundJoint.groundJointSpeed(MathUtil.applyDeadband(-m_testController.getRightY()*GroundArmConstants.kMaxManualGroundJointSpeed, OIConstants.kIntakeDeadband)), m_groundJoint));
 
     // Intake Speed: Positive is pick-up, negative is eject
     m_testController.leftStick().toggleOnTrue(new RunCommand(() -> 

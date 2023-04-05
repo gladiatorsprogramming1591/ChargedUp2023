@@ -33,8 +33,8 @@ public class C1ThreePieceRED extends SequentialCommandGroup {
         new PathConstraints(4.0, 3.0));
     PathPlannerTrajectory m_thirdPath = PathPlanner.loadPath("Cube to shoot 2 from 2 Grid bot45", 
         new PathConstraints(4.0, 3.0));
-    // PathPlannerTrajectory m_forthPath = PathPlanner.loadPath("Balance from 2 RED", 
-    //     new PathConstraints(2.5, 2.5));
+    PathPlannerTrajectory m_forthPath = PathPlanner.loadPath("Balance from 2 RED 3Piece", 
+        new PathConstraints(3.0, 4.0));
     // PathPlannerTrajectory m_fifthPath = PathPlanner.loadPath("New Drive to Cube 9", 
     //     new PathConstraints(2, 3));
     // PathPlannerTrajectory m_sixthPath = PathPlanner.loadPath("Go to 8 with Cube", 
@@ -43,7 +43,7 @@ public class C1ThreePieceRED extends SequentialCommandGroup {
     
     addCommands(
         new InstantCommand(() -> intakeSubsystem.intakeOn(Constants.IntakeConstants.kIntakePickUp), intakeSubsystem),
-        new ArmToPositionWithEnd(armSubsystem, armPositions.LVLTRE).withTimeout(1.40),
+        new ArmToPositionWithEnd(armSubsystem, armPositions.LVLTRE).withTimeout(1.20),
         new FollowPathWithEvents(
             driveSubsystem.followTrajectoryCommand(m_firstPath, true),
             m_firstPath.getMarkers(),
@@ -53,18 +53,16 @@ public class C1ThreePieceRED extends SequentialCommandGroup {
             driveSubsystem.followTrajectoryCommand(m_secondPath, false),
             m_secondPath.getMarkers(),
             Constants.AutoConstants.AUTO_EVENT_MAP),
-        // new RunCommand(() -> intakeSubsystem.intakeOn(IntakeConstants.kIntakePickUp), intakeSubsystem).withTimeout(0.25)
-            // .alongWith(
-                new InstantCommand(() -> LED.setColor(LED.BLUE)), // TODDO: improve intake constant names
+        new InstantCommand(() -> LED.setColor(LED.BLUE)), // TODDO: improve intake constant names
         new FollowPathWithEvents(
             driveSubsystem.followTrajectoryCommand(m_thirdPath, false),
             m_thirdPath.getMarkers(),
             Constants.AutoConstants.AUTO_EVENT_MAP),
-        // new FollowPathWithEvents(
-        //     driveSubsystem.followTrajectoryCommand(m_forthPath, false),
-        //     m_forthPath.getMarkers(),
-        //     Constants.AutoConstants.AUTO_EVENT_MAP),
 
+        new FollowPathWithEvents(
+            driveSubsystem.followTrajectoryCommand(m_forthPath, false),
+            m_forthPath.getMarkers(),
+            Constants.AutoConstants.AUTO_EVENT_MAP),
             
         new DriveToLevel(driveSubsystem)
             .alongWith(new RunCommand(() -> LED.cycle()))
