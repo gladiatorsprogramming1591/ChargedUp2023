@@ -1,8 +1,9 @@
 Main TODO:
--Ground intake shoot button (Shoot pos method needs improvment)
+Ground Intake:
+    -Ground intake shoot button (Shoot pos method needs improvment)
+    -enum Map?
 -Go through 'TODOs'
 -Set reminder to straighten out modules before running any auto (Systems Check Responsibility)
-TEST: Manual Ground/Arm button debounce and corresponding LEDs
 
 Sensors & 3D printed parts:
     Add Distance Sensor to determine alignment to grid
@@ -31,7 +32,6 @@ to account for its additional wheel slip
         New autos over cable protector:
             AUTO DESCRIPTION                                                    GOAL                POINTS      OPENING DURATION
         -Score 1 high w/ +1 and balance                                     (for Score)    (6+(8-12)+5 = 19-23p)    (~15+3s)
-        -Score hybrid then shoot 2 cubes into community to link             (for RP)           (3+2+2+[5] = 12p)    (~15+5s)
         -Score 1 high, shoot 1 to community, race nearest Loading Zone      (for LVL3)         (6+5+5+[5] = 21p)    (~15+7s)
 
         -Improve C9OneConeShootTwo Auto's speed (by seperating cable-protector path)
@@ -47,6 +47,7 @@ April Tags:
 
 
 Requires Testing:
+
     Vision
         confirm if 2nd level node reflective tape is visible on chargeStation
     Autos
@@ -97,8 +98,10 @@ Research April tags with Limelight:
 
 
 Completed:
+Manual Ground/Arm button debounce and corresponding LEDs
 New autos over cable protector:
         AUTO DESCRIPTION                                                    GOAL                POINTS      OPENING DURATION
+    -Score hybrid then shoot 2 cubes into community to link             (for RP)           (3+2+2+[5] = 12p)    (~15+5s)
     -Score 2 high                                                       (for LVL3)               (6+6 = 12p)    (~15s)
     -Score 1 high then shoot 2 cubes into hybrid                        (for LVL3)             (6+5+5 = 16p)    (~15+10s)
 -Speed up autonomous

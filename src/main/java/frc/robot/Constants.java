@@ -185,6 +185,10 @@ public final class Constants {
     public static final HashMap<String, Command> AUTO_EVENT_MAP = new HashMap<>();
   }
 
+  public static final class PathConstants{
+    
+  }
+
   public static final class VisionConstants{
     public static final double kLimelightOffDelay = 3.0;
     public static final String tLength = "thor";
@@ -236,7 +240,7 @@ public final class Constants {
     //public static final double kOperatorReverseSpeed = 0;
   }
 
-  public static final class GroundIntakeConstants{
+  public static final class GroundArmConstants{
   // Joint Speed: Positive  is up, negative speed down
   // Intake Speed: Positive is pick-up, negative is eject
   //Joint Encoder: 0 = arm inside chassis, negative = down
@@ -250,10 +254,11 @@ public final class Constants {
     public static final double kOutPosition = -13.35; // -13.1
     public static final double kInPosition = 0.0;
 
-    public static final double kInShootPosition = -8.0; // starting from inPosition
-    public static final double kShootPosition = -7.0; // setpoint
-    public static final double kOutShootPosition = -7.0; // starting from outPosition
-    public static final double kAutoShootPosition = -9.0;
+    public static final double kShootPosition = -7.0; // setpoint (executed from outPosition)
+    
+    public static final double kAutoHighShootPosition = -6.5;
+    public static final double kAutoMidShootPosition = -7.5;
+    public static final double kAutoFarShootPosition = -9.0;
 
     public static final double kJointTolerance = 0.10;
     public static final double kShootJointTolerance = 0.05;
@@ -265,6 +270,7 @@ public final class Constants {
     public static final double kIntakePickUp = 0.4; // 0.5
     public static final double kIntakeReverse = -0.5;
     public static final double kIntakeShoot = -1.0;
+    public static final double kIntakeShootL2 = -0.5;
     
   /**
    * How many amps the ground intake can take while moving

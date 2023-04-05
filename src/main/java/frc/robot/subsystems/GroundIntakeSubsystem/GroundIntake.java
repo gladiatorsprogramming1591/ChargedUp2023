@@ -8,7 +8,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.GroundIntakeConstants;
+import frc.robot.Constants.GroundArmConstants;
 import frc.robot.Constants.CANIDConstants;
 
 public class GroundIntake extends SubsystemBase{
@@ -18,9 +18,9 @@ public class GroundIntake extends SubsystemBase{
 
     double intakeCurrent = 3.0;
 
-    double defaultPickUp = GroundIntakeConstants.kIntakePickUp;
-    double defaultReverse = GroundIntakeConstants.kIntakeReverse;
-    double defaultShoot = GroundIntakeConstants.kIntakeShoot;
+    double defaultPickUp = GroundArmConstants.kIntakePickUp;
+    double defaultReverse = GroundArmConstants.kIntakeReverse;
+    double defaultShoot = GroundArmConstants.kIntakeShoot;
 
     boolean atPosition;
     int positionCheckCount = 0;

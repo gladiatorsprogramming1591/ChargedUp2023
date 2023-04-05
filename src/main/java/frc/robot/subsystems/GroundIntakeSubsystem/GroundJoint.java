@@ -8,14 +8,14 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.GroundIntakeConstants;
+import frc.robot.Constants.GroundArmConstants;
 import frc.robot.Constants.CANIDConstants;
 
 public class GroundJoint extends SubsystemBase{
         
     private final CANSparkMax GroundIntakeJoint = new CANSparkMax(CANIDConstants.kGroundIntakeJointCANId, MotorType.kBrushless);
 
-    private final PIDController GroundIntakePID = new PIDController(GroundIntakeConstants.kOutP, GroundIntakeConstants.ki, GroundIntakeConstants.kd);
+    private final PIDController GroundIntakePID = new PIDController(GroundArmConstants.kOutP, GroundArmConstants.ki, GroundArmConstants.kd);
 
     double m_encoderPos;
     boolean atPosition;
@@ -25,7 +25,7 @@ public class GroundJoint extends SubsystemBase{
         GroundIntakeJoint.restoreFactoryDefaults();
         GroundIntakeJoint.setIdleMode(IdleMode.kBrake);
 
-        GroundIntakeJoint.setSmartCurrentLimit(GroundIntakeConstants.GROUND_JOINT_CURRENT_LIMIT_A);
+        GroundIntakeJoint.setSmartCurrentLimit(GroundArmConstants.GROUND_JOINT_CURRENT_LIMIT_A);
     }
 
     @Override
@@ -43,6 +43,13 @@ public class GroundJoint extends SubsystemBase{
         GroundIntakeJoint.set(speed); //TODO: Add soft limits
     }
 
+    public void groundJointEmergencyControl(double speed){
+
+        GroundIntakeJoint.set(speed);
+
+        this.zeroEncoder();
+    }
+
     public void groundJointOff(){
         GroundIntakeJoint.set(0);
     }
@@ -54,32 +61,32 @@ public class GroundJoint extends SubsystemBase{
     public void groundJointPosition(double position){
         atPosition = false;
         double speed = MathUtil.applyDeadband(MathUtil.clamp(GroundIntakePID.calculate(m_encoderPos, position), 
-            GroundIntakeConstants.kMaxJointOutSpeed, GroundIntakeConstants.kMaxJointInSpeed),
-            GroundIntakeConstants.kPIDDeadband);
+            GroundArmConstants.kMaxJointOutSpeed, GroundArmConstants.kMaxJointInSpeed),
+            GroundArmConstants.kPIDDeadband);
         SmartDashboard.putNumber("Ground Intake PidOut Speed", speed);
         SmartDashboard.putNumber("Ground Intake PidOut Setpoint", position);
 
-        if (position == GroundIntakeConstants.kInPosition){
-            GroundIntakePID.setP(GroundIntakeConstants.kInP);
-            if (m_encoderPos > (GroundIntakeConstants.kInPosition - GroundIntakeConstants.kJointTolerance*10.0)){ // Stops sooner before setpoint to protect "hardstop" (Gearbox)
+        if (position == GroundArmConstants.kInPosition){
+            GroundIntakePID.setP(GroundArmConstants.kInP);
+            if (m_encoderPos > (GroundArmConstants.kInPosition - GroundArmConstants.kJointTolerance*10.0)){ // Stops sooner before setpoint to protect "hardstop" (Gearbox)
                 atPosition = true;
             }
         } else  {
-        if (position == GroundIntakeConstants.kOutPosition){
-            GroundIntakePID.setP(GroundIntakeConstants.kOutP);
-            if (m_encoderPos < (GroundIntakeConstants.kOutPosition + GroundIntakeConstants.kJointTolerance)){
+        if (position == GroundArmConstants.kOutPosition){
+            GroundIntakePID.setP(GroundArmConstants.kOutP);
+            if (m_encoderPos < (GroundArmConstants.kOutPosition + GroundArmConstants.kJointTolerance)){
                 atPosition = true;
             }
         } else {
-        if (position == GroundIntakeConstants.kShootPosition){
-            if (GroundIntakeJoint.getEncoder().getPosition() > (GroundIntakeConstants.kOutPosition / 2)){    // if Starting from inPosition
-                GroundIntakePID.setP(GroundIntakeConstants.kInP);
-                if (m_encoderPos < (GroundIntakeConstants.kShootPosition - GroundIntakeConstants.kShootJointTolerance)){
+        if (position == GroundArmConstants.kShootPosition){
+            if (GroundIntakeJoint.getEncoder().getPosition() > (GroundArmConstants.kOutPosition / 2)){    // if Starting from inPosition
+                GroundIntakePID.setP(GroundArmConstants.kInP);
+                if (m_encoderPos < (GroundArmConstants.kShootPosition - GroundArmConstants.kShootJointTolerance)){
                     atPosition = true;
                 }    
             } else {
-                GroundIntakePID.setP(GroundIntakeConstants.kOutP);
-                if (m_encoderPos < (GroundIntakeConstants.kShootPosition + GroundIntakeConstants.kShootJointTolerance)){
+                GroundIntakePID.setP(GroundArmConstants.kOutP);
+                if (m_encoderPos < (GroundArmConstants.kShootPosition + GroundArmConstants.kShootJointTolerance)){
                     atPosition = true;
                 }  
             }
