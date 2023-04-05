@@ -26,8 +26,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.GroundArmConstants;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.OIConstants;
-import frc.robot.commands.PathPlanner.C1NOLVLTwoPiece;
-import frc.robot.commands.PathPlanner.C1NOLVLTwoPieceAndCube;
+import frc.robot.Constants.PathConstants;
 import frc.robot.commands.PathPlanner.C1ThreePiece;
 import frc.robot.commands.PathPlanner.C1TwoPiece;
 import frc.robot.commands.PathPlanner.C3OneCone;
@@ -168,11 +167,11 @@ public class RobotContainer {
     m_autoChooser.setDefaultOption("OneCone ScoreSolo", new OneConeScoreSolo(m_robotDrive, m_arm, m_intake));
     m_autoChooser.addOption("OneCube ScoreSolo", new OneCubeScoreSolo(m_robotDrive, m_arm, m_intake));
 
-    m_autoChooser.addOption("C1 RED TwoPiece", new C1TwoPiece(true, m_robotDrive, m_arm, m_intake, m_LEDs));
-    m_autoChooser.addOption("C1 BLUE TwoPiece", new C1TwoPiece(false, m_robotDrive, m_arm, m_intake, m_LEDs));
-    m_autoChooser.addOption("C1 TwoPiece NOLEVEL", new C1NOLVLTwoPiece(m_robotDrive, m_arm, m_intake, m_LEDs));
-    m_autoChooser.addOption("C1 TwoPiece & Cube NOLEVEL", new C1NOLVLTwoPieceAndCube(m_robotDrive, m_arm, m_intake, m_LEDs));
-    m_autoChooser.addOption("C1 ThreePiece", new C1ThreePiece(true, m_robotDrive, m_arm, m_intake, m_LEDs));    // Add Blue Option if Charge Station behaves differently
+    m_autoChooser.addOption("C1 RED TwoPiece", new C1TwoPiece(PathConstants.LVL, true, m_robotDrive, m_arm, m_intake, m_LEDs));
+    m_autoChooser.addOption("C1 BLUE TwoPiece", new C1TwoPiece(PathConstants.LVL, false, m_robotDrive, m_arm, m_intake, m_LEDs));
+    m_autoChooser.addOption("C1 TwoPiece NO LVL", new C1TwoPiece(PathConstants.NoLVL, false, m_robotDrive, m_arm, m_intake, m_LEDs));
+    // m_autoChooser.addOption("C1 TwoPiece & Cube NO LVL", new C1TwoPiece(PathConstants.grabCube, false, m_robotDrive, m_arm, m_intake, m_LEDs));  // Not tested / dialed-in
+    m_autoChooser.addOption("C1 ThreePiece", new C1ThreePiece(false, m_robotDrive, m_arm, m_intake, m_LEDs));    // Add Red Option if Charge Station behaves differently
 
     m_autoChooser.addOption("C3 OneCone", new C3OneCone(m_robotDrive, m_arm, m_intake));
     m_autoChooser.addOption("C3 OneCubeHybrid", new C3OneCubeHybrid(m_robotDrive, m_arm, m_intake));

@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.IntakeConstants;
+import frc.robot.Constants.PathConstants;
 import frc.robot.commands.armCommands.ArmToPositionWithEnd;
 import frc.robot.commands.driveCommands.DriveToLevel;
 import frc.robot.subsystems.LEDs;
@@ -21,6 +22,7 @@ import frc.robot.subsystems.MainIntakeSubsystem.ArmSubsystem.armPositions;
 public class C1TwoPiece extends SequentialCommandGroup {
 
     public C1TwoPiece(
+        int endStrategy,
         boolean isRED,
         DriveSubsystem driveSubsystem, 
         ArmSubsystem armSubsystem,
@@ -32,14 +34,54 @@ public class C1TwoPiece extends SequentialCommandGroup {
         new PathConstraints(2, 3));
     PathPlannerTrajectory m_pickupPath = PathPlanner.loadPath("Cube to 2 from 1 Grid", 
         new PathConstraints(2, 2.2));
-    PathPlannerTrajectory m_balancePath;
+    PathPlannerTrajectory m_lastPath;
 
-    if (isRED)
-        m_balancePath = PathPlanner.loadPath("Balance from 2 RED", 
-            new PathConstraints(2.5, 2.5));
-    else 
-        m_balancePath = PathPlanner.loadPath("Balance from 2 BLUE", 
-            new PathConstraints(2.5, 2.5));
+    SequentialCommandGroup m_lastCommands;
+    
+    // Balance
+    if (endStrategy == PathConstants.LVL){
+        if (isRED)
+            m_lastPath = PathPlanner.loadPath("Balance from 2 RED", 
+                new PathConstraints(2.5, 2.5));
+        else 
+            m_lastPath = PathPlanner.loadPath("Balance from 2 BLUE", 
+                new PathConstraints(2.5, 2.5));
+        
+        m_lastCommands = new SequentialCommandGroup(
+            new FollowPathWithEvents(
+                driveSubsystem.followTrajectoryCommand(m_lastPath, false),
+                m_lastPath.getMarkers(),
+                AutoConstants.AUTO_EVENT_MAP),
+            new DriveToLevel(driveSubsystem)
+                .alongWith(new RunCommand(() -> LED.cycle())));
+
+    // No Balance
+    } else {
+        // if (lastCommands == PathConstants.NoLVL){                                        // Default initiallization required
+            m_lastPath = PathPlanner.loadPath("Cube Reverse 2", 
+                new PathConstraints(2, 2));
+            
+            m_lastCommands = new SequentialCommandGroup(
+                driveSubsystem.followTrajectoryCommand(m_lastPath, false),
+                new ArmToPositionWithEnd(armSubsystem, armPositions.HOME).withTimeout(2.0),
+                new RunCommand(() -> LED.cycle(), LED));
+
+        // // Grab Cube, No Balance
+        // } else {                                                                         // Not tested / dialed-in
+        //     if (lastCommands == PathConstants.grabCube){
+        //         m_lastPath = PathPlanner.loadPath("Cube 2 Pickup from 2", 
+        //             new PathConstraints(2.0, 2.2));
+                
+        //         m_lastCommands = new SequentialCommandGroup(
+        //             new FollowPathWithEvents(
+        //                 driveSubsystem.followTrajectoryCommand(m_lastPath, false),
+        //                 m_lastPath.getMarkers(),
+        //                 AutoConstants.AUTO_EVENT_MAP)
+        //         );
+        //     }
+        // }
+    }
+
     
     addCommands(
         new InstantCommand(() -> intakeSubsystem.intakeOn(IntakeConstants.kConePickUp), intakeSubsystem),
@@ -55,14 +97,16 @@ public class C1TwoPiece extends SequentialCommandGroup {
             m_pickupPath.getMarkers(),
             AutoConstants.AUTO_EVENT_MAP),
         new RunCommand(() -> intakeSubsystem.intakeOn(IntakeConstants.kCubeEject), intakeSubsystem).withTimeout(0.25)   // TODO: Possible to Reduce?
-
             .alongWith(new InstantCommand(() -> LED.setColor(LED.BLUE))),
-        new FollowPathWithEvents(
-            driveSubsystem.followTrajectoryCommand(m_balancePath, false),
-            m_balancePath.getMarkers(),
-            AutoConstants.AUTO_EVENT_MAP),
-        new DriveToLevel(driveSubsystem)
-            .alongWith(new RunCommand(() -> LED.cycle()))
+            
+            m_lastCommands
+
+        // new FollowPathWithEvents(
+        //     driveSubsystem.followTrajectoryCommand(m_lastPath, false),
+        //     m_lastPath.getMarkers(),
+        //     AutoConstants.AUTO_EVENT_MAP),
+        // new DriveToLevel(driveSubsystem)
+        //     .alongWith(new RunCommand(() -> LED.cycle()))
         );
     }
 }

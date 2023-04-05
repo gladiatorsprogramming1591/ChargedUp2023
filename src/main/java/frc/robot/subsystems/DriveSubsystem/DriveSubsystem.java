@@ -35,6 +35,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants;
 import frc.robot.Constants.CANIDConstants;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.PathConstants;
 import frc.robot.Constants.VisionConstants;
 import frc.utils.SwerveUtils;
 
@@ -84,6 +85,19 @@ public class DriveSubsystem extends SubsystemBase {
   private final PIDController m_rotVisionPidController = new PIDController(0.020, 0.0, 0.002);
   private final PIDController m_strafeVisionPidController = new PIDController(0.040, 0.0, 0.0);
   private final Trigger m_slowDriveButton;
+
+  // followTrajectoryCommand PID variables
+  private double m_kpX;
+  private double m_kiX;
+  private double m_kdX;
+
+  private double m_kpY;
+  private double m_kiY;
+  private double m_kdY;
+
+  private double m_kpR;
+  private double m_kiR;
+  private double m_kdR;
 
   NetworkTable table; 
   NetworkTableEntry tx; 
@@ -402,23 +416,58 @@ public class DriveSubsystem extends SubsystemBase {
             traj, 
             this::getPose, // Pose supplier
             Constants.DriveConstants.kDriveKinematics, // SwerveDriveKinematics
-            new PIDController(1.5, 0, 0), // Forward/Backward X controller. Tune these values for your robot. Leaving them 0 will only use feedforwards.
-            new PIDController(3.0, 0, 0), // Strafe Y controller (usually the same values as X controller)
-            new PIDController(5.0, 0, 0), // Rotation controller. Tune these values for your robot. Leaving them 0 will only use feedforwards.
+            new PIDController(PathConstants.kpXdefault, PathConstants.kiXdefault, PathConstants.kdXdefault), // Forward/Backward X controller. Tune these values for your robot. Leaving them 0 will only use feedforwards.
+            new PIDController(PathConstants.kpYdefault, PathConstants.kiYdefault, PathConstants.kdYdefault), // Strafe Y controller (usually the same values as X controller)
+            new PIDController(PathConstants.kpRdefault, PathConstants.kiRdefault, PathConstants.kdRdefault), // Rotation controller. Tune these values for your robot. Leaving them 0 will only use feedforwards.
             this::setModuleStates, // Module states consumer
             true, // Should the path be automatically mirrored depending on alliance color. Optional, defaults to true
             this // Requires this drive subsystem
 
-            //1 inch undershot Forward/Backward. Increasing Xkp and Xki increases this error
-            //TODO (requires bot): Adjust max vel and acc constaints
+            //TODO: 1 inch undershot Forward/Backward. Increasing Xkp and Xki increases this error
         )
     );
   }
-    // Assuming this method is part of a drivetrain subsystem that provides the necessary methods
-  public Command followTrajectoryCommand(PathPlannerTrajectory traj, boolean isFirstPath,
+
+  public void setTrajPID(
     double kpX, double kiX, double kdX,
     double kpY, double kiY, double kdY,
-    double kpR, double kiR, double kdR) {
+    double kpR, double kiR, double kdR
+    ){
+    m_kpX = kpX;  m_kpY = kpY;  m_kpR = kpR;
+    m_kiX = kiX;  m_kiY = kiY;  m_kiR = kiR;
+    m_kdX = kdX;  m_kdY = kdY;  m_kdR = kdR;
+  }
+
+  public void setXTrajPID(double kp, double ki, double kd){
+    m_kpX = kp;
+    m_kiX = ki;
+    m_kdX = kd;
+  }
+  public void setYTrajPID(double kp, double ki, double kd){
+    m_kpY = kp;
+    m_kiY = ki;
+    m_kdY = kd;
+  }
+  public void setRotTrajPID(double kp, double ki, double kd){
+    m_kpR = kp;
+    m_kiR = ki;
+    m_kdR = kd;
+  }
+  // Use if PID values are set manually (does not affect default values)
+  public Command followTrajectoryCommand(PathPlannerTrajectory traj, boolean isFirstPath, boolean isModifiedPID) {
+    if (!isModifiedPID){
+      m_kpX = PathConstants.kpXdefault;
+      m_kiX = PathConstants.kiXdefault;
+      m_kdX = PathConstants.kdXdefault;
+
+      m_kpY = PathConstants.kpYdefault;
+      m_kiY = PathConstants.kiYdefault;
+      m_kdY = PathConstants.kdYdefault;
+
+      m_kpR = PathConstants.kpRdefault;
+      m_kiR = PathConstants.kiRdefault;
+      m_kdR = PathConstants.kdRdefault;
+    }
     return new SequentialCommandGroup(
         new InstantCommand(() -> {
           // Reset odometry for the first path you run during auto
@@ -431,15 +480,12 @@ public class DriveSubsystem extends SubsystemBase {
             traj, 
             this::getPose, // Pose supplier
             Constants.DriveConstants.kDriveKinematics, // SwerveDriveKinematics
-            new PIDController(kpX, kiX, kdX), // Forward/Backward X controller. Tune these values for your robot. Leaving them 0 will only use feedforwards.
-            new PIDController(kpY, kiY, kdY), // Strafe Y controller (usually the same values as X controller)
-            new PIDController(kpR, kiR, kdR), // Rotation controller. Tune these values for your robot. Leaving them 0 will only use feedforwards.
+            new PIDController(m_kpX, m_kiX, m_kdX), // Forward/Backward X controller. Tune these values for your robot. Leaving them 0 will only use feedforwards.
+            new PIDController(m_kpY, m_kiY, m_kdY), // Strafe Y controller (usually the same values as X controller)
+            new PIDController(m_kpR, m_kiR, m_kdR), // Rotation controller. Tune these values for your robot. Leaving them 0 will only use feedforwards.
             this::setModuleStates, // Module states consumer
             true, // Should the path be automatically mirrored depending on alliance color. Optional, defaults to true
             this // Requires this drive subsystem
-
-            //1 inch undershot Forward/Backward. Increasing Xkp and Xki increases this error
-            //TODO (requires bot): Adjust max vel and acc constaints
         )
     );
   }

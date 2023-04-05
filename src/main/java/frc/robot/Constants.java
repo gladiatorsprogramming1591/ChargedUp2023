@@ -186,7 +186,22 @@ public final class Constants {
   }
 
   public static final class PathConstants{
+    public static final double kpXdefault = 1.5;
+    public static final double kiXdefault = 0.0;
+    public static final double kdXdefault = 0.0;
     
+    public static final double kpYdefault = 3.0;
+    public static final double kiYdefault = 0.0;
+    public static final double kdYdefault = 0.0;
+    
+    public static final double kpRdefault = 5.0;
+    public static final double kiRdefault = 0.0;
+    public static final double kdRdefault = 0.0;
+
+    public static final int LVL = 0;
+    public static final int NoLVL = 1;
+    public static final int grabCube = 2;
+
   }
 
   public static final class VisionConstants{

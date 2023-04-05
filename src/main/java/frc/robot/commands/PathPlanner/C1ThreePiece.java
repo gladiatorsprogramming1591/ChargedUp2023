@@ -36,10 +36,10 @@ public class C1ThreePiece extends SequentialCommandGroup {
     PathPlannerTrajectory m_balancePath;
 
     if (isRED)
-    m_balancePath = PathPlanner.loadPath("Balance from 2 RED 3Piece", 
+    m_balancePath = PathPlanner.loadPath("Balance from 2 BLUE 3Piece", 
         new PathConstraints(3.0, 4.0));
     else
-    m_balancePath = PathPlanner.loadPath("Balance from 2 RED 3Piece",   // Add Blue Option if Charge Station behaves differently
+    m_balancePath = PathPlanner.loadPath("Balance from 2 BLUE 3Piece",   // Add Red Option if Charge Station behaves differently
         new PathConstraints(3.0, 4.0));
     
     addCommands(
