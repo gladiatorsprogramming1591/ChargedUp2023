@@ -23,9 +23,9 @@ public class C5OneCubeLevel extends SequentialCommandGroup {
                         IntakeSubsystem intakeSubsystem
                         ){
 
-        PathPlannerTrajectory m_firstPath = PathPlanner.loadPath("Cone Score 5", 
+        PathPlannerTrajectory m_firstPath = PathPlanner.loadPath("Cube Score 5", 
             new PathConstraints(2, 3));
-        PathPlannerTrajectory m_secondPath = PathPlanner.loadPath("Cone Reverse 5", 
+        PathPlannerTrajectory m_secondPath = PathPlanner.loadPath("Cube Reverse 5", 
             new PathConstraints(2, 1));       
         PathPlannerTrajectory m_thirdPath = PathPlanner.loadPath("Leave 5 Level", 
             new PathConstraints(1.4, 3));
