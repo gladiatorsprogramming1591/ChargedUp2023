@@ -9,10 +9,14 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
+import frc.robot.Constants.AutoConstants;
+import frc.robot.Constants.GroundArmConstants;
+import frc.robot.Constants.PathConstants;
 import frc.robot.commands.armCommands.ArmToPositionWithEnd;
 import frc.robot.commands.driveCommands.DriveToLevel;
 import frc.robot.subsystems.LEDs;
 import frc.robot.subsystems.DriveSubsystem.DriveSubsystem;
+import frc.robot.subsystems.GroundIntakeSubsystem.GroundJoint;
 import frc.robot.subsystems.MainIntakeSubsystem.ArmSubsystem;
 import frc.robot.subsystems.MainIntakeSubsystem.IntakeSubsystem;
 import frc.robot.subsystems.MainIntakeSubsystem.ArmSubsystem.armPositions;
@@ -20,11 +24,13 @@ import frc.robot.subsystems.MainIntakeSubsystem.ArmSubsystem.armPositions;
 public class C1ThreePiece extends SequentialCommandGroup {
 
     public C1ThreePiece(
+        int endStrategy,
         boolean isRED,
         DriveSubsystem driveSubsystem, 
         ArmSubsystem armSubsystem,
         IntakeSubsystem intakeSubsystem,
-        LEDs LED
+        LEDs LED,
+        GroundJoint groundJoint 
         ){
 
     PathPlannerTrajectory m_conePath = PathPlanner.loadPath("Cone Score 1", 
@@ -33,14 +39,41 @@ public class C1ThreePiece extends SequentialCommandGroup {
         new PathConstraints(4.0, 3.0));
     PathPlannerTrajectory m_2ndPickUpPath = PathPlanner.loadPath("Cube to shoot 2 from 2 Grid bot45", 
         new PathConstraints(4.0, 3.0));
-    PathPlannerTrajectory m_balancePath;
+    PathPlannerTrajectory m_lastPath;
 
-    if (isRED)
-    m_balancePath = PathPlanner.loadPath("Balance from 2 BLUE 3Piece", 
-        new PathConstraints(3.0, 4.0));
-    else
-    m_balancePath = PathPlanner.loadPath("Balance from 2 BLUE 3Piece",   // Add Red Option if Charge Station behaves differently
-        new PathConstraints(3.0, 4.0));
+    SequentialCommandGroup m_lastCommands;
+
+    // Balance
+    if (endStrategy == PathConstants.LVL){
+        if (isRED)
+        m_lastPath = PathPlanner.loadPath("Balance from 2 BLUE 3Piece", 
+            new PathConstraints(3.0, 4.0));
+        else
+        m_lastPath = PathPlanner.loadPath("Balance from 2 BLUE 3Piece",   // Add Red Option if Charge Station behaves differently
+            new PathConstraints(3.0, 4.0));
+
+        m_lastCommands = new SequentialCommandGroup(
+            new FollowPathWithEvents(
+                driveSubsystem.followTrajectoryCommand(m_lastPath, false),
+                m_lastPath.getMarkers(),
+                AutoConstants.AUTO_EVENT_MAP),
+            new DriveToLevel(driveSubsystem)
+                .alongWith(new RunCommand(() -> LED.cycle())));
+    
+    // No Balance
+    } else {
+        // if (lastCommands == PathConstants.NoLVL){                                        // Default initiallization required
+            m_lastPath = PathPlanner.loadPath("Cube Reverse 2", 
+                new PathConstraints(0, 0));
+            
+            m_lastCommands = new SequentialCommandGroup(
+                new RunCommand(() -> groundJoint.groundJointPosition(GroundArmConstants.kInPosition), groundJoint)
+                    .alongWith(new RunCommand(() -> LED.cycle(), LED)));
+        // }
+    }
+
+    
+
     
     addCommands(
         new InstantCommand(() -> intakeSubsystem.intakeOn(Constants.IntakeConstants.kConePickUp), intakeSubsystem),
@@ -62,12 +95,14 @@ public class C1ThreePiece extends SequentialCommandGroup {
             m_2ndPickUpPath.getMarkers(),
             Constants.AutoConstants.AUTO_EVENT_MAP),
 
-        new FollowPathWithEvents(
-            driveSubsystem.followTrajectoryCommand(m_balancePath, false),
-            m_balancePath.getMarkers(),
-            Constants.AutoConstants.AUTO_EVENT_MAP),
-        new DriveToLevel(driveSubsystem)
-            .alongWith(new RunCommand(() -> LED.cycle()))
+        m_lastCommands
+
+        // new FollowPathWithEvents(
+        //     driveSubsystem.followTrajectoryCommand(m_lastPath, false),
+        //     m_lastPath.getMarkers(),
+        //     Constants.AutoConstants.AUTO_EVENT_MAP),
+        // new DriveToLevel(driveSubsystem)
+        //     .alongWith(new RunCommand(() -> LED.cycle()))
         );
     }
 }

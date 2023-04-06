@@ -99,7 +99,7 @@ public class C1TwoPiece extends SequentialCommandGroup {
         new RunCommand(() -> intakeSubsystem.intakeOn(IntakeConstants.kCubeEject), intakeSubsystem).withTimeout(0.25)   // TODO: Possible to Reduce?
             .alongWith(new InstantCommand(() -> LED.setColor(LED.BLUE))),
             
-            m_lastCommands
+        m_lastCommands
 
         // new FollowPathWithEvents(
         //     driveSubsystem.followTrajectoryCommand(m_lastPath, false),
