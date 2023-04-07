@@ -180,7 +180,8 @@ public class RobotContainer {
     m_autoChooser.addOption("C5 OneCubeLevel", new C5OneCubeLevel(m_robotDrive, m_arm, m_intake));
     m_autoChooser.addOption("C7 OneCone", new C7OneCone(m_robotDrive, m_arm, m_intake));
     m_autoChooser.addOption("C7 Hybrid Link", new C7HybridLink(m_robotDrive, m_arm, m_intake));
-    m_autoChooser.addOption("C9 TwoPiece", new C9TwoPiece(m_robotDrive, m_arm, m_intake, m_LEDs));
+    m_autoChooser.addOption("C9 TwoPiece", new C9TwoPiece(PathConstants.LVL, true, m_robotDrive, m_arm, m_intake, m_LEDs));
+    m_autoChooser.addOption("C9 TwoPiece NO LVL", new C9TwoPiece(PathConstants.NoLVL, true, m_robotDrive, m_arm, m_intake, m_LEDs));
     m_autoChooser.addOption("C9 OneConeShootTwo", new C9OneConeShootTwo(m_robotDrive, m_arm, m_intake, m_LEDs));
     SmartDashboard.putData("Auto Mode", m_autoChooser);
   }
@@ -379,10 +380,8 @@ public class RobotContainer {
     // LEDs
     m_manipulatorController.leftBumper().onTrue(new InstantCommand(() -> m_LEDs.setPiece(), m_LEDs));
     m_manipulatorController.back().onTrue(new InstantCommand(() -> m_LEDs.off(), m_LEDs))
-      .debounce(1.0).onTrue(new RunCommand(() -> m_LEDs.flashing(), m_LEDs)); // TODO: Optimize
-
-    // m_manipulatorController.back().onTrue(new InstantCommand(() -> m_LEDs.off(), m_LEDs)).
-    //   debounce(0.5).onTrue(new RunCommand(() -> m_LEDs.cycle(), m_LEDs));
+      .debounce(0.5).onTrue(new RunCommand(() -> m_LEDs.flashing(m_LEDs.PURPLE), m_LEDs))
+      .debounce(1.0).onTrue(new RunCommand(() -> m_LEDs.cycle(), m_LEDs));
 
     // Arm Positions
     m_manipulatorController.povDown().onTrue(new ArmToPosition(m_arm, ArmSubsystem.armPositions.HOME));
