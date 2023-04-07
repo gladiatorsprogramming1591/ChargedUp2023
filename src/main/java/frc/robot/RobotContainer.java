@@ -171,7 +171,8 @@ public class RobotContainer {
     m_autoChooser.addOption("C1 BLUE TwoPiece", new C1TwoPiece(PathConstants.LVL, false, m_robotDrive, m_arm, m_intake, m_LEDs));
     m_autoChooser.addOption("C1 TwoPiece NO LVL", new C1TwoPiece(PathConstants.NoLVL, false, m_robotDrive, m_arm, m_intake, m_LEDs));
     // m_autoChooser.addOption("C1 TwoPiece & Cube NO LVL", new C1TwoPiece(PathConstants.grabCube, false, m_robotDrive, m_arm, m_intake, m_LEDs));  // Not tested / dialed-in
-    m_autoChooser.addOption("C1 ThreePiece", new C1ThreePiece(false, m_robotDrive, m_arm, m_intake, m_LEDs));    // Add Red Option if Charge Station behaves differently
+    m_autoChooser.addOption("C1 ThreePiece", new C1ThreePiece(PathConstants.LVL, false, m_robotDrive, m_arm, m_intake, m_groundJoint, m_groundIntake, m_LEDs));    // Add Red Option if Charge Station behaves differently
+    m_autoChooser.addOption("C1 ThreePiece NO LVL", new C1ThreePiece(PathConstants.NoLVL, false, m_robotDrive, m_arm, m_intake, m_groundJoint, m_groundIntake, m_LEDs));    // Add Red Option if Charge Station behaves differently
 
     m_autoChooser.addOption("C3 OneCone", new C3OneCone(m_robotDrive, m_arm, m_intake));
     m_autoChooser.addOption("C3 OneCubeHybrid", new C3OneCubeHybrid(m_robotDrive, m_arm, m_intake));

@@ -9,3 +9,6 @@ Qual 9 BLUE:
         - Cube placement waypoint moved 0.15m (6in) towards loading zone 
             (matched start/end waypoints with "Cube Reverse 2" and Balance paths)
 
+TODO: 
+    C1TwoPiece - Create Pickup path for RED that is 0.2m (8in) closer to the loading zone
+    C1ThreePiece NoLVL - add to selector
