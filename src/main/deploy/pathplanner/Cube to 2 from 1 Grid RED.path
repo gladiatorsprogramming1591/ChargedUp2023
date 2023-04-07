@@ -2,15 +2,15 @@
   "waypoints": [
     {
       "anchorPoint": {
-        "x": 2.12,
-        "y": 4.13
+        "x": 1.82,
+        "y": 4.95
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.6741519560660922,
-        "y": 4.695201854895866
+        "x": 3.1160733310229185,
+        "y": 4.721467302763966
       },
-      "holonomicAngle": -3.0,
+      "holonomicAngle": 180.0,
       "isReversal": false,
       "velOverride": null,
       "isLocked": false,
@@ -24,19 +24,19 @@
     },
     {
       "anchorPoint": {
-        "x": 6.98,
-        "y": 3.88
+        "x": 6.83,
+        "y": 4.7
       },
       "prevControl": {
-        "x": 6.4983026284962575,
-        "y": 4.31495729498478
+        "x": 6.509023899748872,
+        "y": 4.706829278728748
       },
       "nextControl": {
-        "x": 6.4983026284962575,
-        "y": 4.31495729498478
+        "x": 7.150976100251128,
+        "y": 4.693170721271253
       },
-      "holonomicAngle": 135.0,
-      "isReversal": true,
+      "holonomicAngle": 180.0,
+      "isReversal": false,
       "velOverride": null,
       "isLocked": false,
       "isStopPoint": false,
@@ -49,15 +49,15 @@
     },
     {
       "anchorPoint": {
-        "x": 2.42,
-        "y": 5.23
+        "x": 1.816588141846804,
+        "y": 4.38
       },
       "prevControl": {
-        "x": 5.056146767097806,
-        "y": 5.306133886289125
+        "x": 2.6096070277728627,
+        "y": 4.551311879645849
       },
       "nextControl": null,
-      "holonomicAngle": 0.0,
+      "holonomicAngle": 180.0,
       "isReversal": false,
       "velOverride": null,
       "isLocked": false,
@@ -70,23 +70,20 @@
       }
     }
   ],
+  "maxVelocity": 2.0,
+  "maxAcceleration": 2.2,
+  "isReversed": null,
   "markers": [
     {
-      "position": 0.5,
+      "position": 0.1,
       "names": [
-        "GroundIntakeOut and Fast PickUp"
+        "ArmHOME then GroundIntakeOut and PickUp"
       ]
     },
     {
-      "position": 1.09,
+      "position": 1.13,
       "names": [
-        "ShootPosL3"
-      ]
-    },
-    {
-      "position": 2.0,
-      "names": [
-        "ShootToL2"
+        "GroundIntakeTransferArmUp"
       ]
     }
   ]

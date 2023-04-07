@@ -32,20 +32,29 @@ public class C1TwoPiece extends SequentialCommandGroup {
 
     PathPlannerTrajectory m_conePath = PathPlanner.loadPath("Cone Score 1", 
         new PathConstraints(2, 3));
-    PathPlannerTrajectory m_pickupPath = PathPlanner.loadPath("Cube to 2 from 1 Grid", 
-        new PathConstraints(2, 2.2));
+    PathPlannerTrajectory m_pickupPath;
     PathPlannerTrajectory m_lastPath;
 
     SequentialCommandGroup m_lastCommands;
+
+    // Cube Pick-Up
+    if (isRED) {
+            m_pickupPath = PathPlanner.loadPath("Cube to 2 from 1 Grid RED", 
+                new PathConstraints(2, 2.2));
+    } else {
+            m_pickupPath = PathPlanner.loadPath("Cube to 2 from 1 Grid BLUE", 
+                new PathConstraints(2, 2.2));
+    }
     
     // Balance
     if (endStrategy == PathConstants.LVL){
-        if (isRED)
+        if (isRED) {
             m_lastPath = PathPlanner.loadPath("Balance from 2 RED", 
                 new PathConstraints(2.5, 2.5));
-        else 
+        } else {
             m_lastPath = PathPlanner.loadPath("Balance from 2 BLUE", 
                 new PathConstraints(2.5, 2.5));
+        }
         
         m_lastCommands = new SequentialCommandGroup(
             new FollowPathWithEvents(

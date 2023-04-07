@@ -10,5 +10,4 @@ Qual 9 BLUE:
             (matched start/end waypoints with "Cube Reverse 2" and Balance paths)
 
 TODO: 
-    C1TwoPiece - Create Pickup path for RED that is 0.2m (8in) closer to the loading zone
-    C1ThreePiece NoLVL - add to selector
+    Investigate C1ThreePiece Auto

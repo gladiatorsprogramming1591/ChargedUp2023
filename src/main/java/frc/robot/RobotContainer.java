@@ -208,6 +208,16 @@ public class RobotContainer {
             .until(() -> m_groundJoint.groundJointAtPosition())
             .alongWith(new RunCommand(() -> m_groundIntake.groundIntakeSpeed(GroundArmConstants.kAutoIntakePickUp), m_groundIntake)))));
 
+    Constants.AutoConstants.AUTO_EVENT_MAP.put("ArmHOME then GroundIntakeOut and Fast PickUp",
+      new SequentialCommandGroup(
+        new InstantCommand(() -> m_intake.intakeOff()),
+        new ArmToPosition(m_arm, armPositions.HOME, true).withTimeout(1.0), 
+        new ParallelCommandGroup(
+          new ArmToPosition(m_arm, armPositions.HOME, false).withTimeout(0.6),
+          new RunCommand(() -> m_groundJoint.groundJointPosition(GroundArmConstants.kOutPosition), m_groundJoint)
+            .until(() -> m_groundJoint.groundJointAtPosition())
+            .alongWith(new RunCommand(() -> m_groundIntake.groundIntakeSpeed(GroundArmConstants.kAutoIntakePickUp + 0.2), m_groundIntake)))));
+
     Constants.AutoConstants.AUTO_EVENT_MAP.put("GroundIntakeTransferArmUp", 
       new SequentialCommandGroup(
         new IntakeHandoff(m_groundIntake, m_groundJoint, m_intake),
@@ -246,6 +256,11 @@ public class RobotContainer {
         new RunCommand(() -> m_groundJoint.groundJointPosition(GroundArmConstants.kOutPosition), m_groundJoint)
           .until(() -> m_groundJoint.groundJointAtPosition())
           .alongWith(new RunCommand(() -> m_groundIntake.groundIntakeSpeed(GroundArmConstants.kAutoIntakePickUp), m_groundIntake)));
+
+      Constants.AutoConstants.AUTO_EVENT_MAP.put("GroundIntakeOut and Fast PickUp",
+        new RunCommand(() -> m_groundJoint.groundJointPosition(GroundArmConstants.kOutPosition), m_groundJoint)
+          .until(() -> m_groundJoint.groundJointAtPosition())
+          .alongWith(new RunCommand(() -> m_groundIntake.groundIntakeSpeed(GroundArmConstants.kAutoIntakePickUp + 0.2), m_groundIntake)));
 
       Constants.AutoConstants.AUTO_EVENT_MAP.put("GroundJointIn",
         new RunCommand(() -> m_groundJoint.groundJointPosition(GroundArmConstants.kInPosition), m_groundJoint));
