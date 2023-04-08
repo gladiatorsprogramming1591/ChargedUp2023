@@ -18,11 +18,12 @@ public class IntakeSubsystem extends SubsystemBase{
     
     // TODO: Is powerDist needed?
     PowerDistribution powerDist = new PowerDistribution(Constants.CANIDConstants.kPdhCanId, ModuleType.kRev);
-    double intakeCurrent = 3.5; //2.75
+    double intakeCurrent = 3.75; //2.75
 
     public IntakeSubsystem(){
         intakeMotor.setNeutralMode(NeutralMode.Brake);
-        intakeMotor.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, intakeCurrent, intakeCurrent + 2.5, 0.6)); // +1.75, 0.6 seconds
+        intakeMotor.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 
+            intakeCurrent, intakeCurrent + 2.75, 0.6)); // +1.75, 0.6 seconds
     }
     
     @Override

@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants;
+import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.GroundArmConstants;
 import frc.robot.Constants.PathConstants;
 import frc.robot.commands.armCommands.ArmToPositionWithEnd;
@@ -58,7 +59,7 @@ public class C1ThreePiece extends SequentialCommandGroup {
         new FollowPathWithEvents(
             driveSubsystem.followTrajectoryCommand(m_lastPath, false),
             m_lastPath.getMarkers(),
-            Constants.AutoConstants.AUTO_EVENT_MAP),
+            AutoConstants.AUTO_EVENT_MAP),
         new DriveToLevel(driveSubsystem)
             .alongWith(new RunCommand(() -> LED.cycle()))
     );
@@ -82,19 +83,19 @@ public class C1ThreePiece extends SequentialCommandGroup {
         new FollowPathWithEvents(
             driveSubsystem.followTrajectoryCommand(m_conePath, true),
             m_conePath.getMarkers(),
-            Constants.AutoConstants.AUTO_EVENT_MAP),
+            AutoConstants.AUTO_EVENT_MAP),
         new RunCommand(() -> intakeSubsystem.intakeOn(Constants.IntakeConstants.kConeEject), intakeSubsystem).withTimeout(.25), // TODO: Possible to Reduce?
 
         new FollowPathWithEvents(
             driveSubsystem.followTrajectoryCommand(m_1stPickUpPath, false),
             m_1stPickUpPath.getMarkers(),
-            Constants.AutoConstants.AUTO_EVENT_MAP),
+            AutoConstants.AUTO_EVENT_MAP),
 
         new InstantCommand(() -> LED.setColor(LED.BLUE)),
         new FollowPathWithEvents(
             driveSubsystem.followTrajectoryCommand(m_2ndPickUpPath, false),
             m_2ndPickUpPath.getMarkers(),
-            Constants.AutoConstants.AUTO_EVENT_MAP),
+            AutoConstants.AUTO_EVENT_MAP),
 
         m_lastCommands
 
