@@ -396,7 +396,7 @@ public class RobotContainer {
     // LEDs
     m_manipulatorController.leftBumper().onTrue(new InstantCommand(() -> m_LEDs.setPiece(), m_LEDs));
     m_manipulatorController.back().onTrue(new InstantCommand(() -> m_LEDs.off(), m_LEDs))
-      .debounce(0.5).onTrue(new RunCommand(() -> m_LEDs.flashing(m_LEDs.PURPLE), m_LEDs))
+      .debounce(0.2).onTrue(new RunCommand(() -> m_LEDs.flashing(m_LEDs.PURPLE), m_LEDs))
       .debounce(1.0).onTrue(new RunCommand(() -> m_LEDs.cycle(), m_LEDs));
 
     // Arm Positions
