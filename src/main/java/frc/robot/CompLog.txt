@@ -1,0 +1,15 @@
+Qual 1 BLUE:
+    C1TwoPiece - missed cube pickup
+        - BLUE path extended 0.3m (1ft)
+        - Pickup path moved 0.15m (6in) towards loading zone
+
+Qual 9 BLUE:
+    C1TwoPiece - success
+        - Equilized BLUE and RED paths
+        - Cube placement waypoint moved 0.15m (6in) towards loading zone 
+            (matched start/end waypoints with "Cube Reverse 2" and Balance paths)
+
+TODO: 
+    Investigate C1ThreePiece Auto
+    Add RED/BLUE NoLVL options to SELECTOR for C1TwoPiece 
+        & Create options for C1ThreePiece pickUp paths

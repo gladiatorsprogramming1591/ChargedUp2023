@@ -186,7 +186,22 @@ public final class Constants {
   }
 
   public static final class PathConstants{
+    public static final double kpXdefault = 1.5;
+    public static final double kiXdefault = 0.0;
+    public static final double kdXdefault = 0.0;
     
+    public static final double kpYdefault = 3.0;
+    public static final double kiYdefault = 0.0;
+    public static final double kdYdefault = 0.0;
+    
+    public static final double kpRdefault = 5.0;
+    public static final double kiRdefault = 0.0;
+    public static final double kdRdefault = 0.0;
+
+    public static final int LVL = 0;
+    public static final int NoLVL = 1;
+    public static final int grabCube = 2;
+
   }
 
   public static final class VisionConstants{
@@ -234,16 +249,19 @@ public final class Constants {
 
   public static final class IntakeConstants{
     public static final int kPdhChannel = 0;
-    public static final double kStallSpeed = 0.2; // + for cone, - for cube
-    public static final double kIntakePickUp = 0.3;
-    public static final double kIntakeReverse = -0.5; // -0.5
-    //public static final double kOperatorReverseSpeed = 0;
+    public static final double kIntakeStall = 0.2; // + for cone, - for cube
+
+    public static final double kConePickUp = 0.3;
+    public static final double kConeEject = -0.5;
+
+    public static final double kCubePickUp = -0.5;
+    public static final double kCubeEject = 0.3;
   }
 
   public static final class GroundArmConstants{
   // Joint Speed: Positive  is up, negative speed down
   // Intake Speed: Positive is pick-up, negative is eject
-  //Joint Encoder: 0 = arm inside chassis, negative = down
+  // Joint Encoder: 0 = arm inside chassis, negative = down
     public static final double kOutP = 0.06;
     public static final double kInP = 0.06;
     public static final double ki = 0.0;

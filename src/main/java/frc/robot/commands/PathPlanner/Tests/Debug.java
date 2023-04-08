@@ -54,7 +54,7 @@ public class Debug extends SequentialCommandGroup {
                 driveSubsystem.followTrajectoryCommand(m_thirdPath, true),
                 m_thirdPath.getMarkers(),
                 Constants.AutoConstants.AUTO_EVENT_MAP),
-            new RunCommand(() -> intakeSubsystem.intakeOn(IntakeConstants.kIntakePickUp), intakeSubsystem).alongWith(new RunCommand(() -> LED.cycle())) // TODDO: improve intake constant names
+            new RunCommand(() -> intakeSubsystem.intakeOn(IntakeConstants.kConePickUp), intakeSubsystem).alongWith(new RunCommand(() -> LED.cycle())) // TODDO: improve intake constant names
             // new ParallelCommandGroup(new ArmToPositionWithEnd(armSubsystem, armPositions.HOME).withTimeout(2.0),
             //     driveSubsystem.followTrajectoryCommand(m_thirdPath, true))
             // new DriveToLevel(driveSubsystem)

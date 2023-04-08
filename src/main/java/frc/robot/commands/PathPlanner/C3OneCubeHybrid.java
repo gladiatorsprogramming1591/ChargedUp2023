@@ -33,9 +33,9 @@ public class C3OneCubeHybrid extends SequentialCommandGroup {
 
         
         addCommands(
-            new InstantCommand(() -> intakeSubsystem.intakeOn(Constants.IntakeConstants.kIntakeReverse), intakeSubsystem),
+            new InstantCommand(() -> intakeSubsystem.intakeOn(Constants.IntakeConstants.kConeEject), intakeSubsystem),
             new ArmToPositionWithEnd(armSubsystem, armPositions.LVLONE).withTimeout(1.2),
-            new RunCommand(() -> intakeSubsystem.intakeOn(Constants.IntakeConstants.kIntakePickUp + 0.2), intakeSubsystem).withTimeout(.25),
+            new RunCommand(() -> intakeSubsystem.intakeOn(Constants.IntakeConstants.kConePickUp + 0.2), intakeSubsystem).withTimeout(.25),
             new ParallelCommandGroup(new ArmToPositionWithEnd(armSubsystem, armPositions.HOME).withTimeout(0.8),
             driveSubsystem.followTrajectoryCommand(m_firstPath, true)),
             // new WaitCommand(0.5),

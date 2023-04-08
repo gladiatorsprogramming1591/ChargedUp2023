@@ -27,7 +27,7 @@ public class IntakeHandoff extends SequentialCommandGroup {
                 .raceWith( new RunCommand( () -> m_groundIntake.groundIntakeSpeed(GroundArmConstants.kDefaultSpeed + 0.15))),
                 // .withTimeout(2.5),
 
-            new RunCommand(() -> m_mainIntake.intakeOn(IntakeConstants.kIntakeReverse))
+            new RunCommand(() -> m_mainIntake.intakeOn(IntakeConstants.kConeEject))
                 .alongWith( new RunCommand(() -> m_groundIntake.groundIntakeReverse())).withTimeout(0.75)
         
         );

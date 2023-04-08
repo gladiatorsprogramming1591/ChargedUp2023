@@ -23,18 +23,18 @@ public class C5OneCubeLevel extends SequentialCommandGroup {
                         IntakeSubsystem intakeSubsystem
                         ){
 
-        PathPlannerTrajectory m_firstPath = PathPlanner.loadPath("Cone Score 5", 
+        PathPlannerTrajectory m_firstPath = PathPlanner.loadPath("Cube Score 5", 
             new PathConstraints(2, 3));
-        PathPlannerTrajectory m_secondPath = PathPlanner.loadPath("Cone Reverse 5", 
+        PathPlannerTrajectory m_secondPath = PathPlanner.loadPath("Cube Reverse 5", 
             new PathConstraints(2, 1));       
         PathPlannerTrajectory m_thirdPath = PathPlanner.loadPath("Leave 5 Level", 
             new PathConstraints(1.4, 3));
         
         addCommands(
-            new InstantCommand(() -> intakeSubsystem.intakeOn(Constants.IntakeConstants.kIntakeReverse), intakeSubsystem),
+            new InstantCommand(() -> intakeSubsystem.intakeOn(Constants.IntakeConstants.kConeEject), intakeSubsystem),
             new ArmToPositionWithEnd(armSubsystem, armPositions.LVLTRE).withTimeout(1.55),
             driveSubsystem.followTrajectoryCommand(m_firstPath, true),
-            new RunCommand(() -> intakeSubsystem.intakeOn(Constants.IntakeConstants.kIntakePickUp + 0.2), intakeSubsystem).withTimeout(.2),
+            new RunCommand(() -> intakeSubsystem.intakeOn(Constants.IntakeConstants.kConePickUp + 0.2), intakeSubsystem).withTimeout(.2),
             // new WaitCommand(0.5),
             driveSubsystem.followTrajectoryCommand(m_secondPath, false),
             new InstantCommand(() -> intakeSubsystem.intakeOff()),

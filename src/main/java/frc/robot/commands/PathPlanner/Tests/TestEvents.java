@@ -40,7 +40,7 @@ public class TestEvents extends SequentialCommandGroup {
         //     Constants.AutoConstants.AUTO_EVENT_MAP)));
 
         addCommands(
-                new InstantCommand(() -> intakeSubsystem.intakeOn(Constants.IntakeConstants.kIntakePickUp), intakeSubsystem),
+                new InstantCommand(() -> intakeSubsystem.intakeOn(Constants.IntakeConstants.kConePickUp), intakeSubsystem),
                 new ArmToPositionWithEnd(armSubsystem, armPositions.LVLTRE).withTimeout(1.6),
                 new FollowPathWithEvents(
                     driveSubsystem.followTrajectoryCommand(m_path.get(0), true),
