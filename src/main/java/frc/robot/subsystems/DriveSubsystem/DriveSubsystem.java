@@ -224,14 +224,19 @@ public class DriveSubsystem extends SubsystemBase {
     
     double xSpeedCommanded;
     double ySpeedCommanded;
+    double magnitude;
 
     //Override max output when slowdrive button is pressed
     if (m_slowDriveButton.getAsBoolean()) maxOutput = DriveConstants.kDriveSlow; 
 
     if (squaredInputs) {
-      xSpeed = Math.copySign(xSpeed*xSpeed, xSpeed);
-      ySpeed = Math.copySign(ySpeed*ySpeed, ySpeed);
-      if (!rotException) {rot = Math.copySign(rot*rot, rot);}
+      // xSpeed = Math.copySign(xSpeed*xSpeed, xSpeed);
+      // ySpeed = Math.copySign(ySpeed*ySpeed, ySpeed);
+      // if (!rotException) {rot = Math.copySign(rot*rot, rot);}
+
+      magnitude = Math.sqrt(xSpeed*xSpeed + ySpeed*ySpeed);
+      xSpeed *= magnitude;
+      ySpeed *= magnitude;
     }
 
     xSpeed *= maxOutput;
