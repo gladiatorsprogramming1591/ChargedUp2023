@@ -232,7 +232,7 @@ public class DriveSubsystem extends SubsystemBase {
     if (squaredInputs) {
       // xSpeed = Math.copySign(xSpeed*xSpeed, xSpeed);
       // ySpeed = Math.copySign(ySpeed*ySpeed, ySpeed);
-      // if (!rotException) {rot = Math.copySign(rot*rot, rot);}
+      if (!rotException) {rot = Math.copySign(rot*rot, rot);}
 
       magnitude = Math.sqrt(xSpeed*xSpeed + ySpeed*ySpeed);
       xSpeed *= magnitude;

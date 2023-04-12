@@ -269,14 +269,14 @@ public final class Constants {
     public static final double kMaxJointOutSpeed = -0.30; // was -0.30
     public static final double kMaxJointInSpeed = 0.40; // was 0.40
 
-    public static final double kOutPosition = -13.35; // -13.1
+    public static final double kOutPosition = -14.85; // -13.35
     public static final double kInPosition = 0.0;
 
-    public static final double kShootPosition = -7.0; // setpoint (executed from outPosition)
+    public static final double kShootPosition = -8.5; // -7.0 , setpoint (executed from outPosition)
     
-    public static final double kAutoHighShootPosition = -6.5;
-    public static final double kAutoMidShootPosition = -7.5;
-    public static final double kAutoFarShootPosition = -9.0;
+    public static final double kAutoHighShootPosition = -8.0;
+    public static final double kAutoMidShootPosition = -9.0;
+    public static final double kAutoFarShootPosition = -10.5;
 
     public static final double kJointTolerance = 0.10;
     public static final double kShootJointTolerance = 0.05;

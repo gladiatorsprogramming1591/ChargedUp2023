@@ -2,13 +2,13 @@
   "waypoints": [
     {
       "anchorPoint": {
-        "x": 1.82,
-        "y": 4.95
+        "x": 1.73,
+        "y": 3.31
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.1160733310229185,
-        "y": 4.721467302763966
+        "x": 1.7212394049699147,
+        "y": 3.31
       },
       "holonomicAngle": 180.0,
       "isReversal": false,
@@ -24,18 +24,43 @@
     },
     {
       "anchorPoint": {
-        "x": 6.83,
-        "y": 4.3
+        "x": 7.5,
+        "y": 3.31
       },
       "prevControl": {
-        "x": 6.509023899748872,
-        "y": 4.306829278728747
+        "x": 7.315185754025126,
+        "y": 3.31
       },
       "nextControl": {
-        "x": 7.150976100251128,
-        "y": 4.293170721271252
+        "x": 7.315185754025126,
+        "y": 3.31
       },
       "holonomicAngle": 180.0,
+      "isReversal": true,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [],
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 6.0,
+        "y": 3.31
+      },
+      "prevControl": {
+        "x": 6.027510518867748,
+        "y": 3.31
+      },
+      "nextControl": {
+        "x": 5.972489481132252,
+        "y": 3.31
+      },
+      "holonomicAngle": 0.0,
       "isReversal": false,
       "velOverride": null,
       "isLocked": false,
@@ -49,15 +74,15 @@
     },
     {
       "anchorPoint": {
-        "x": 1.816588141846804,
-        "y": 4.38
+        "x": 3.9,
+        "y": 3.31
       },
       "prevControl": {
-        "x": 2.6096070277728627,
-        "y": 4.551311879645849
+        "x": 4.117874317205438,
+        "y": 3.31
       },
       "nextControl": null,
-      "holonomicAngle": 180.0,
+      "holonomicAngle": 0,
       "isReversal": false,
       "velOverride": null,
       "isLocked": false,
@@ -70,20 +95,26 @@
       }
     }
   ],
-  "maxVelocity": 2.0,
-  "maxAcceleration": 2.2,
+  "maxVelocity": 1.4,
+  "maxAcceleration": null,
   "isReversed": null,
   "markers": [
     {
-      "position": 0.1,
+      "position": 0.15,
       "names": [
-        "ArmHOME then GroundIntakeOut and PickUp"
+        "Arm HOME"
       ]
     },
     {
-      "position": 1.13,
+      "position": 0.581818181818164,
       "names": [
-        "GroundIntakeTransferArmUp"
+        "GroundIntakeOut and Fast PickUp"
+      ]
+    },
+    {
+      "position": 1.1636363636363656,
+      "names": [
+        "ShootPosL3"
       ]
     }
   ]
