@@ -34,10 +34,11 @@ import frc.robot.commands.PathPlanner.C3OneCubeHybrid;
 import frc.robot.commands.PathPlanner.C5OneCubeLevel;
 import frc.robot.commands.PathPlanner.C7HybridLink;
 import frc.robot.commands.PathPlanner.C4C6OneConeLevel;
-import frc.robot.commands.PathPlanner.C4TwoPieceCS;
+import frc.robot.commands.PathPlanner.C4C6TwoPieceCS;
 import frc.robot.commands.PathPlanner.C9TwoPiece;
 import frc.robot.commands.PathPlanner.OneConeScoreSolo;
 import frc.robot.commands.PathPlanner.OneCubeScoreSolo;
+import frc.robot.commands.PathPlanner.TEST;
 import frc.robot.commands.PathPlanner.C7OneCone;
 import frc.robot.commands.PathPlanner.C9OneConeShootTwo;
 import frc.robot.commands.armCommands.ArmToPosition;
@@ -169,7 +170,7 @@ public class RobotContainer {
     m_autoChooser.addOption("OneCube ScoreSolo", new OneCubeScoreSolo(m_robotDrive, m_arm, m_intake));
 
     m_autoChooser.addOption("C1 RED TwoPiece", new C1TwoPiece(PathConstants.LVL, true, m_robotDrive, m_arm, m_intake, m_LEDs));
-    m_autoChooser.addOption("C1 BLUE TwoPiece", new C1TwoPiece(PathConstants.LVL, false, m_robotDrive, m_arm, m_intake, m_LEDs));
+    m_autoChooser.addOption("C1 Default TwoPiece", new C1TwoPiece(PathConstants.LVL, false, m_robotDrive, m_arm, m_intake, m_LEDs));
     m_autoChooser.addOption("C1 TwoPiece NO LVL", new C1TwoPiece(PathConstants.NoLVL, false, m_robotDrive, m_arm, m_intake, m_LEDs));
     // m_autoChooser.addOption("C1 TwoPiece & Cube NO LVL", new C1TwoPiece(PathConstants.grabCube, false, m_robotDrive, m_arm, m_intake, m_LEDs));  // Not tested / dialed-in
     m_autoChooser.addOption("C1 ThreePiece", new C1ThreePiece(PathConstants.LVL, false, m_robotDrive, m_arm, m_intake, m_groundJoint, m_groundIntake, m_LEDs));    // Add Red Option if Charge Station behaves differently
@@ -178,7 +179,7 @@ public class RobotContainer {
     m_autoChooser.addOption("C3 OneCone", new C3OneCone(m_robotDrive, m_arm, m_intake));
     m_autoChooser.addOption("C3 OneCubeHybrid", new C3OneCubeHybrid(m_robotDrive, m_arm, m_intake));
 
-    m_autoChooser.addOption("C4TwoPieceCS", new C4TwoPieceCS(true, m_robotDrive, m_arm, m_intake, m_LEDs, m_groundIntake));
+    m_autoChooser.addOption("C4 OR C6 TwoPieceCS", new C4C6TwoPieceCS(true, m_robotDrive, m_arm, m_intake, m_LEDs, m_groundIntake));
     m_autoChooser.addOption("C4 OR C6 OneConeLevel", new C4C6OneConeLevel(m_robotDrive, m_arm, m_intake));
     m_autoChooser.addOption("C5 OneCubeLevel", new C5OneCubeLevel(m_robotDrive, m_arm, m_intake));
     m_autoChooser.addOption("C7 OneCone", new C7OneCone(m_robotDrive, m_arm, m_intake));
@@ -186,6 +187,11 @@ public class RobotContainer {
     m_autoChooser.addOption("C9 TwoPiece", new C9TwoPiece(PathConstants.LVL, true, m_robotDrive, m_arm, m_intake, m_LEDs));
     m_autoChooser.addOption("C9 TwoPiece NO LVL", new C9TwoPiece(PathConstants.NoLVL, true, m_robotDrive, m_arm, m_intake, m_LEDs));
     m_autoChooser.addOption("C9 OneConeShootTwo", new C9OneConeShootTwo(m_robotDrive, m_arm, m_intake, m_LEDs));
+
+    m_autoChooser.addOption("PID TEST x & y", new TEST(0, m_robotDrive, m_arm, m_intake, m_LEDs));
+    m_autoChooser.addOption("PID TEST rot", new TEST(1, m_robotDrive, m_arm, m_intake, m_LEDs));
+    m_autoChooser.addOption("PID TEST all", new TEST(2, m_robotDrive, m_arm, m_intake, m_LEDs));
+    m_autoChooser.addOption("PID TEST straight", new TEST(3, m_robotDrive, m_arm, m_intake, m_LEDs));
     SmartDashboard.putData("Auto Mode", m_autoChooser);
   }
 
@@ -409,6 +415,7 @@ public class RobotContainer {
     m_manipulatorController.rightTrigger().onTrue(new ArmToPosition(m_arm, ArmSubsystem.armPositions.CONESTOW)
       .alongWith(new InstantCommand(() -> m_LEDs.off())));
     m_manipulatorController.rightBumper().onTrue(new ArmToPosition(m_arm, ArmSubsystem.armPositions.CONESINGLE));
+    // m_manipulatorController.rightBumper().whileTrue(new RunCommand(() -> m_intake.intakeOn(1.0), m_intake));
 
     // Main Intake
     m_manipulatorController.rightStick().whileTrue( new RunCommand(

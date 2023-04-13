@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.IntakeConstants;
-import frc.robot.commands.armCommands.ArmToPositionWithEnd;
+import frc.robot.commands.armCommands.ArmToPosition;
 import frc.robot.commands.driveCommands.DriveToLevel;
 import frc.robot.subsystems.LEDs;
 import frc.robot.subsystems.DriveSubsystem.DriveSubsystem;
@@ -21,9 +21,9 @@ import frc.robot.subsystems.MainIntakeSubsystem.ArmSubsystem;
 import frc.robot.subsystems.MainIntakeSubsystem.IntakeSubsystem;
 import frc.robot.subsystems.MainIntakeSubsystem.ArmSubsystem.armPositions;
 
-public class C4TwoPieceCS extends SequentialCommandGroup {
+public class C4C6TwoPieceCS extends SequentialCommandGroup {
 
-    public C4TwoPieceCS(
+    public C4C6TwoPieceCS(
         // int endStrategy,
         boolean isRED,
         DriveSubsystem driveSubsystem, 
@@ -60,7 +60,7 @@ public class C4TwoPieceCS extends SequentialCommandGroup {
     
     addCommands(
         new InstantCommand(() -> intakeSubsystem.intakeOn(IntakeConstants.kConePickUp), intakeSubsystem),
-        new ArmToPositionWithEnd(armSubsystem, armPositions.LVLTRE).withTimeout(1.20),
+        new ArmToPosition(armSubsystem, armPositions.LVLTRE, true).withTimeout(1.20),
         new FollowPathWithEvents(
             driveSubsystem.followTrajectoryCommand(m_conePath, true),
             m_conePath.getMarkers(),

@@ -241,7 +241,7 @@ public class DriveSubsystem extends SubsystemBase {
 
     xSpeed *= maxOutput;
     ySpeed *= maxOutput;
-    if (!rotException) {rot *= maxOutput;}
+    // if (!rotException) {rot *= maxOutput;}       // TODO: SEPERATE FROM DRIVE MAX OUTPUT
 
     if (rateLimit) {
       // Convert XY to polar for rate limiting

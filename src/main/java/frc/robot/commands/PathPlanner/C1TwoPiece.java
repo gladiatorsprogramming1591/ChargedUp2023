@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.PathConstants;
+import frc.robot.commands.armCommands.ArmToPosition;
 import frc.robot.commands.armCommands.ArmToPositionWithEnd;
 import frc.robot.commands.driveCommands.DriveToLevel;
 import frc.robot.subsystems.LEDs;
@@ -94,7 +95,7 @@ public class C1TwoPiece extends SequentialCommandGroup {
     
     addCommands(
         new InstantCommand(() -> intakeSubsystem.intakeOn(IntakeConstants.kConePickUp), intakeSubsystem),
-        new ArmToPositionWithEnd(armSubsystem, armPositions.LVLTRE).withTimeout(1.20),
+        new ArmToPosition(armSubsystem, armPositions.LVLTRE, true).withTimeout(1.20),
         new FollowPathWithEvents(
             driveSubsystem.followTrajectoryCommand(m_conePath, true),
             m_conePath.getMarkers(),
