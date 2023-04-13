@@ -128,6 +128,7 @@ public class RobotContainer {
         // Turning is controlled by the X axis of the right stick.
         new RunCommand(
             () -> m_robotDrive.drive(
+                true,
                 -MathUtil.applyDeadband(m_driverController.getLeftY(), OIConstants.kDriveDeadband),
                 -MathUtil.applyDeadband(m_driverController.getLeftX(), OIConstants.kDriveDeadband),
                 -MathUtil.applyDeadband(m_driverController.getRightX(), OIConstants.kDriveDeadband),
@@ -316,6 +317,7 @@ public class RobotContainer {
     // POV Rotation
     m_driverController.b().whileTrue( new RunCommand (
           () -> m_robotDrive.TurnToTarget(
+              true,
               -MathUtil.applyDeadband(m_driverController.getLeftY(), OIConstants.kDriveDeadband),
               -MathUtil.applyDeadband(m_driverController.getLeftX(), OIConstants.kDriveDeadband),
               Constants.DriveConstants.faceRight,
@@ -324,6 +326,7 @@ public class RobotContainer {
           m_robotDrive));
     m_driverController.x().whileTrue( new RunCommand (
           () -> m_robotDrive.TurnToTarget(
+              true,
               -MathUtil.applyDeadband(m_driverController.getLeftY(), OIConstants.kDriveDeadband),
               -MathUtil.applyDeadband(m_driverController.getLeftX(), OIConstants.kDriveDeadband),
               Constants.DriveConstants.faceLeft,
@@ -332,6 +335,7 @@ public class RobotContainer {
           m_robotDrive));
     m_driverController.y().whileTrue( new RunCommand (
           () -> m_robotDrive.TurnToTarget(
+              true,
               -MathUtil.applyDeadband(m_driverController.getLeftY(), OIConstants.kDriveDeadband),
               -MathUtil.applyDeadband(m_driverController.getLeftX(), OIConstants.kDriveDeadband),
               Constants.DriveConstants.faceForward,
@@ -340,6 +344,7 @@ public class RobotContainer {
           m_robotDrive));
     m_driverController.a().whileTrue( new RunCommand (
           () -> m_robotDrive.TurnToTarget(
+              true,
               -MathUtil.applyDeadband(m_driverController.getLeftY(), OIConstants.kDriveDeadband),
               -MathUtil.applyDeadband(m_driverController.getLeftX(), OIConstants.kDriveDeadband),
               Constants.DriveConstants.faceBackward,
@@ -353,6 +358,7 @@ public class RobotContainer {
     // NOT USED IN MATCH PLAY
     m_driverController.rightStick().toggleOnTrue( new RunCommand (
           () -> m_robotDrive.drive(
+              true,
               -MathUtil.applyDeadband(m_driverController.getLeftY(), OIConstants.kDriveDeadband),
               -MathUtil.applyDeadband(m_driverController.getLeftX(), OIConstants.kDriveDeadband),
               -MathUtil.applyDeadband(m_driverController.getRightX(), OIConstants.kDriveDeadband),
@@ -363,6 +369,7 @@ public class RobotContainer {
       // Allign with Cone Node by Rotation
       m_driverController.start().whileTrue(new RunCommand(
           () -> m_robotDrive.drive(
+            false,
               -MathUtil.applyDeadband(m_driverController.getLeftY(), OIConstants.kDriveDeadband),
               -MathUtil.applyDeadband(m_driverController.getLeftX(), OIConstants.kDriveDeadband),
               m_robotDrive.getVisionRotSpeed(),
@@ -383,6 +390,7 @@ public class RobotContainer {
       // Allign with Cone Node by Strafe
       m_driverController.back().whileTrue(new RunCommand(
           () -> m_robotDrive.TurnToTarget(
+              false,
               -MathUtil.applyDeadband(m_driverController.getLeftY(), OIConstants.kDriveDeadband),
               -m_robotDrive.getVisionStrafeSpeed(),
               Constants.DriveConstants.faceBackward,
