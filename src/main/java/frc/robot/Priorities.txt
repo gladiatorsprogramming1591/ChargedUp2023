@@ -1,4 +1,6 @@
 Main TODO:
+Investigate rot limitation (test w/ & w/o slew and squared inputs)
+
 Ground Intake:
     -Ground intake shoot button (Shoot pos method needs improvment)
     -enum Map?

@@ -50,6 +50,10 @@ public class GroundIntake extends SubsystemBase{
         SmartDashboard.putNumber("RightGroundIntake iCurrent", RightGroundIntakeMotor.getSupplyCurrent());
     }
 
+    public void setShootSpeed(double shootSpeed){
+        SmartDashboard.putNumber("GroundIntakeShoot", shootSpeed);
+    }
+
     // Joint Speed: Positive  is up, negative speed down
     // Intake Speed: Positive is pick-up, negative is eject
 
@@ -75,6 +79,5 @@ public class GroundIntake extends SubsystemBase{
     public void groundIntakeSpeed(double speed){
         LeftGroundIntakeMotor.set(ControlMode.PercentOutput, speed);
     }
-
 }
 

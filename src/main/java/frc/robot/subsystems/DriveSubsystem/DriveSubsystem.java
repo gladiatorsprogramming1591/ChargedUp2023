@@ -209,34 +209,39 @@ public class DriveSubsystem extends SubsystemBase {
    * @param rateLimit     Whether to enable rate limiting for smoother control.
    */
   
-  public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative) {
-    drive(xSpeed, ySpeed, rot, fieldRelative, true, false, 1, false);
+  public void drive(boolean highMaxSpeed, double xSpeed, double ySpeed, double rot, boolean fieldRelative) {
+    drive(highMaxSpeed, xSpeed, ySpeed, rot, fieldRelative, true, false, 1, false);
   }
-  public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative, boolean rateLimit) {
-    drive(xSpeed, ySpeed, rot, fieldRelative, rateLimit, true, 1, false);
+  public void drive(boolean highMaxSpeed, double xSpeed, double ySpeed, double rot, boolean fieldRelative, boolean rateLimit) {
+    drive(highMaxSpeed, xSpeed, ySpeed, rot, fieldRelative, rateLimit, true, 1, false);
   }
-  public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative, boolean rateLimit, boolean squaredInputs, double maxOutput) {
-    drive(xSpeed, ySpeed, rot, fieldRelative, rateLimit, squaredInputs, maxOutput, false);
+  public void drive(boolean highMaxSpeed, double xSpeed, double ySpeed, double rot, boolean fieldRelative, boolean rateLimit, boolean squaredInputs, double maxOutput) {
+    drive(highMaxSpeed, xSpeed, ySpeed, rot, fieldRelative, rateLimit, squaredInputs, maxOutput, false);
   }
 
   // Main drive method
-  public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative, boolean rateLimit, boolean squaredInputs, double maxOutput, boolean rotException) {
+  public void drive(boolean highMaxSpeed, double xSpeed, double ySpeed, double rot, boolean fieldRelative, boolean rateLimit, boolean squaredInputs, double maxOutput, boolean rotException) {
     
     double xSpeedCommanded;
     double ySpeedCommanded;
+    double magnitude;
 
     //Override max output when slowdrive button is pressed
     if (m_slowDriveButton.getAsBoolean()) maxOutput = DriveConstants.kDriveSlow; 
 
     if (squaredInputs) {
-      xSpeed = Math.copySign(xSpeed*xSpeed, xSpeed);
-      ySpeed = Math.copySign(ySpeed*ySpeed, ySpeed);
+      // xSpeed = Math.copySign(xSpeed*xSpeed, xSpeed);
+      // ySpeed = Math.copySign(ySpeed*ySpeed, ySpeed);
       if (!rotException) {rot = Math.copySign(rot*rot, rot);}
+
+      magnitude = Math.sqrt(xSpeed*xSpeed + ySpeed*ySpeed);
+      xSpeed *= magnitude;
+      ySpeed *= magnitude;
     }
 
     xSpeed *= maxOutput;
     ySpeed *= maxOutput;
-    if (!rotException) {rot *= maxOutput;}
+    // if (!rotException) {rot *= maxOutput;}       // TODO: SEPERATE FROM DRIVE MAX OUTPUT
 
     if (rateLimit) {
       // Convert XY to polar for rate limiting
@@ -286,18 +291,27 @@ public class DriveSubsystem extends SubsystemBase {
       ySpeedCommanded = ySpeed;
       m_currentRotation = rot;
     }
+    double xSpeedDelivered;
+    double ySpeedDelivered;
+    double rotDelivered;
 
     // Convert the commanded speeds into the correct units for the drivetrain
-    double xSpeedDelivered = xSpeedCommanded * DriveConstants.kMaxSpeedMetersPerSecond;
-    double ySpeedDelivered = ySpeedCommanded * DriveConstants.kMaxSpeedMetersPerSecond;
-    double rotDelivered = m_currentRotation * DriveConstants.kMaxAngularSpeed;
+    if(highMaxSpeed){
+      xSpeedDelivered = xSpeedCommanded * DriveConstants.kMaxTeleopSpeedMetersPerSecond;
+      ySpeedDelivered = ySpeedCommanded * DriveConstants.kMaxTeleopSpeedMetersPerSecond;
+      rotDelivered = m_currentRotation * DriveConstants.kMaxTeleopAngularSpeed;
+    } else {
+      xSpeedDelivered = xSpeedCommanded * DriveConstants.kMaxDefaultSpeedMetersPerSecond;
+      ySpeedDelivered = ySpeedCommanded * DriveConstants.kMaxDefaultSpeedMetersPerSecond;
+      rotDelivered = m_currentRotation * DriveConstants.kMaxDefaultAngularSpeed;
+    }
 
     var swerveModuleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(
         fieldRelative
             ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered, m_odometry.getPoseMeters().getRotation())
             : new ChassisSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered));
     SwerveDriveKinematics.desaturateWheelSpeeds(
-        swerveModuleStates, DriveConstants.kMaxSpeedMetersPerSecond);
+        swerveModuleStates, DriveConstants.kMaxTeleopSpeedMetersPerSecond);
     m_frontLeft.setDesiredState(swerveModuleStates[0]);
     m_frontRight.setDesiredState(swerveModuleStates[1]);
     m_rearLeft.setDesiredState(swerveModuleStates[2]);
@@ -321,7 +335,7 @@ public class DriveSubsystem extends SubsystemBase {
    */
   public void setModuleStates(SwerveModuleState[] desiredStates) {
     SwerveDriveKinematics.desaturateWheelSpeeds(
-        desiredStates, DriveConstants.kMaxSpeedMetersPerSecond);
+        desiredStates, DriveConstants.kMaxTeleopSpeedMetersPerSecond);
     m_frontLeft.setDesiredState(desiredStates[0]);
     m_frontRight.setDesiredState(desiredStates[1]);
     m_rearLeft.setDesiredState(desiredStates[2]);
@@ -370,7 +384,7 @@ public class DriveSubsystem extends SubsystemBase {
   public void driveToLevel(){
     double pidOut = MathUtil.clamp(m_rollPidController.calculate(
       m_navX.getRoll(), 0), -DriveConstants.kAutoLevelMaxOutput, DriveConstants.kAutoLevelMaxOutput);
-    drive(pidOut, 0, 0, false);
+    drive(false, pidOut, 0, 0, false);
 
     if (++count %10 == 0) {
         System.out.println("Roll is :" + m_navX.getRoll());
@@ -390,14 +404,14 @@ public class DriveSubsystem extends SubsystemBase {
     double currentAngle = m_navX.getRoll();
     // double currentAngle = m_odometry.;
     if ( currentAngle >= targetAngle) {
-        drive(.25, 0, 0, false);  // xSpeed .4
+        drive(false, .25, 0, 0, false);  // xSpeed .4
         atAngle = false;
         if (++count %10 == 0) {
           System.out.println("Angle is:" + currentAngle);
         }
     }
     else {
-        drive(0, 0, 0, true);
+        drive(false, 0, 0, 0, true);
     }
     return atAngle;
   }
@@ -491,16 +505,16 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   // TODO: use profiled pid if needed
-  public void TurnToTarget(double X, double Y, double angle, boolean rateLimit, boolean squaredInputs, double maxOutput){
+  public void TurnToTarget(boolean highMaxSpeed, double X, double Y, double angle, boolean rateLimit, boolean squaredInputs, double maxOutput){
     // double pidOut = MathUtil.clamp(m_rotPidController.calculate(-m_navX.getAngle()%360, angle), -0.30, 0.30);
     double pidOut = MathUtil.clamp(m_rotPidController.calculate(MathUtil.inputModulus(m_odometry.getPoseMeters().getRotation().getDegrees(), -180, 180), angle), -DriveConstants.kmaxPOVturnspeed, DriveConstants.kmaxPOVturnspeed);
-    drive(X, Y, pidOut, true, rateLimit, squaredInputs, maxOutput, true); // added rotExeption to keep the driver's SquaredInputs and MaxOutput seperate from PID rotation
+    drive(highMaxSpeed, X, Y, pidOut, true, rateLimit, squaredInputs, maxOutput, true); // added rotExeption to keep the driver's SquaredInputs and MaxOutput seperate from PID rotation
   }
 
   public Command DriveCommand(double speed){
     return new StartEndCommand(
-      () -> drive(speed,0,0,false), 
-      () -> drive(0,0,0,false),
+      () -> drive(false, speed,0,0,false), 
+      () -> drive(false, 0,0,0,false),
       this);
   }
 
