@@ -283,7 +283,8 @@ public class RobotContainer {
       new RunCommand(() -> m_groundJoint.groundJointPosition(GroundArmConstants.kInPosition),
                      m_groundJoint)
                   .beforeStarting(new InstantCommand(() -> m_groundIntake.setShootSpeed(0.6))
-                    .alongWith(new InstantCommand(() -> m_LEDs.setColor(m_LEDs.BLUE)))));
+                    // .alongWith(new InstantCommand(() -> m_LEDs.setColor(m_LEDs.BLUE)))
+                    ));
   }
 
   /**
