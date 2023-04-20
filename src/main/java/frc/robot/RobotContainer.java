@@ -447,7 +447,7 @@ public class RobotContainer {
     m_manipulatorController.b().onTrue(new RunCommand(() -> m_groundJoint.groundJointPosition(GroundArmConstants.kOutPosition), m_groundJoint));
       //Shoot Position
     m_manipulatorController.leftTrigger(0.10).whileTrue(new RunCommand(() -> m_groundJoint.groundJointPosition(GroundArmConstants.kShootPosition + 1.5), m_groundJoint)
-      .alongWith(new InstantCommand(() -> m_groundIntake.setShootSpeed(GroundArmConstants.kIntakeShoot - 0.5))));
+      .alongWith(new InstantCommand(() -> m_groundIntake.setShootSpeed(GroundArmConstants.kIntakeShoot*0.1))));
     m_manipulatorController.leftTrigger(0.85).whileTrue(new RunCommand(() -> m_groundJoint.groundJointPosition(GroundArmConstants.kShootPosition + 1.5), m_groundJoint)
       .alongWith(new InstantCommand(() -> m_groundIntake.setShootSpeed(GroundArmConstants.kIntakeShoot))));
 
