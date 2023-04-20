@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.IntakeConstants;
+import frc.robot.Constants.PathConstants;
 import frc.robot.commands.armCommands.ArmToPosition;
 import frc.robot.commands.driveCommands.DriveToLevel;
 import frc.robot.subsystems.LEDs;
@@ -57,6 +58,12 @@ public class C4C6TwoPieceCS extends SequentialCommandGroup {
         //     new DriveToLevel(driveSubsystem)
         //         .alongWith(new RunCommand(() -> LED.cycle())));
 
+        driveSubsystem.setTrajPID(
+            PathConstants.kpXdefault, PathConstants.kiXdefault, PathConstants.kdXdefault, 
+            PathConstants.kpYdefault + 3, PathConstants.kiYdefault, PathConstants.kdYdefault, 
+            PathConstants.kpRdefault, PathConstants.kiRdefault, PathConstants.kdRdefault);
+    
+
     
     addCommands(
         new InstantCommand(() -> intakeSubsystem.intakeOn(IntakeConstants.kConePickUp), intakeSubsystem),
@@ -68,7 +75,7 @@ public class C4C6TwoPieceCS extends SequentialCommandGroup {
         new RunCommand(() -> intakeSubsystem.intakeOn(IntakeConstants.kConeEject), intakeSubsystem).withTimeout(.25),
 
         new FollowPathWithEvents(
-            driveSubsystem.followTrajectoryCommand(m_pickupPath, false),
+            driveSubsystem.followTrajectoryCommand(m_pickupPath, false, true),
             m_pickupPath.getMarkers(),
             AutoConstants.AUTO_EVENT_MAP),
         

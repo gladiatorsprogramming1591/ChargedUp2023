@@ -446,8 +446,10 @@ public class RobotContainer {
       //Down
     m_manipulatorController.b().onTrue(new RunCommand(() -> m_groundJoint.groundJointPosition(GroundArmConstants.kOutPosition), m_groundJoint));
       //Shoot Position
-    m_manipulatorController.leftTrigger().whileTrue(new RunCommand(() -> m_groundJoint.groundJointPosition(GroundArmConstants.kShootPosition), m_groundJoint));
-    //TODO: Add setpoint that +/- "1" depending on staring pos of groundJoint
+    m_manipulatorController.leftTrigger(0.10).whileTrue(new RunCommand(() -> m_groundJoint.groundJointPosition(GroundArmConstants.kShootPosition + 1.5), m_groundJoint)
+      .alongWith(new InstantCommand(() -> m_groundIntake.setShootSpeed(GroundArmConstants.kIntakeShoot - 0.5))));
+    m_manipulatorController.leftTrigger(0.85).whileTrue(new RunCommand(() -> m_groundJoint.groundJointPosition(GroundArmConstants.kShootPosition + 1.5), m_groundJoint)
+      .alongWith(new InstantCommand(() -> m_groundIntake.setShootSpeed(GroundArmConstants.kIntakeShoot))));
 
     // Arm Manual Control
     m_manipulatorController.leftStick()
