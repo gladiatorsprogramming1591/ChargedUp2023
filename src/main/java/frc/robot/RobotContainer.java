@@ -281,7 +281,9 @@ public class RobotContainer {
   public void updateRobotForTeleop() {
     m_groundJoint.setDefaultCommand(
       new RunCommand(() -> m_groundJoint.groundJointPosition(GroundArmConstants.kInPosition),
-                     m_groundJoint));
+                     m_groundJoint)
+                  .beforeStarting(new InstantCommand(() -> m_groundIntake.setShootSpeed(0.6))
+                    .alongWith(new InstantCommand(() -> m_LEDs.setColor(m_LEDs.BLUE)))));
   }
 
   /**
@@ -444,12 +446,20 @@ public class RobotContainer {
       //Intake Reverse
     m_manipulatorController.y().whileTrue(new RunCommand(() -> m_groundIntake.groundIntakeShoot(), m_groundIntake));
       //Down
-    m_manipulatorController.b().onTrue(new RunCommand(() -> m_groundJoint.groundJointPosition(GroundArmConstants.kOutPosition), m_groundJoint));
-      //Shoot Position
+    m_manipulatorController.b().onTrue(new RunCommand(() -> m_groundJoint.groundJointPosition(GroundArmConstants.kOutPosition), m_groundJoint)
+      .beforeStarting(new InstantCommand(() -> m_groundIntake.setShootSpeed(GroundArmConstants.kIntakeShoot*0.2))
+        // .andThen(new InstantCommand(() -> m_LEDs.setColor(m_LEDs.WHITE), m_LEDs))
+        ));
+      //Shoot Position Mid
     m_manipulatorController.leftTrigger(0.10).whileTrue(new RunCommand(() -> m_groundJoint.groundJointPosition(GroundArmConstants.kShootPosition + 1.5), m_groundJoint)
-      .alongWith(new InstantCommand(() -> m_groundIntake.setShootSpeed(GroundArmConstants.kIntakeShoot*0.1))));
-    m_manipulatorController.leftTrigger(0.85).whileTrue(new RunCommand(() -> m_groundJoint.groundJointPosition(GroundArmConstants.kShootPosition + 1.5), m_groundJoint)
-      .alongWith(new InstantCommand(() -> m_groundIntake.setShootSpeed(GroundArmConstants.kIntakeShoot))));
+      .beforeStarting(new InstantCommand(() -> m_groundIntake.setShootSpeed(GroundArmConstants.kIntakeShoot*0.4))
+        // .andThen(new InstantCommand(() -> m_LEDs.setColor(m_LEDs.YELLOW), m_LEDs))
+        ));
+      //Shoot Position High
+    m_manipulatorController.leftTrigger(0.99).whileTrue(new RunCommand(() -> m_groundJoint.groundJointPosition(GroundArmConstants.kShootPosition + 1.5), m_groundJoint)
+      .beforeStarting(new InstantCommand(() -> m_groundIntake.setShootSpeed(GroundArmConstants.kIntakeShoot))
+        // .andThen(new InstantCommand(() -> m_LEDs.setColor(m_LEDs.PURPLE), m_LEDs))
+        ));
 
     // Arm Manual Control
     m_manipulatorController.leftStick()
