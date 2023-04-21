@@ -258,7 +258,7 @@ public class RobotContainer {
 
       Constants.AutoConstants.AUTO_EVENT_MAP.put("ShootToL2",
         new SequentialCommandGroup(
-          new RunCommand(() -> m_groundIntake.groundIntakeSpeed(GroundArmConstants.kIntakeShootL2), m_groundIntake)
+          new RunCommand(() -> m_groundIntake.groundIntakeSpeed(GroundArmConstants.kIntakeShootL2Auto), m_groundIntake)
         ));
 
       Constants.AutoConstants.AUTO_EVENT_MAP.put("GroundIntakeOut and PickUp",
@@ -282,7 +282,7 @@ public class RobotContainer {
     m_groundJoint.setDefaultCommand(
       new RunCommand(() -> m_groundJoint.groundJointPosition(GroundArmConstants.kInPosition),
                      m_groundJoint)
-                  .beforeStarting(new InstantCommand(() -> m_groundIntake.setShootSpeed(0.6))
+                  .beforeStarting(new InstantCommand(() -> m_groundIntake.setShootSpeed(GroundArmConstants.kIntakeReverseDefault))
                     // .alongWith(new InstantCommand(() -> m_LEDs.setColor(m_LEDs.BLUE)))
                     ));
   }
@@ -448,12 +448,12 @@ public class RobotContainer {
     m_manipulatorController.y().whileTrue(new RunCommand(() -> m_groundIntake.groundIntakeShoot(), m_groundIntake));
       //Down
     m_manipulatorController.b().onTrue(new RunCommand(() -> m_groundJoint.groundJointPosition(GroundArmConstants.kOutPosition), m_groundJoint)
-      .beforeStarting(new InstantCommand(() -> m_groundIntake.setShootSpeed(GroundArmConstants.kIntakeShoot*0.2))
+      .beforeStarting(new InstantCommand(() -> m_groundIntake.setShootSpeed(GroundArmConstants.kIntakeSpit))
         // .andThen(new InstantCommand(() -> m_LEDs.setColor(m_LEDs.WHITE), m_LEDs))
         ));
       //Shoot Position Mid
     m_manipulatorController.leftTrigger(0.10).whileTrue(new RunCommand(() -> m_groundJoint.groundJointPosition(GroundArmConstants.kShootPosition + 1.5), m_groundJoint)
-      .beforeStarting(new InstantCommand(() -> m_groundIntake.setShootSpeed(GroundArmConstants.kIntakeShoot*0.4))
+      .beforeStarting(new InstantCommand(() -> m_groundIntake.setShootSpeed(GroundArmConstants.kIntakeShootL2))
         // .andThen(new InstantCommand(() -> m_LEDs.setColor(m_LEDs.YELLOW), m_LEDs))
         ));
       //Shoot Position High
