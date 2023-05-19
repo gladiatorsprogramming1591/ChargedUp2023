@@ -294,7 +294,7 @@ public final class Constants {
     public static final double kIntakeReverseDefault = -0.5;
     public static final double kIntakeShoot = -1.0;
     public static final double kIntakeShootL2 = -0.5;
-    public static final double kIntakeSpit = -0.2;
+    public static final double kIntakeSpit = -0.45;
 
     public static final double kIntakeShootL2Auto = -0.5;
     
