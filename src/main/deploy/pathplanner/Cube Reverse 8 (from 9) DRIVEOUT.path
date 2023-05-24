@@ -2,13 +2,13 @@
   "waypoints": [
     {
       "anchorPoint": {
-        "x": 1.82,
-        "y": 4.95
+        "x": 1.73,
+        "y": 1.31
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.1160733310229185,
-        "y": 4.721467302763966
+        "x": 1.890124744119178,
+        "y": 1.31
       },
       "holonomicAngle": 180.0,
       "isReversal": false,
@@ -24,16 +24,16 @@
     },
     {
       "anchorPoint": {
-        "x": 6.83,
-        "y": 4.3
+        "x": 2.06,
+        "y": 1.31
       },
       "prevControl": {
-        "x": 6.509023899748872,
-        "y": 4.306829278728747
+        "x": 1.900579627793654,
+        "y": 1.31
       },
       "nextControl": {
-        "x": 7.150976100251128,
-        "y": 4.293170721271252
+        "x": 2.564255185792348,
+        "y": 1.31
       },
       "holonomicAngle": 180.0,
       "isReversal": false,
@@ -49,15 +49,40 @@
     },
     {
       "anchorPoint": {
-        "x": 1.816588141846804,
-        "y": 4.28
+        "x": 3.8,
+        "y": 0.7204338517093577
       },
       "prevControl": {
-        "x": 2.6096070277728627,
-        "y": 4.451311879645849
+        "x": 2.1063902638765875,
+        "y": 0.7204338517093577
+      },
+      "nextControl": {
+        "x": 5.699146930507526,
+        "y": 0.7204338517093577
+      },
+      "holonomicAngle": 180.0,
+      "isReversal": false,
+      "velOverride": 0.5,
+      "isLocked": false,
+      "isStopPoint": true,
+      "stopEvent": {
+        "names": [],
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 6.909437042839849,
+        "y": 1.3379485817459496
+      },
+      "prevControl": {
+        "x": 6.53206693003971,
+        "y": 0.9262720950548883
       },
       "nextControl": null,
-      "holonomicAngle": 180.0,
+      "holonomicAngle": 270.0,
       "isReversal": false,
       "velOverride": null,
       "isLocked": false,
@@ -70,21 +95,5 @@
       }
     }
   ],
-  "maxVelocity": 2.0,
-  "maxAcceleration": 2.2,
-  "isReversed": null,
-  "markers": [
-    {
-      "position": 0.1,
-      "names": [
-        "ArmHOME then GroundIntakeOut and PickUp"
-      ]
-    },
-    {
-      "position": 1.13,
-      "names": [
-        "GroundIntakeTransferArmUp"
-      ]
-    }
-  ]
+  "markers": []
 }

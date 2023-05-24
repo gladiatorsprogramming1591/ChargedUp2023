@@ -68,7 +68,7 @@ public class C1TwoPiece extends SequentialCommandGroup {
     // No Balance
     } else {
         // if (lastCommands == PathConstants.NoLVL){                                        // Default initiallization required
-            m_lastPath = PathPlanner.loadPath("Cube Reverse 2", 
+            m_lastPath = PathPlanner.loadPath("Cube Reverse 2 DRIVEOUT", 
                 new PathConstraints(2, 2));
             
             m_lastCommands = new SequentialCommandGroup(

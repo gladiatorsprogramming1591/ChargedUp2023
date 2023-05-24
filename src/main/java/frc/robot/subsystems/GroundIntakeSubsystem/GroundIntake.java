@@ -19,7 +19,7 @@ public class GroundIntake extends SubsystemBase{
     double intakeCurrent = 3.0;
 
     double defaultPickUp = GroundArmConstants.kIntakePickUp;
-    double defaultReverse = GroundArmConstants.kIntakeReverse;
+    double defaultReverse = GroundArmConstants.kIntakeReverseDefault;
     double defaultShoot = GroundArmConstants.kIntakeShoot;
 
     boolean atPosition;

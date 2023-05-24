@@ -289,10 +289,14 @@ public final class Constants {
   
     // Intake
     public static final double kAutoIntakePickUp = 0.6;
-    public static final double kIntakePickUp = 0.4; // 0.5
-    public static final double kIntakeReverse = -0.5;
+    public static final double kIntakePickUp = 0.38; // 0.4
+    
+    public static final double kIntakeReverseDefault = -0.5;
     public static final double kIntakeShoot = -1.0;
     public static final double kIntakeShootL2 = -0.5;
+    public static final double kIntakeSpit = -0.45;
+
+    public static final double kIntakeShootL2Auto = -0.5;
     
   /**
    * How many amps the ground intake can take while moving

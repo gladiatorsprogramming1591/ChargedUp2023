@@ -44,10 +44,10 @@ public class C4C6TwoPieceCS extends SequentialCommandGroup {
     // Cube Pick-Up
     if (isRED) {
             m_pickupPath = PathPlanner.loadPath("Leave 4 Level Shoot", 
-                new PathConstraints(1.4, 3.0));
+                new PathConstraints(1.4, 2.0));
     } else {
             m_pickupPath = PathPlanner.loadPath("Leave 4 Level Shoot", 
-                new PathConstraints(1.4,  3.0));
+                new PathConstraints(1.4,  2.0));
     }
         
         // m_lastCommands = new SequentialCommandGroup(
@@ -61,7 +61,7 @@ public class C4C6TwoPieceCS extends SequentialCommandGroup {
         driveSubsystem.setTrajPID(
             PathConstants.kpXdefault, PathConstants.kiXdefault, PathConstants.kdXdefault, 
             PathConstants.kpYdefault + 3, PathConstants.kiYdefault, PathConstants.kdYdefault, 
-            PathConstants.kpRdefault, PathConstants.kiRdefault, PathConstants.kdRdefault);
+            1.0, PathConstants.kiRdefault, 0.2);
     
 
     
