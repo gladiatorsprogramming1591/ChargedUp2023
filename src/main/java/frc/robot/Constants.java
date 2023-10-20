@@ -89,7 +89,7 @@ public final class Constants {
     // Drivetrain Speeds
     public static final double kDriveMaxOutput = 0.95;  // Field: 0.85 | Arcadia: 0.40
     public static final double kDriveSlow = 0.25; //0.25
-    public static final double kmaxPOVturnspeed = 1.0; //0.45
+    public static final double kmaxPOVturnspeed = 0.5; //0.45
     public static final double kAutoLevelMaxOutput = 0.30;
     // Vision
     public static final double maxVisionRotSpeed = 0.4;
@@ -235,7 +235,7 @@ public final class Constants {
     public static final double kLVLONE = kOffset + 0.150;
     public static final double kLVLTWO = kOffset + 0.280;
     public static final double kCONESINGLE = kOffset + 0.325;
-    public static final double kLVLTRE = kOffset + 0.365;
+    public static final double kLVLTRE = kOffset + 0.367;
     public static final double kAllowedErrAbs = 0.001;
 
     // Soft Limits
@@ -280,7 +280,7 @@ public final class Constants {
     
     public static final double kAutoHighShootPosition = -8.0;
     public static final double kAutoMidShootPosition = -9.0;
-    public static final double kAutoFarShootPosition = -10.5;
+    public static final double kAutoFarShootPosition = -9.5;
 
     public static final double kJointTolerance = 0.10;
     public static final double kShootJointTolerance = 0.05;

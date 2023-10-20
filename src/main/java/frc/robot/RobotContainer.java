@@ -253,6 +253,7 @@ public class RobotContainer {
       Constants.AutoConstants.AUTO_EVENT_MAP.put("Shoot",
         new SequentialCommandGroup(
           // new RunCommand(() -> m_groundIntake.groundIntakePickUp(), m_groundIntake).withTimeout(0.10), // 2.95, 5.95 markers on C7
+          new InstantCommand(() -> m_groundIntake.setShootSpeed(-0.65)),
           new RunCommand(() -> m_groundIntake.groundIntakeShoot(), m_groundIntake)
         ));
 
@@ -315,7 +316,7 @@ public class RobotContainer {
     // Intake deadband to prevent accidental activation
     m_driverController.rightTrigger(OIConstants.kIntakeReverseDeadband).whileTrue(new RunCommand(() -> 
       m_intake.operatorReverse(m_manipulatorController.getRightY(), 
-      m_driverController.getRightTriggerAxis())));
+      m_driverController.getRightTriggerAxis()),m_intake));
 
     // POV Rotation
     m_driverController.b().whileTrue( new RunCommand (
