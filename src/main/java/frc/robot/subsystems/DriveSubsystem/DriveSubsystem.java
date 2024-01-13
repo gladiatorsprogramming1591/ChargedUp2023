@@ -4,7 +4,8 @@
 
 package frc.robot.subsystems.DriveSubsystem;
 
-import com.kauailabs.navx.frc.AHRS;
+import com.ctre.phoenix6.hardware.Pigeon2;
+// import com.kauailabs.navx.frc.AHRS;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 
@@ -63,7 +64,8 @@ public class DriveSubsystem extends SubsystemBase {
 
   // The gyro sensor
   // private final ADIS16470_IMU m_gyro = new ADIS16470_IMU();
-  private final AHRS m_navX;
+  // private final AHRS m_navX;
+  private final Pigeon2 m_pigeon;
 
   private Field2d m_field = new Field2d();
 
@@ -128,10 +130,11 @@ public class DriveSubsystem extends SubsystemBase {
 
   /** Creates a new DriveSubsystem. */
   public DriveSubsystem(Trigger slowDriveButton) {
-    m_navX = new AHRS(SPI.Port.kMXP);
+    // m_navX = new AHRS(SPI.Port.kMXP);
+    m_pigeon = new Pigeon2(Constants.CANIDConstants.kPigeon);
     m_odometry = new SwerveDriveOdometry(
       DriveConstants.kDriveKinematics,
-      Rotation2d.fromDegrees(-m_navX.getAngle()),
+      Rotation2d.fromDegrees(-m_pigeon.getAngle()),
       new SwerveModulePosition[] {
           m_frontLeft.getPosition(),
           m_frontRight.getPosition(),
@@ -148,9 +151,9 @@ public class DriveSubsystem extends SubsystemBase {
   public void periodic() {
     // Update the odometry in the periodic block
     SmartDashboard.putData(m_field);
-    SmartDashboard.putBoolean("Navx is calibrating: ", m_navX.isCalibrating());
+    // SmartDashboard.putBoolean("Navx is calibrating: ", m_navX.isCalibrating());
     m_odometry.update(
-        Rotation2d.fromDegrees(-m_navX.getAngle()),
+        Rotation2d.fromDegrees(-m_pigeon.getAngle()),
         new SwerveModulePosition[] {
             m_frontLeft.getPosition(),
             m_frontRight.getPosition(),
@@ -161,7 +164,7 @@ public class DriveSubsystem extends SubsystemBase {
         m_field.setRobotPose(m_odometry.getPoseMeters());
 
     SmartDashboard.putNumber("Heading", m_odometry.getPoseMeters().getRotation().getDegrees());
-    SmartDashboard.putNumber("CurrentPitch", m_navX.getRoll());
+    SmartDashboard.putNumber("CurrentPitch", m_pigeon.getRoll().getValueAsDouble());
     // SmartDashboard.putNumber("xTrajSP", xTrajPID.getSetpoint());
     // SmartDashboard.putNumber("xTrajPosErr", xTrajPID.getPositionError());
 
@@ -188,7 +191,7 @@ public class DriveSubsystem extends SubsystemBase {
    */
   public void resetOdometry(Pose2d pose) {
     m_odometry.resetPosition(
-        Rotation2d.fromDegrees(-m_navX.getAngle()),
+        Rotation2d.fromDegrees(-m_pigeon.getAngle()),
         new SwerveModulePosition[] {
             m_frontLeft.getPosition(),
             m_frontRight.getPosition(),
@@ -358,9 +361,9 @@ public class DriveSubsystem extends SubsystemBase {
   //FYI: Don't use m_navX.calibrate(), the method does nothing
   //Startup Cal takes 20s
 
-  public boolean isCalibrating(){
-    return m_navX.isCalibrating();
-  }
+  // public boolean isCalibrating(){
+  //   return m_navX.isCalibrating();
+  // }
 
   /**
    * Returns the heading of the robot.
@@ -377,18 +380,18 @@ public class DriveSubsystem extends SubsystemBase {
    * @return The turn rate of the robot, in degrees per second
    */
   public double getTurnRate() {
-    return m_navX.getRate() * (DriveConstants.kGyroReversed ? -1.0 : 1.0);
+    return m_pigeon.getRate() * (DriveConstants.kGyroReversed ? -1.0 : 1.0);
   }
 
   //Charge Station Autos
   public void driveToLevel(){
     double pidOut = MathUtil.clamp(m_rollPidController.calculate(
-      m_navX.getRoll(), 0), -DriveConstants.kAutoLevelMaxOutput, DriveConstants.kAutoLevelMaxOutput);
+      m_pigeon.getRoll().getValueAsDouble(), 0), -DriveConstants.kAutoLevelMaxOutput, DriveConstants.kAutoLevelMaxOutput);
     drive(false, pidOut, 0, 0, false);
 
     if (++count %10 == 0) {
-        System.out.println("Roll is :" + m_navX.getRoll());
-        System.out.println("Pitch is :" + m_navX.getPitch());
+        System.out.println("Roll is :" + m_pigeon.getRoll().getValueAsDouble());
+        System.out.println("Pitch is :" + m_pigeon.getPitch().getValueAsDouble());
         System.out.println("PID Output is: " + pidOut);
     }
 
@@ -396,12 +399,12 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   public boolean isLevel(){
-    return Math.abs(m_navX.getRoll()) < Constants.AutoConstants.kLevelTolerance;
+    return Math.abs(m_pigeon.getRoll().getValueAsDouble()) < Constants.AutoConstants.kLevelTolerance;
   }
 
   public boolean driveToAngle (double targetAngle){ 
     boolean atAngle = true;
-    double currentAngle = m_navX.getRoll();
+    double currentAngle = m_pigeon.getRoll().getValueAsDouble();
     // double currentAngle = m_odometry.;
     if ( currentAngle >= targetAngle) {
         drive(false, .25, 0, 0, false);  // xSpeed .4
@@ -416,6 +419,7 @@ public class DriveSubsystem extends SubsystemBase {
     return atAngle;
   }
     
+  /*
     // Assuming this method is part of a drivetrain subsystem that provides the necessary methods
   public Command followTrajectoryCommand(PathPlannerTrajectory traj, boolean isFirstPath) {
     return new SequentialCommandGroup(
@@ -441,6 +445,7 @@ public class DriveSubsystem extends SubsystemBase {
         )
     );
   }
+  */
 
   public void setTrajPID(
     double kpX, double kiX, double kdX,
@@ -467,6 +472,8 @@ public class DriveSubsystem extends SubsystemBase {
     m_kiR = ki;
     m_kdR = kd;
   }
+
+  /*
   // Use if PID values are set manually (does not affect default values)
   public Command followTrajectoryCommand(PathPlannerTrajectory traj, boolean isFirstPath, boolean isModifiedPID) {
     if (!isModifiedPID){
@@ -503,6 +510,7 @@ public class DriveSubsystem extends SubsystemBase {
         )
     );
   }
+  */
 
   // TODO: use profiled pid if needed
   public void TurnToTarget(boolean highMaxSpeed, double X, double Y, double angle, boolean rateLimit, boolean squaredInputs, double maxOutput){

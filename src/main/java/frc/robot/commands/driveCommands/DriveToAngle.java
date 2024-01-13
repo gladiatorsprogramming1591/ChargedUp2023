@@ -1,11 +1,11 @@
 package frc.robot.commands.driveCommands;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.DriveSubsystem.DriveSubsystem;
 
-public class DriveToAngle extends CommandBase {
+public class DriveToAngle extends Command {
     private DriveSubsystem m_drivetrain;
     private boolean atAngle = false;
     private boolean Initlevel;

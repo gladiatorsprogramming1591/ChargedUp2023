@@ -6,7 +6,7 @@ package frc.robot;
 
 import java.util.HashMap;
 
-import com.revrobotics.CANSparkMax.IdleMode;
+import com.revrobotics.CANSparkBase.IdleMode;
 
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -51,7 +51,8 @@ public final class Constants {
     //Ground Intake
     public static final int kLeftGroundIntakeCANId = 6;
     public static final int kRightGroundIntakeCANId = 7;
-    public static final int kGroundIntakeJointCANId = 8; 
+    public static final int kGroundIntakeJointCANId = 8;
+    public static final int kPigeon = 9; 
   }
 
   public static final class DriveConstants {

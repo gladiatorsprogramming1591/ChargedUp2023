@@ -1,10 +1,10 @@
 package frc.robot.commands.driveCommands;
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.DriveSubsystem.DriveSubsystem;
 import edu.wpi.first.wpilibj.Timer;
 
-public class DriveToLevel extends CommandBase {
+public class DriveToLevel extends Command {
     private DriveSubsystem m_drivetrain;
     private Timer timer = new Timer(); 
 
