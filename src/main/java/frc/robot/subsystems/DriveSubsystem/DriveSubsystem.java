@@ -420,6 +420,8 @@ public class DriveSubsystem extends SubsystemBase {
   }
     
   /*
+    TODO: Need to update path planer to 2024 changes
+
     // Assuming this method is part of a drivetrain subsystem that provides the necessary methods
   public Command followTrajectoryCommand(PathPlannerTrajectory traj, boolean isFirstPath) {
     return new SequentialCommandGroup(
@@ -474,6 +476,8 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   /*
+  TODO: Need to update path planer to 2024 changes
+  
   // Use if PID values are set manually (does not affect default values)
   public Command followTrajectoryCommand(PathPlannerTrajectory traj, boolean isFirstPath, boolean isModifiedPID) {
     if (!isModifiedPID){
